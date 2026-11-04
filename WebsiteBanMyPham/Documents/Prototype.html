@@ -1,0 +1,2700 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI/UX Prototype & Design System - Web Mỹ Phẩm ASP.NET Core MVC (.NET 10)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display (Headings) & Plus Jakarta Sans (Body/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFF9F5',        /* Trắng kem - Nền chính */
+                        pastel: '#F8DDE5',       /* Hồng pastel - Màu nhấn nhẹ */
+                        nude: '#E9B8C5',         /* Hồng nude - Nút phụ & Sidebar Admin */
+                        primary: '#C87991',      /* Hồng đậm - Nút chính */
+                        primaryHover: '#B3627A', /* Hover nút chính */
+                        charcoal: '#65545A',     /* Nâu xám - Chữ chính */
+                        muted: '#9A8B90',        /* Chữ phụ */
+                        borderLight: '#F0E4E8',  /* Viền mảnh */
+                        surface: '#FFFFFF',      /* Trắng - Thẻ sản phẩm / Bảng */
+                        statusSuccess: '#4A9D7C',
+                        statusWarning: '#D99B52',
+                        statusDanger: '#D96B6B',
+                        statusInfo: '#5B8FB9',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(101, 84, 90, 0.06)',
+                        'hover': '0 8px 28px rgba(200, 121, 145, 0.15)',
+                    },
+                    borderRadius: {
+                        'btn': '6px',
+                        'card': '10px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-main: #FFF9F5;
+            --pink-pastel: #F8DDE5;
+            --pink-nude: #E9B8C5;
+            --pink-primary: #C87991;
+            --text-main: #65545A;
+            --surface-white: #FFFFFF;
+        }
+        body {
+            background-color: #FFF9F5;
+            color: #65545A;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Playfair Display', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF9F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E9B8C5;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C87991;
+        }
+        .custom-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #C87991;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .custom-checkbox:checked {
+            background-color: #C87991;
+        }
+        .custom-checkbox:checked::before {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .view-section {
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-pastel selection:text-charcoal">
+
+    <!-- ==========================================
+         THANH CHUYỂN ĐỔI 3 PHÂN KHU CỰC RÕ RÀNG (STICKY TOP SWITCHER)
+    =========================================== -->
+    <div class="sticky top-0 z-50 bg-charcoal text-white px-3 sm:px-6 py-2.5 shadow-lg border-b border-white/15">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-nude animate-ping"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-pastel">BẢN THIẾT KẾ UI/UX HOÀN CHỈNH (.NET 10 MVC)</span>
+                <span class="hidden xl:inline text-[11px] text-white/70">· LUNA + Serene Rose + Lumiva + Lunara</span>
+            </div>
+
+            <!-- 3 Nút Chuyển Phân Khu Lớn, Nổi Bật Trên Mọi Màn Hình -->
+            <div class="flex flex-wrap items-center justify-center bg-black/30 p-1 rounded-lg gap-1.5 w-full md:w-auto">
+                <button onclick="switchMainArea('customer')" id="tab-area-customer" class="flex-1 md:flex-initial justify-center px-3.5 py-2 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-primary text-white shadow-sm">
+                    <i class="ph-fill ph-storefront text-base"></i> 1. KHU VỰC KHÁCH HÀNG (6 Trang)
+                </button>
+                <button onclick="switchMainArea('admin')" id="tab-area-admin" class="flex-1 md:flex-initial justify-center px-3.5 py-2 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-white/10 text-pastel hover:bg-white/20 border border-nude/40">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i class="ph-fill ph-gauge text-base"></i> 2. GIAO DIỆN ADMIN (21 Chức năng)
+                </button>
+                <button onclick="switchMainArea('design-system')" id="tab-area-design-system" class="flex-1 md:flex-initial justify-center px-3.5 py-2 rounded-md text-xs font-bold transition flex items-center gap-1.5 text-white/80 hover:text-white hover:bg-white/10">
+                    <i class="ph-fill ph-palette text-base"></i> 3. DESIGN SYSTEM & BẢNG MÀU
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông báo nổi (Toast Notification) -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-charcoal text-white px-4 py-3.5 rounded-card shadow-xl flex items-center gap-3 text-xs sm:text-sm border border-nude/50 max-w-md">
+        <i class="ph-fill ph-check-circle text-nude text-xl shrink-0"></i>
+        <span id="toast-msg" class="leading-snug">Thao tác thành công!</span>
+    </div>
+
+    <!-- Modal Quản lý Hình Ảnh Sản Phẩm (Dành cho Admin STT 6) -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-surface rounded-card border border-borderLight shadow-xl max-w-lg w-full p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-borderLight pb-3">
+                <div>
+                    <h3 class="text-lg font-bold text-charcoal">Quản lý Hình ảnh Sản phẩm (STT 6)</h3>
+                    <p id="img-modal-product-name" class="text-xs text-primary font-semibold">Tinh Chất Rose Glow Serum 50ml</p>
+                </div>
+                <button onclick="closeImageModal()" class="text-muted hover:text-charcoal text-lg"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="grid grid-cols-3 gap-3" id="img-modal-grid">
+                <div class="relative group rounded-btn overflow-hidden border-2 border-primary aspect-square bg-cream">
+                    <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
+                    <span class="absolute top-1.5 left-1.5 bg-primary text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">Ảnh chính</span>
+                </div>
+                <div class="relative group rounded-btn overflow-hidden border border-borderLight aspect-square bg-cream">
+                    <img src="https://images.unsplash.com/photo-1608248597359-0e6d526a6828?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
+                    <button onclick="this.parentElement.remove(); showToast('Đã xóa ảnh phụ sản phẩm!');" class="absolute top-1.5 right-1.5 bg-statusDanger text-white w-6 h-6 rounded-full text-xs flex items-center justify-center">✕</button>
+                </div>
+                <div class="relative group rounded-btn overflow-hidden border border-borderLight aspect-square bg-cream">
+                    <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
+                    <button onclick="this.parentElement.remove(); showToast('Đã xóa ảnh phụ sản phẩm!');" class="absolute top-1.5 right-1.5 bg-statusDanger text-white w-6 h-6 rounded-full text-xs flex items-center justify-center">✕</button>
+                </div>
+            </div>
+            <div class="p-3 rounded-btn bg-cream border border-borderLight space-y-2 text-xs">
+                <label class="font-semibold text-charcoal block">Thêm hình ảnh mới (URL hoặc Upload file):</label>
+                <div class="flex gap-2">
+                    <input id="new-img-url" type="text" placeholder="Dán link ảnh hoặc chọn file..." value="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=300&q=80" class="flex-1 px-3 py-1.5 bg-surface border border-borderLight rounded-btn">
+                    <button onclick="addProductImageModal()" class="px-3 py-1.5 bg-primary text-white font-semibold rounded-btn">+ Thêm ảnh</button>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeImageModal()" class="px-4 py-2 bg-nude text-charcoal text-xs font-semibold rounded-btn">Đóng & Lưu</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================================================================================
+         PHÂN KHU 1: GIAO DIỆN KHÁCH HÀNG - GUEST & CUSTOMER (MẶC ĐỊNH HIỂN THỊ ĐẦU TIÊN)
+    =================================================================================== -->
+    <div id="area-customer" class="view-section flex-1 flex flex-col">
+
+        <!-- Thanh chuyển nhanh 6 cụm trang Khách hàng -->
+        <div class="bg-pastel/75 border-b border-borderLight px-3 sm:px-6 py-2 sticky top-[52px] z-40 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
+                <span class="text-xs font-bold text-charcoal flex items-center gap-1.5">
+                    <i class="ph-fill ph-compass text-primary text-base"></i> Chuyển trang Khách hàng:
+                </span>
+                <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                    <button onclick="openCustomerPage('trangchu')" id="subtab-trangchu" class="px-3 py-1.5 rounded-btn font-bold bg-primary text-white shadow-sm transition">01. TrangChu</button>
+                    <button onclick="openCustomerPage('sanpham')" id="subtab-sanpham" class="px-3 py-1.5 rounded-btn font-medium bg-surface text-charcoal hover:bg-nude/50 transition">02. SanPham (Lọc & Tìm)</button>
+                    <button onclick="openCustomerPage('chitiet')" id="subtab-chitiet" class="px-3 py-1.5 rounded-btn font-medium bg-surface text-charcoal hover:bg-nude/50 transition">03. ChiTietSanPham</button>
+                    <button onclick="openCustomerPage('giohang')" id="subtab-giohang" class="px-3 py-1.5 rounded-btn font-medium bg-surface text-charcoal hover:bg-nude/50 transition">04. GioHang (Chọn & Voucher)</button>
+                    <button onclick="openCustomerPage('thanhtoan')" id="subtab-thanhtoan" class="px-3 py-1.5 rounded-btn font-medium bg-surface text-charcoal hover:bg-nude/50 transition">05. DatHang & ThanhToan (UC01, UC03)</button>
+                    <button onclick="openCustomerPage('taikhoan')" id="subtab-taikhoan" class="px-3 py-1.5 rounded-btn font-medium bg-surface text-charcoal hover:bg-nude/50 transition">06. Đơn hàng (UC02), Đánh giá (UC05) & Khiếu nại</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HEADER CHUNG KHU VỰC KHÁCH HÀNG (LUNA + Lumiva Style) -->
+        <header class="bg-surface border-b border-borderLight">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+                <!-- Logo -->
+                <div onclick="openCustomerPage('trangchu')" class="cursor-pointer flex items-center gap-2.5 shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-pastel flex items-center justify-center text-primary font-serif font-bold text-xl border border-nude shadow-sm">S</div>
+                    <div>
+                        <span class="font-serif text-2xl font-bold tracking-tight text-charcoal">SERENE</span>
+                        <span class="block text-[10px] uppercase tracking-[0.22em] text-muted -mt-1">LUNA · ROSE · LUMIVA</span>
+                    </div>
+                </div>
+
+                <!-- Menu chính -->
+                <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-charcoal">
+                    <button onclick="openCustomerPage('trangchu')" class="hover:text-primary transition">Trang chủ</button>
+                    <button onclick="openCustomerPage('sanpham')" class="hover:text-primary transition">Cửa hàng</button>
+                    <button onclick="openCustomerPage('trangchu'); setTimeout(()=>document.getElementById('promo-section').scrollIntoView({behavior:'smooth'}), 100)" class="hover:text-primary transition flex items-center gap-1 text-primary">
+                        <i class="ph-fill ph-ticket"></i> Mã Khuyến mãi
+                    </button>
+                    <button onclick="openCustomerPage('trangchu'); setTimeout(()=>document.getElementById('brand-story-section').scrollIntoView({behavior:'smooth'}), 100)" class="hover:text-primary transition">Câu chuyện thương hiệu</button>
+                </nav>
+
+                <!-- Ô tìm kiếm trực tiếp -->
+                <div class="hidden sm:block flex-1 max-w-xs relative">
+                    <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"></i>
+                    <input type="text" placeholder="Tìm Serum, Kem dưỡng, Son..." onfocus="openCustomerPage('sanpham')" oninput="document.getElementById('catalog-search').value=this.value; filterCatalog();" class="w-full pl-9 pr-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition">
+                </div>
+
+                <!-- Cụm Nút Tài khoản, Giỏ hàng & Nút Nhảy Nhanh Sang Admin -->
+                <div class="flex items-center gap-2">
+                    <button onclick="openCustomerPage('taikhoan')" class="px-3 py-2 rounded-btn hover:bg-cream text-charcoal flex items-center gap-1.5 text-xs font-semibold border border-borderLight transition">
+                        <i class="ph-fill ph-user-circle text-lg text-primary"></i>
+                        <span class="hidden md:inline">Minh Anh</span>
+                    </button>
+
+                    <button onclick="openCustomerPage('giohang')" class="px-3 py-2 rounded-btn bg-pastel hover:bg-nude text-charcoal flex items-center gap-1.5 text-xs font-bold transition shadow-sm">
+                        <i class="ph-fill ph-shopping-bag text-lg text-primary"></i>
+                        <span class="hidden sm:inline">Giỏ hàng</span>
+                        <span id="header-cart-count" class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[11px]">3</span>
+                    </button>
+
+                    <!-- Nút Mở Nhanh Giao diện Admin ngay trên Header -->
+                    <button onclick="switchMainArea('admin')" class="px-3 py-2 rounded-btn bg-charcoal hover:bg-primary text-white flex items-center gap-1.5 text-xs font-bold transition shadow-sm" title="Chuyển sang Giao diện Quản trị Admin">
+                        <i class="ph-fill ph-gauge text-nude text-base"></i>
+                        <span class="hidden xl:inline">Mở Admin</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             TRANG 01: TRANG CHỦ - TrangChu (Học theo Lumiva + Serene Rose)
+        =========================================== -->
+        <div id="cust-page-trangchu" class="cust-page flex-1 space-y-14 pb-16">
+            <!-- Hero Banner Khuyến mãi lớn -->
+            <section class="bg-gradient-to-r from-pastel/55 via-cream to-pastel/30 border-b border-borderLight">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 lg:py-14 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-6 space-y-5">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-nude text-primary text-xs font-semibold shadow-sm">
+                            <i class="ph-fill ph-sparkle"></i>
+                            <span>BST Dưỡng Sáng Cánh Hoa Hồng · Giảm đến 25%</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-bold text-charcoal leading-tight">
+                            Làn da căng bóng tự nhiên cùng Serene Rose.
+                        </h1>
+                        <p class="text-sm sm:text-base text-muted leading-relaxed">
+                            Sự kết hợp hoàn hảo giữa luồng mua sắm tiện lợi của <strong>LUNA</strong>, sắc hồng phấn dịu nhẹ của <strong>Serene Rose</strong> và không gian trưng bày tinh tế của <strong>Lumiva</strong>.
+                        </p>
+                        <div class="flex flex-wrap items-center gap-3 pt-1">
+                            <button onclick="openCustomerPage('sanpham')" class="px-6 py-3 bg-primary hover:bg-primaryHover text-white text-sm font-semibold rounded-btn transition shadow-soft flex items-center gap-2">
+                                Mua sắm ngay <i class="ph ph-arrow-right"></i>
+                            </button>
+                            <button onclick="document.getElementById('promo-section').scrollIntoView({behavior:'smooth'})" class="px-5 py-3 bg-surface hover:bg-pastel/50 text-charcoal border border-nude text-sm font-semibold rounded-btn transition flex items-center gap-1.5">
+                                <i class="ph-fill ph-ticket text-primary"></i> Lấy mã giảm giá
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pt-3 border-t border-borderLight text-xs">
+                            <div><p class="font-bold text-charcoal text-sm">100% Thuần Chay</p><p class="text-muted">An toàn cho da nhạy cảm</p></div>
+                            <div><p class="font-bold text-charcoal text-sm">Tồn Kho Thực Tế</p><p class="text-muted">Cập nhật tự động (UC01)</p></div>
+                            <div><p class="font-bold text-charcoal text-sm">Đổi Trả Minh Bạch</p><p class="text-muted">Hỗ trợ khiếu nại 24/7</p></div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-6">
+                        <div class="relative rounded-card overflow-hidden border border-borderLight shadow-soft bg-surface aspect-[16/10]">
+                            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=80" alt="Cosmetics Hero" class="w-full h-full object-cover">
+                            <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur p-4 rounded-card border border-nude shadow-soft max-w-xs">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-primary">Best Seller 2026</span>
+                                <p class="font-serif font-bold text-charcoal text-base mt-0.5">Tinh Chất Rose Glow Serum 50ml</p>
+                                <div class="flex items-center justify-between mt-2">
+                                    <span class="text-primary font-bold text-sm">450.000đ</span>
+                                    <button onclick="viewProductDetail(1)" class="text-xs font-semibold text-charcoal underline hover:text-primary">Xem ngay →</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- KHU VỰC MÃ KHUYẾN MÃI NỔI BẬT (Bấm Lưu hoặc Dùng ngay) -->
+            <section id="promo-section" class="max-w-7xl mx-auto px-4 sm:px-6 space-y-4">
+                <div class="flex flex-wrap items-end justify-between gap-2">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-primary font-bold">Ưu Đãi Độc Quyền (UC03)</span>
+                        <h2 class="text-2xl font-bold text-charcoal mt-0.5">Ví Voucher Khuyến Mãi Của Shop</h2>
+                    </div>
+                    <p class="text-xs text-muted">Bấm <strong>"Chọn dùng ngay"</strong> để áp dụng tự động vào Giỏ hàng & Đặt hàng</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="home-voucher-list">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+            <!-- DANH MỤC MỸ PHẨM (Học theo Lumiva) -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-5">
+                <div class="flex items-end justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-primary font-bold">Danh Mục Mỹ Phẩm</span>
+                        <h2 class="text-2xl font-bold text-charcoal mt-0.5">Chăm sóc toàn diện theo từng bước</h2>
+                    </div>
+                    <button onclick="openCustomerPage('sanpham')" class="text-xs font-bold text-primary hover:underline">Xem toàn bộ danh mục →</button>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div onclick="filterByCategoryFromHome('Chăm sóc da')" class="group bg-surface p-4 rounded-card border border-borderLight shadow-soft hover:border-primary cursor-pointer transition text-center space-y-2.5">
+                        <div class="aspect-[4/3] rounded-btn overflow-hidden bg-cream">
+                            <img src="https://images.unsplash.com/photo-1608248597359-0e6d526a6828?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <h3 class="font-bold text-charcoal text-sm">Chăm sóc da</h3>
+                        <p class="text-[11px] text-muted">Serum, Kem dưỡng, B5</p>
+                    </div>
+                    <div onclick="filterByCategoryFromHome('Trang điểm')" class="group bg-surface p-4 rounded-card border border-borderLight shadow-soft hover:border-primary cursor-pointer transition text-center space-y-2.5">
+                        <div class="aspect-[4/3] rounded-btn overflow-hidden bg-cream">
+                            <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <h3 class="font-bold text-charcoal text-sm">Trang điểm</h3>
+                        <p class="text-[11px] text-muted">Son kem lì, Phấn nước</p>
+                    </div>
+                    <div onclick="filterByCategoryFromHome('Làm sạch')" class="group bg-surface p-4 rounded-card border border-borderLight shadow-soft hover:border-primary cursor-pointer transition text-center space-y-2.5">
+                        <div class="aspect-[4/3] rounded-btn overflow-hidden bg-cream">
+                            <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <h3 class="font-bold text-charcoal text-sm">Làm sạch & Toner</h3>
+                        <p class="text-[11px] text-muted">Sữa rửa mặt, Nước hoa hồng</p>
+                    </div>
+                    <div onclick="filterByCategoryFromHome('Chống nắng')" class="group bg-surface p-4 rounded-card border border-borderLight shadow-soft hover:border-primary cursor-pointer transition text-center space-y-2.5">
+                        <div class="aspect-[4/3] rounded-btn overflow-hidden bg-cream">
+                            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <h3 class="font-bold text-charcoal text-sm">Chống nắng</h3>
+                        <p class="text-[11px] text-muted">KCN nâng tông SPF50+</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SẢN PHẨM BÁN CHẠY & SẢN PHẨM MỚI (Học theo LUNA & Lunara) -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-5">
+                <div class="flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-primary font-bold">Kệ Hàng Trực Tuyến</span>
+                        <h2 class="text-2xl font-bold text-charcoal mt-0.5">Sản phẩm bán chạy & Mới ra mắt</h2>
+                    </div>
+                    <button onclick="openCustomerPage('sanpham')" class="px-4 py-2 bg-nude hover:bg-primary hover:text-white text-charcoal text-xs font-bold rounded-btn transition">
+                        Xem tất cả 8 sản phẩm →
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="home-product-grid"></div>
+            </section>
+
+            <!-- CÂU CHUYỆN THƯƠNG HIỆU & THƯƠNG HIỆU NỔI BẬT (Học theo Lumiva) -->
+            <section id="brand-story-section" class="max-w-7xl mx-auto px-4 sm:px-6">
+                <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+                    <div class="lg:col-span-5 bg-pastel/40 p-8 flex flex-col justify-between space-y-6">
+                        <div class="space-y-3">
+                            <span class="text-xs font-bold uppercase tracking-widest text-primary">Câu Chuyện Thương Hiệu · Lumiva Concept</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold text-charcoal leading-snug">Vẻ đẹp bền vững bắt đầu từ bảng thành phần minh bạch.</h2>
+                            <p class="text-xs sm:text-sm text-muted leading-relaxed">
+                                Chúng tôi hợp tác trực tiếp với 4 thương hiệu dược mỹ phẩm hàng đầu (LUNA SKIN, SERENE ROSE, LUMIVA, LUNARA BERRY) nhằm mang đến quy trình chăm sóc da chuẩn khoa học với mức giá hợp lý nhất cho phụ nữ Việt.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-2.5 pt-2">
+                            <div class="p-3 rounded-btn bg-surface border border-borderLight text-center font-serif font-bold text-xs text-charcoal">LUNA SKIN</div>
+                            <div class="p-3 rounded-btn bg-surface border border-borderLight text-center font-serif font-bold text-xs text-charcoal">SERENE ROSE</div>
+                            <div class="p-3 rounded-btn bg-surface border border-borderLight text-center font-serif font-bold text-xs text-charcoal">LUMIVA</div>
+                            <div class="p-3 rounded-btn bg-surface border border-borderLight text-center font-serif font-bold text-xs text-charcoal">LUNARA BERRY</div>
+                        </div>
+                    </div>
+
+                    <!-- Đánh giá khách hàng nổi bật trên Trang chủ -->
+                    <div class="lg:col-span-7 p-8 space-y-5">
+                        <div class="flex items-center justify-between border-b border-borderLight pb-3">
+                            <div>
+                                <span class="text-xs font-bold uppercase text-primary">Đánh Giá Thực Tế (Học theo Lunara)</span>
+                                <h3 class="text-xl font-bold text-charcoal">Khách hàng nói gì về Serene?</h3>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-[#E6F4EE] text-statusSuccess text-xs font-bold">★ 4.9/5.0 (Từ đơn Hoàn thành)</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                            <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-charcoal">Nguyễn Thị Minh Anh</span>
+                                    <span class="text-amber-500 font-bold">★★★★★</span>
+                                </div>
+                                <p class="text-muted leading-relaxed">"Serum Rose Glow thấm cực nhanh, mùi hương hoa hồng nhẹ nhàng thư giãn. Đóng gói hộp màu hồng pastel rất xinh!"</p>
+                                <p class="text-[11px] text-primary font-semibold">Đã mua: Rose Glow Serum 50ml</p>
+                            </div>
+                            <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-charcoal">Trần Bảo Ngọc</span>
+                                    <span class="text-amber-500 font-bold">★★★★★</span>
+                                </div>
+                                <p class="text-muted leading-relaxed">"Mình rất thích tính năng chọn sẵn mã giảm giá ngay ở giỏ hàng, không cần phải nhớ mã. Giao hàng nhanh chỉ 2 ngày."</p>
+                                <p class="text-[11px] text-primary font-semibold">Đã mua: Kem Dưỡng Velvet Barrier</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================================
+             TRANG 02: DANH SÁCH SẢN PHẨM - SanPham (Học theo LUNA Catalog)
+        =========================================== -->
+        <div id="cust-page-sanpham" class="cust-page hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+            <div class="mb-6 pb-4 border-b border-borderLight flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <p class="text-xs text-muted">Trang chủ / <span class="text-charcoal font-semibold">Cửa hàng mỹ phẩm (SanPham)</span></p>
+                    <h1 class="text-2xl font-bold text-charcoal mt-1">Tất Cả Sản Phẩm Đang Kinh Doanh</h1>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <div class="relative">
+                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                        <input id="catalog-search" oninput="filterCatalog()" type="text" placeholder="Tìm tên sản phẩm, thương hiệu..." class="pl-8 pr-3 py-2 bg-surface border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary w-56">
+                    </div>
+                    <select id="catalog-sort" onchange="filterCatalog()" class="px-3 py-2 bg-surface border border-borderLight rounded-btn text-xs text-charcoal font-medium focus:outline-none focus:border-primary">
+                        <option value="default">Sắp xếp: Nổi bật nhất</option>
+                        <option value="asc">Giá: Tăng dần (Thấp → Cao)</option>
+                        <option value="desc">Giá: Giảm dần (Cao → Thấp)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Cột Bộ lọc bên trái -->
+                <aside class="lg:col-span-3 space-y-5">
+                    <div class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-5">
+                        <div class="flex items-center justify-between border-b border-borderLight pb-2.5">
+                            <h3 class="font-bold text-charcoal text-sm flex items-center gap-1.5"><i class="ph-fill ph-funnel text-primary"></i> Bộ lọc sản phẩm</h3>
+                            <button onclick="resetCatalogFilters()" class="text-xs text-primary font-semibold hover:underline">Đặt lại</button>
+                        </div>
+
+                        <div class="space-y-2">
+                            <p class="text-xs font-bold uppercase tracking-wider text-charcoal">1. Danh mục mỹ phẩm</p>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="cat" value="all" checked onchange="filterCatalog()" class="accent-primary"> Tất cả danh mục</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="cat" value="Chăm sóc da" onchange="filterCatalog()" class="accent-primary"> Chăm sóc da</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="cat" value="Trang điểm" onchange="filterCatalog()" class="accent-primary"> Trang điểm</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="cat" value="Làm sạch" onchange="filterCatalog()" class="accent-primary"> Làm sạch & Toner</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="cat" value="Chống nắng" onchange="filterCatalog()" class="accent-primary"> Chống nắng</label>
+                        </div>
+
+                        <div class="space-y-2 pt-3 border-t border-borderLight">
+                            <p class="text-xs font-bold uppercase tracking-wider text-charcoal">2. Thương hiệu</p>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="brand" value="all" checked onchange="filterCatalog()" class="accent-primary"> Tất cả thương hiệu</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="brand" value="LUNA SKIN" onchange="filterCatalog()" class="accent-primary"> LUNA SKIN</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="brand" value="SERENE ROSE" onchange="filterCatalog()" class="accent-primary"> SERENE ROSE</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="brand" value="LUMIVA" onchange="filterCatalog()" class="accent-primary"> LUMIVA</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="brand" value="LUNARA BERRY" onchange="filterCatalog()" class="accent-primary"> LUNARA BERRY</label>
+                        </div>
+
+                        <div class="space-y-2 pt-3 border-t border-borderLight">
+                            <p class="text-xs font-bold uppercase tracking-wider text-charcoal">3. Khoảng giá</p>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="price" value="all" checked onchange="filterCatalog()" class="accent-primary"> Tất cả mức giá</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="price" value="under300" onchange="filterCatalog()" class="accent-primary"> Dưới 300.000đ</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="price" value="300to500" onchange="filterCatalog()" class="accent-primary"> Từ 300.000đ - 500.000đ</label>
+                            <label class="flex items-center gap-2 text-xs cursor-pointer"><input type="radio" name="price" value="over500" onchange="filterCatalog()" class="accent-primary"> Trên 500.000đ</label>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Lưới sản phẩm -->
+                <div class="lg:col-span-9 space-y-4">
+                    <div id="catalog-product-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TRANG 03: CHI TIẾT SẢN PHẨM - ChiTietSanPham (LUNA + Lunara)
+        =========================================== -->
+        <div id="cust-page-chitiet" class="cust-page hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-10">
+            <div class="text-xs text-muted flex items-center gap-2">
+                <button onclick="openCustomerPage('sanpham')" class="text-primary font-semibold hover:underline flex items-center gap-1"><i class="ph ph-arrow-left"></i> Quay lại Cửa hàng</button>
+                <span>/</span>
+                <span class="text-charcoal font-medium" id="detail-breadcrumb">Tinh Chất Dưỡng Sáng Cấp Ẩm Rose Glow Serum 50ml</span>
+            </div>
+
+            <div class="bg-surface p-6 sm:p-8 rounded-card border border-borderLight shadow-soft grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Gallery Ảnh lớn + Thumbnails -->
+                <div class="lg:col-span-6 space-y-3">
+                    <div class="aspect-square rounded-card overflow-hidden bg-cream border border-borderLight">
+                        <img id="detail-main-img" src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
+                    </div>
+                    <div class="grid grid-cols-4 gap-3">
+                        <img onclick="document.getElementById('detail-main-img').src=this.src" src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80" class="aspect-square rounded-btn object-cover border-2 border-primary cursor-pointer">
+                        <img onclick="document.getElementById('detail-main-img').src=this.src" src="https://images.unsplash.com/photo-1608248597359-0e6d526a6828?auto=format&fit=crop&w=400&q=80" class="aspect-square rounded-btn object-cover border border-borderLight hover:border-primary cursor-pointer">
+                        <img onclick="document.getElementById('detail-main-img').src=this.src" src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=400&q=80" class="aspect-square rounded-btn object-cover border border-borderLight hover:border-primary cursor-pointer">
+                        <img onclick="document.getElementById('detail-main-img').src=this.src" src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&q=80" class="aspect-square rounded-btn object-cover border border-borderLight hover:border-primary cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Thông tin chi tiết, Tabs Mô tả/Thành phần/Công dụng & Nút Thêm giỏ -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span id="detail-brand" class="px-3 py-1 rounded-full bg-pastel text-charcoal text-xs font-bold uppercase">LUNA SKIN</span>
+                        <span id="detail-stock" class="px-2.5 py-1 rounded-full bg-[#E6F4EE] text-statusSuccess text-xs font-semibold">● Đang kinh doanh · Tồn kho: 85</span>
+                    </div>
+
+                    <h1 id="detail-title" class="text-2xl sm:text-3xl font-bold text-charcoal">Tinh Chất Dưỡng Sáng Cấp Ẩm Rose Glow Serum 50ml</h1>
+
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="text-amber-500 font-bold text-sm">★★★★★ 4.9</span>
+                        <span class="text-muted">| Đã bán 420+ | Đánh giá đã được Admin kiểm duyệt (UC05)</span>
+                    </div>
+
+                    <div class="flex items-baseline gap-3 p-4 rounded-btn bg-cream border border-borderLight">
+                        <span id="detail-price" class="text-2xl font-bold text-primary">450.000đ</span>
+                        <span id="detail-oldprice" class="text-sm text-muted line-through">550.000đ</span>
+                        <span class="px-2 py-0.5 rounded bg-primary text-white text-xs font-semibold">Tiết kiệm 100.000đ</span>
+                    </div>
+
+                    <!-- Số lượng & Nút Thêm vào giỏ / Mua ngay (Học theo LUNA) -->
+                    <div class="pt-1 flex flex-wrap items-center gap-3">
+                        <div class="inline-flex items-center border border-borderLight rounded-btn bg-cream">
+                            <button onclick="updateDetailQty(-1)" class="px-3.5 py-2.5 text-charcoal hover:bg-pastel font-bold">-</button>
+                            <span id="detail-qty" class="px-4 py-2.5 text-sm font-bold border-x border-borderLight bg-surface">1</span>
+                            <button onclick="updateDetailQty(1)" class="px-3.5 py-2.5 text-charcoal hover:bg-pastel font-bold">+</button>
+                        </div>
+
+                        <button onclick="addCurrentDetailToCart()" class="flex-1 py-3 px-5 bg-primary hover:bg-primaryHover text-white text-sm font-bold rounded-btn transition shadow-soft flex items-center justify-center gap-2">
+                            <i class="ph-fill ph-shopping-bag text-lg"></i> Thêm vào giỏ hàng
+                        </button>
+
+                        <button onclick="buyNowFromDetail()" class="py-3 px-5 bg-nude hover:bg-primary hover:text-white text-charcoal text-sm font-bold rounded-btn transition flex items-center gap-1.5 shadow-sm">
+                            <i class="ph-fill ph-lightning"></i> Mua ngay (Thanh toán luôn)
+                        </button>
+                    </div>
+
+                    <!-- Tabs chuyển đổi: Mô tả, Thành phần, Công dụng -->
+                    <div class="pt-4 border-t border-borderLight space-y-3">
+                        <div class="flex border-b border-borderLight gap-4 text-xs font-bold">
+                            <button onclick="switchDetailTab('mota')" id="dtab-btn-mota" class="pb-2.5 border-b-2 border-primary text-primary">1. Mô tả sản phẩm</button>
+                            <button onclick="switchDetailTab('thanhphan')" id="dtab-btn-thanhphan" class="pb-2.5 border-b-2 border-transparent text-muted hover:text-charcoal">2. Thành phần chi tiết</button>
+                            <button onclick="switchDetailTab('congdung')" id="dtab-btn-congdung" class="pb-2.5 border-b-2 border-transparent text-muted hover:text-charcoal">3. Công dụng & HDSD</button>
+                        </div>
+                        <div id="dtab-mota" class="text-xs sm:text-sm text-muted leading-relaxed">
+                            Tinh chất dưỡng sáng da Rose Glow Serum được chắt lọc từ 72% nước hoa hồng Damask hữu cơ kết hợp hoạt chất Niacinamide 5% tinh khiết. Kết cấu mỏng nhẹ, thấm nhanh trong 5 giây mà không gây bết dính, phù hợp với mọi loại da kể cả da nhạy cảm.
+                        </div>
+                        <div id="dtab-thanhphan" class="hidden text-xs sm:text-sm text-muted leading-relaxed">
+                            • <strong>Rosa Damascena Flower Water (72%):</strong> Cấp ẩm dịu nhẹ, làm dịu vết đỏ.<br>
+                            • <strong>Niacinamide (5%):</strong> Làm sáng đều màu da, thu nhỏ lỗ chân lông.<br>
+                            • <strong>Panthenol (Vitamin B5) & Hyaluronic Acid:</strong> Phục hồi màng ẩm tự nhiên. Không cồn khô, không Paraben.
+                        </div>
+                        <div id="dtab-congdung" class="hidden text-xs sm:text-sm text-muted leading-relaxed">
+                            • Cấp nước tức thì, giúp bề mặt da căng mịn, rạng rỡ.<br>
+                            • <strong>Hướng dẫn sử dụng:</strong> Nhỏ 3-4 giọt serum sau bước Toner (Nước hoa hồng), vỗ nhẹ khắp mặt vào mỗi sáng và tối.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khu vực Đánh giá đã duyệt (UC05) & Sản phẩm liên quan (Học theo Lunara) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-6 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex items-center justify-between border-b border-borderLight pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-charcoal">Đánh giá từ Khách hàng đã mua (UC05)</h3>
+                            <p class="text-xs text-muted">Chỉ hiển thị các đánh giá đã được Admin duyệt</p>
+                        </div>
+                        <button onclick="openCustomerPage('taikhoan')" class="text-xs font-bold text-primary hover:underline">+ Viết đánh giá</button>
+                    </div>
+                    <div id="public-approved-reviews" class="space-y-3 text-xs">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="border-b border-borderLight pb-3">
+                        <h3 class="text-lg font-bold text-charcoal">Sản phẩm liên quan gợi ý mua kèm</h3>
+                        <p class="text-xs text-muted">Kết hợp trọn bộ quy trình dưỡng da Serene Rose</p>
+                    </div>
+                    <div id="related-products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TRANG 04: GIỎ HÀNG - GioHang (Tích chọn SP + Vừa Nhập Vừa Chọn Mã Khuyến Mãi)
+        =========================================== -->
+        <div id="cust-page-giohang" class="cust-page hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+            <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-charcoal">Giỏ Hàng Của Bạn (GioHang)</h1>
+                    <p class="text-xs text-muted mt-1">Tích chọn sản phẩm cần mua, điều chỉnh số lượng và <strong>nhập hoặc bấm chọn thẻ Mã giảm giá</strong> ngay bên phải</p>
+                </div>
+                <button onclick="openCustomerPage('sanpham')" class="px-3.5 py-2 bg-surface border border-borderLight rounded-btn text-xs font-bold text-primary hover:bg-pastel/40 transition">+ Mua thêm sản phẩm khác</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Danh sách sản phẩm trong giỏ -->
+                <div class="lg:col-span-7 bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+                    <div class="p-4 bg-cream border-b border-borderLight flex items-center justify-between text-xs font-bold text-charcoal">
+                        <label class="inline-flex items-center gap-2.5 cursor-pointer">
+                            <input type="checkbox" id="cart-check-all" checked onchange="toggleAllCart(this.checked)" class="custom-checkbox">
+                            <span>Chọn tất cả sản phẩm trong giỏ</span>
+                        </label>
+                        <span>Số lượng / Thành tiền / Xóa</span>
+                    </div>
+                    <div id="cart-items-container" class="divide-y divide-borderLight"></div>
+                </div>
+
+                <!-- Khung Tạm tính & Hệ thống Khuyến Mãi Kép (Vừa Nhập + Vừa Chọn) -->
+                <div class="lg:col-span-5 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5 sticky top-28">
+                    <h3 class="text-lg font-bold text-charcoal border-b border-borderLight pb-3">Tóm tắt Giỏ hàng & Mã Giảm Giá</h3>
+
+                    <!-- HỆ THỐNG VOUCHER KÉP: VỪA NHẬP TAY + VỪA BẤM CHỌN THẺ VOUCHER -->
+                    <div class="p-4 rounded-card bg-cream border border-nude space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-charcoal flex items-center gap-1.5">
+                                <i class="ph-fill ph-ticket text-primary text-base"></i> Mã khuyến mãi (Nhập hoặc Chọn)
+                            </span>
+                            <button onclick="removePromoCode()" class="text-[11px] font-semibold text-statusDanger hover:underline">Bỏ chọn / Xóa mã</button>
+                        </div>
+
+                        <!-- Cách 1: Ô nhập tay -->
+                        <div class="flex gap-2">
+                            <input id="cart-promo-input" type="text" value="ROSE50" placeholder="Nhập mã (VD: ROSE50, LUNA10, VIP100)..." oninput="document.getElementById('promo-input').value=this.value" class="flex-1 px-3 py-2 bg-surface border border-borderLight rounded-btn text-xs uppercase font-mono font-bold text-charcoal focus:outline-none focus:border-primary">
+                            <button onclick="applyPromoFromInput('cart-promo-input')" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shrink-0">Áp dụng</button>
+                        </div>
+
+                        <p id="cart-promo-feedback" class="text-[11px] text-statusSuccess font-semibold"></p>
+
+                        <!-- Cách 2: Danh sách Thẻ Voucher Bấm Chọn Trực Tiếp -->
+                        <div class="space-y-2 pt-2 border-t border-borderLight">
+                            <p class="text-[11px] font-bold text-muted uppercase">Hoặc bấm chọn trực tiếp mã có sẵn:</p>
+                            <div id="cart-voucher-cards" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chi tiết tiền tạm tính -->
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between text-muted">
+                            <span>Sản phẩm đã tích chọn:</span>
+                            <span id="summary-selected-count" class="font-bold text-charcoal">3 sản phẩm</span>
+                        </div>
+                        <div class="flex justify-between text-muted">
+                            <span>Tạm tính tiền hàng:</span>
+                            <span id="summary-subtotal" class="font-bold text-charcoal">1.160.000đ</span>
+                        </div>
+                        <div class="flex justify-between text-muted">
+                            <span>Giảm giá khuyến mãi (UC03):</span>
+                            <span id="summary-discount" class="font-bold text-statusSuccess">-50.000đ</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-charcoal pt-3 border-t border-borderLight">
+                            <span>Tổng thanh toán dự kiến:</span>
+                            <span id="summary-total" class="text-xl text-primary">1.110.000đ</span>
+                        </div>
+                    </div>
+
+                    <button onclick="proceedToCheckoutFromCart()" class="w-full py-3.5 bg-primary hover:bg-primaryHover text-white text-sm font-bold rounded-btn transition shadow-soft flex items-center justify-center gap-2">
+                        Tiến Hành Đặt Hàng & Thanh Toán (UC01) <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TRANG 05: ĐẶT HÀNG & THANH TOÁN - DatHang & ThanhToan (Chuẩn UC01 & UC03)
+        =========================================== -->
+        <div id="cust-page-thanhtoan" class="cust-page hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+            <div class="mb-6">
+                <button onclick="openCustomerPage('giohang')" class="text-xs font-bold text-primary hover:underline flex items-center gap-1 mb-1">
+                    <i class="ph ph-arrow-left"></i> Quay lại Giỏ hàng
+                </button>
+                <h1 class="text-2xl font-bold text-charcoal">Đặt Hàng & Xác Nhận Thanh Toán (UC01 & UC03)</h1>
+                <p class="text-xs text-muted mt-0.5">Kiểm tra thông tin người nhận, <strong>vừa nhập vừa chọn Mã giảm giá (UC03)</strong>, chọn phương thức thanh toán (COD bắt buộc) và xác nhận đơn</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Cột trái: Thông tin nhận hàng + Phương thức thanh toán -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                        <div class="flex items-center justify-between border-b border-borderLight pb-2.5">
+                            <h3 class="text-base font-bold text-charcoal">1. Thông tin nhận hàng</h3>
+                            <span class="text-[11px] font-mono bg-pastel px-2 py-0.5 rounded text-charcoal font-semibold">&lt;&lt;include&gt;&gt;</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal mb-1">Họ và tên người nhận *</label>
+                                <input id="checkout-name" type="text" value="Nguyễn Thị Minh Anh" class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal mb-1">Số điện thoại liên hệ *</label>
+                                <input id="checkout-phone" type="text" value="0987 654 321" class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-charcoal mb-1">Địa chỉ nhận hàng chi tiết *</label>
+                            <input id="checkout-address" type="text" value="Số 125 Đường Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà Nội" class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-charcoal mb-1">Ghi chú giao hàng (Tùy chọn)</label>
+                            <input type="text" placeholder="Giao giờ hành chính, gọi trước khi giao..." class="w-full px-3.5 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                        </div>
+                    </div>
+
+                    <!-- Phương thức thanh toán (COD Bắt buộc + Online Mở rộng) -->
+                    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                        <div class="flex items-center justify-between border-b border-borderLight pb-2.5">
+                            <h3 class="text-base font-bold text-charcoal">2. Chọn phương thức thanh toán</h3>
+                            <span class="text-[11px] font-mono bg-pastel px-2 py-0.5 rounded text-charcoal font-semibold">&lt;&lt;include&gt;&gt;</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <label class="flex items-center justify-between p-4 rounded-btn border-2 border-primary bg-pastel/30 cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="paymethod" value="COD" checked class="accent-primary w-4 h-4">
+                                    <div>
+                                        <p class="font-bold text-charcoal text-sm">Thanh toán khi nhận hàng (COD)</p>
+                                        <p class="text-[11px] text-muted">Kiểm tra hàng và thanh toán tiền mặt trực tiếp cho nhân viên giao vận</p>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded bg-primary text-white text-[10px] font-bold shrink-0">Bắt buộc có</span>
+                            </label>
+
+                            <label class="flex items-center justify-between p-4 rounded-btn border border-borderLight hover:border-primary cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="paymethod" value="VNPAY Sandbox" class="accent-primary w-4 h-4">
+                                    <div>
+                                        <p class="font-bold text-charcoal text-sm">Thanh toán trực tuyến qua Cổng thanh toán (VNPay / MoMo Sandbox)</p>
+                                        <p class="text-[11px] text-muted">Quan hệ &lt;&lt;extend&gt;&gt; có tác nhân ngoài Cổng thanh toán tham gia</p>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded bg-cream border border-borderLight text-muted text-[10px] font-bold shrink-0">Mở rộng</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Sản phẩm đặt mua (Mua ngay hoặc Giỏ hàng) + Mã Khuyến Mãi (UC03) & Xác nhận đơn -->
+                <div class="lg:col-span-5 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5 h-fit">
+                    <div class="flex items-center justify-between border-b border-borderLight pb-2.5">
+                        <h3 class="text-base font-bold text-charcoal">3. Sản phẩm đặt mua & Mã khuyến mãi (UC03)</h3>
+                        <span id="checkout-mode-badge" class="px-2.5 py-0.5 rounded-full bg-pastel text-primary text-[11px] font-bold">Từ Giỏ hàng</span>
+                    </div>
+
+                    <!-- Khung thông báo khi đang ở chế độ MUA NGAY (Không qua giỏ hàng) -->
+                    <div id="buy-now-banner" class="hidden p-3.5 rounded-card bg-pastel/55 border-2 border-primary space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-primary flex items-center gap-1">
+                                <i class="ph-fill ph-lightning text-sm"></i> Đang thanh toán trực tiếp: MUA NGAY
+                            </span>
+                            <button onclick="switchCheckoutToCartMode()" class="px-2 py-1 rounded bg-surface border border-borderLight text-[11px] font-bold text-charcoal hover:border-primary transition">
+                                Đổi sang Giỏ hàng
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-charcoal leading-snug">
+                            Sản phẩm này được chuyển thẳng tới bước Đặt hàng & Thanh toán mà <strong>không thêm vào giỏ hàng</strong> (Giỏ hàng hiện tại của bạn vẫn được giữ nguyên).
+                        </p>
+                    </div>
+
+                    <!-- Danh sách sản phẩm đang được thanh toán tại trang Đặt hàng -->
+                    <div id="checkout-items-preview" class="space-y-2.5 max-h-52 overflow-y-auto pr-1 divide-y divide-borderLight border border-borderLight rounded-btn p-3 bg-cream/60">
+                        <!-- Populated via JS -->
+                    </div>
+
+                    <!-- HỆ THỐNG VOUCHER KÉP TẠI TRANG ĐẶT HÀNG -->
+                    <div class="p-4 rounded-card bg-cream border border-nude space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-charcoal flex items-center gap-1.5">
+                                <i class="ph-fill ph-ticket text-primary text-base"></i> Nhập hoặc Chọn Mã giảm giá (UC03)
+                            </label>
+                            <button onclick="removePromoCode()" class="text-[11px] font-semibold text-statusDanger hover:underline">Bỏ chọn / Xóa mã</button>
+                        </div>
+
+                        <!-- Ô nhập mã thủ công -->
+                        <div class="flex gap-2">
+                            <input id="promo-input" type="text" value="ROSE50" placeholder="Nhập mã hoặc bấm chọn bên dưới..." oninput="document.getElementById('cart-promo-input').value=this.value" class="flex-1 px-3 py-2 bg-surface border border-borderLight rounded-btn text-xs uppercase font-mono font-bold text-charcoal focus:outline-none focus:border-primary">
+                            <button onclick="applyPromoFromInput('promo-input')" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shrink-0">Áp dụng</button>
+                        </div>
+
+                        <p id="promo-feedback" class="text-[11px] text-statusSuccess font-semibold"></p>
+
+                        <!-- Danh sách Voucher bấm chọn ngay -->
+                        <div class="space-y-2 pt-2 border-t border-borderLight">
+                            <p class="text-[11px] font-bold text-muted uppercase">Danh sách mã khuyến mãi khả dụng (Bấm để chọn):</p>
+                            <div id="checkout-voucher-cards" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng tính tiền chi tiết -->
+                    <div class="space-y-2 text-xs pt-1">
+                        <div class="flex justify-between text-muted">
+                            <span>Tổng tiền hàng (Lưu giá tại thời điểm mua):</span>
+                            <span id="checkout-subtotal" class="font-bold text-charcoal">1.160.000đ</span>
+                        </div>
+                        <div class="flex justify-between text-muted">
+                            <span>Số tiền giảm thực tế (UC03):</span>
+                            <span id="checkout-discount" class="font-bold text-statusSuccess">-50.000đ</span>
+                        </div>
+                        <div class="flex justify-between text-muted">
+                            <span>Kiểm tra tồn kho (&lt;&lt;include&gt;&gt;):</span>
+                            <span class="font-bold text-statusSuccess">✓ Đủ tồn kho (Trừ tồn khi tạo đơn)</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold text-charcoal pt-3 border-t border-borderLight">
+                            <span>Tổng thanh toán:</span>
+                            <span id="checkout-total" class="text-xl text-primary">1.110.000đ</span>
+                        </div>
+                    </div>
+
+                    <button onclick="placeOrderUC01()" class="w-full py-3.5 bg-primary hover:bg-primaryHover text-white text-sm font-bold rounded-btn transition shadow-soft flex items-center justify-center gap-2">
+                        <i class="ph-fill ph-check-circle text-lg"></i> Xác Nhận Đặt Hàng (UC01)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TRANG 06: ĐƠN HÀNG CỦA TÔI (UC02), ĐÁNH GIÁ (UC05), KHIẾU NẠI & TÀI KHOẢN
+        =========================================== -->
+        <div id="cust-page-taikhoan" class="cust-page hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-10">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-borderLight pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-charcoal">Trung Tâm Tài Khoản & Chăm Sóc Khách Hàng</h1>
+                    <p class="text-xs text-muted mt-1">Quản lý Đơn hàng cá nhân (UC02), Đánh giá sản phẩm 1-5 sao (UC05), Khiếu nại và Thông tin xác thực</p>
+                </div>
+                <button onclick="switchMainArea('admin'); openAdminTab('donhang');" class="px-3.5 py-2 bg-charcoal text-white text-xs font-bold rounded-btn hover:bg-primary transition flex items-center gap-1.5">
+                    <i class="ph-fill ph-gauge text-nude"></i> Sang Admin để duyệt đơn / đánh giá →
+                </button>
+            </div>
+
+            <!-- KHU VỰC 1: ĐƠN HÀNG CỦA TÔI (Thanh tiến trình 4 bước + Ngày đặt, Ngày vận đơn, Ngày giao TC + Nút Hủy UC02) -->
+            <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-borderLight pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-charcoal">1. Đơn hàng của tôi (Theo dõi 4 trạng thái & Hủy đơn UC02)</h3>
+                        <p class="text-xs text-muted">
+                            • Quy tắc: Chỉ đơn đang ở <strong>Chờ xác nhận</strong> mới được phép bấm <strong>Hủy đơn hàng</strong> (tự động hoàn lại tồn kho 1 lần).<br>
+                            • Đơn <strong>Hoàn thành</strong> hiển thị đầy đủ <strong>Ngày giao hàng thành công</strong> và mở khóa nút <strong>Đánh giá sản phẩm (UC05)</strong>.
+                        </p>
+                    </div>
+                </div>
+                <div id="customer-orders-list" class="space-y-4"></div>
+            </div>
+
+            <!-- KHU VỰC 2: GỬI ĐÁNH GIÁ 1-5 SAO (UC05) & GỬI / THEO DÕI KHIẾU NẠI -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- UC05: Đánh giá sản phẩm -->
+                <div class="lg:col-span-5 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="border-b border-borderLight pb-2.5">
+                        <span class="text-[11px] font-mono bg-pastel px-2 py-0.5 rounded text-charcoal font-bold">UC05 – Đánh giá sản phẩm</span>
+                        <h3 class="text-base font-bold text-charcoal mt-1">Gửi đánh giá sản phẩm đã mua</h3>
+                        <p class="text-xs text-muted">Điều kiện: Sản phẩm thuộc đơn <strong>Hoàn thành</strong>. Đánh giá gửi xong sẽ ở trạng thái <strong>Chờ duyệt</strong>.</p>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-bold text-charcoal mb-1">Chọn sản phẩm từ đơn Hoàn thành (#DH2045)</label>
+                            <select id="review-product-select" class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-charcoal font-medium">
+                                <option>Tinh Chất Rose Glow Serum 50ml (Đơn #DH2045 - Hoàn thành)</option>
+                                <option>Son Kem Lì Velvet Rose Lip Tint (Đơn #DH2045 - Hoàn thành)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-charcoal mb-1">Mức độ hài lòng (Từ 1 đến 5 sao) *</label>
+                            <select id="review-star-select" class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-amber-500 font-bold">
+                                <option value="5">★★★★★ (5 sao - Tuyệt vời)</option>
+                                <option value="4">★★★★☆ (4 sao - Hài lòng)</option>
+                                <option value="3">★★★☆☆ (3 sao - Bình thường)</option>
+                                <option value="2">★★☆☆☆ (2 sao - Kém)</option>
+                                <option value="1">★☆☆☆☆ (1 sao - Rất tệ)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-charcoal mb-1">Nhận xét thực tế (Không bắt buộc)</label>
+                            <textarea id="review-comment" rows="3" placeholder="Chia sẻ cảm nhận của bạn về mùi hương, độ thẩm thấu..." class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-charcoal"></textarea>
+                        </div>
+                        <button onclick="submitReviewUC05()" class="w-full py-2.5 bg-primary hover:bg-primaryHover text-white font-bold rounded-btn transition shadow-sm">
+                            Gửi Đánh Giá (Chuyển sang Admin Chờ duyệt)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gửi & Theo dõi Khiếu nại -->
+                <div class="lg:col-span-7 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="border-b border-borderLight pb-2.5">
+                        <span class="text-[11px] font-mono bg-pastel px-2 py-0.5 rounded text-charcoal font-bold">Luồng 2.5.5 – Khiếu nại & CSKH</span>
+                        <h3 class="text-base font-bold text-charcoal mt-1">Gửi Khiếu nại & Theo dõi Kết quả Xử lý</h3>
+                        <p class="text-xs text-muted">Trạng thái: <code>Chờ xử lý</code> → <code>Đang xử lý</code> → <code>Đã giải quyết</code> hoặc <code>Từ chối</code></p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <input id="complaint-order" type="text" value="#DH2045" placeholder="Mã đơn hàng" class="px-3 py-2 bg-cream border border-borderLight rounded-btn font-mono font-bold">
+                        <input id="complaint-reason" type="text" placeholder="Nhập lý do khiếu nại hoặc yêu cầu hỗ trợ..." class="sm:col-span-2 px-3 py-2 bg-cream border border-borderLight rounded-btn">
+                    </div>
+                    <button onclick="submitComplaintCustomer()" class="px-4 py-2 bg-nude hover:bg-primary hover:text-white text-charcoal text-xs font-bold rounded-btn transition">
+                        + Gửi yêu cầu khiếu nại
+                    </button>
+
+                    <div class="pt-2">
+                        <p class="text-xs font-bold text-charcoal mb-2">Bảng theo dõi trạng thái & phản hồi khiếu nại:</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-cream border-b border-borderLight">
+                                        <th class="p-2.5">Mã KN</th>
+                                        <th class="p-2.5">Đơn hàng</th>
+                                        <th class="p-2.5">Nội dung khiếu nại</th>
+                                        <th class="p-2.5">Trạng thái</th>
+                                        <th class="p-2.5">Phản hồi từ Admin</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customer-complaints-table" class="divide-y divide-borderLight"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KHU VỰC 3: HỒ SƠ CÁ NHÂN, ĐỔI MẬT KHẨU, ĐĂNG NHẬP / ĐĂNG KÝ / QUÊN MẬT KHẨU -->
+            <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5">
+                <div class="border-b border-borderLight pb-3">
+                    <h3 class="text-lg font-bold text-charcoal">3. Hồ sơ cá nhân, Đổi mật khẩu & Các biểu mẫu Xác thực (Guest / Customer / Admin)</h3>
+                    <p class="text-xs text-muted">Theo Mục 2.8: Chức năng <strong>Quên mật khẩu</strong> áp dụng cho cả Customer và Admin (xác minh danh tính + đặt lại mật khẩu).</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                    <!-- Cập nhật thông tin cá nhân -->
+                    <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2.5">
+                        <h4 class="font-bold text-charcoal text-sm">1. Hồ sơ Cá nhân</h4>
+                        <input type="text" value="Nguyễn Thị Minh Anh" class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <input type="text" value="0987 654 321" class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <button onclick="showToast('Đã cập nhật thông tin cá nhân!')" class="w-full py-2 bg-primary text-white font-bold rounded-btn">Lưu thông tin</button>
+                    </div>
+
+                    <!-- Đổi mật khẩu -->
+                    <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2.5">
+                        <h4 class="font-bold text-charcoal text-sm">2. Đổi Mật Khẩu</h4>
+                        <input type="password" value="••••••••" placeholder="Mật khẩu hiện tại" class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <input type="password" placeholder="Nhập mật khẩu mới..." class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <button onclick="showToast('Đổi mật khẩu thành công!')" class="w-full py-2 bg-nude hover:bg-primary hover:text-white text-charcoal font-bold rounded-btn transition">Đổi mật khẩu</button>
+                    </div>
+
+                    <!-- Đăng nhập / Đăng ký -->
+                    <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2.5">
+                        <h4 class="font-bold text-charcoal text-sm">3. Đăng nhập / Đăng ký</h4>
+                        <input type="email" value="minhanh@email.com" class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <input type="password" value="••••••••" class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <button onclick="showToast('Xác thực tài khoản thành công!')" class="w-full py-2 bg-charcoal text-white font-bold rounded-btn">Đăng nhập</button>
+                    </div>
+
+                    <!-- Quên mật khẩu (Dùng chung Customer & Admin) -->
+                    <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-charcoal text-sm">4. Quên Mật Khẩu</h4>
+                            <span class="px-1.5 py-0.5 rounded bg-pastel text-primary font-bold text-[10px]">Customer & Admin</span>
+                        </div>
+                        <input type="email" placeholder="Nhập email xác minh danh tính..." class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <input type="text" placeholder="Mã OTP xác minh..." class="w-full px-3 py-2 bg-surface border border-borderLight rounded-btn">
+                        <button onclick="showToast('Đã xác minh danh tính và đặt lại mật khẩu mới!')" class="w-full py-2 bg-surface border border-primary text-primary hover:bg-pastel font-bold rounded-btn transition">Đặt lại mật khẩu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER CHUNG KHU VỰC KHÁCH HÀNG -->
+        <footer class="bg-surface border-t border-borderLight mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8 text-xs text-muted">
+                <div class="space-y-2">
+                    <span class="font-serif text-xl font-bold text-charcoal">SERENE COSMETICS</span>
+                    <p class="leading-relaxed">Website Quản lý và Kinh doanh Mỹ phẩm trực tuyến xây dựng trên nền tảng ASP.NET Core MVC (.NET 10).</p>
+                </div>
+                <div class="space-y-2">
+                    <p class="font-bold text-charcoal uppercase">Danh mục chính</p>
+                    <p>Chăm sóc da chuyên sâu</p>
+                    <p>Trang điểm tự nhiên</p>
+                    <p>Làm sạch & Nước hoa hồng</p>
+                </div>
+                <div class="space-y-2">
+                    <p class="font-bold text-charcoal uppercase">Chính sách & Hỗ trợ</p>
+                    <p>Hướng dẫn đặt hàng & Áp mã KM (UC01, UC03)</p>
+                    <p>Quy định hủy đơn Chờ xác nhận (UC02)</p>
+                    <p>Chính sách đánh giá & giải quyết khiếu nại</p>
+                </div>
+                <div class="space-y-2">
+                    <p class="font-bold text-charcoal uppercase">Hệ màu thương hiệu</p>
+                    <div class="flex gap-1.5">
+                        <span class="w-6 h-6 rounded-full bg-[#FFF9F5] border border-borderLight" title="#FFF9F5"></span>
+                        <span class="w-6 h-6 rounded-full bg-[#F8DDE5]" title="#F8DDE5"></span>
+                        <span class="w-6 h-6 rounded-full bg-[#E9B8C5]" title="#E9B8C5"></span>
+                        <span class="w-6 h-6 rounded-full bg-[#C87991]" title="#C87991"></span>
+                        <span class="w-6 h-6 rounded-full bg-[#65545A]" title="#65545A"></span>
+                    </div>
+                    <p class="pt-1">© 2026 Nhóm Đồ Án .NET 10 MVC</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- ==================================================================================
+         PHÂN KHU 2: GIAO DIỆN QUẢN LÝ ADMIN (NỀN TRẮNG KEM #FFF9F5, SIDEBAR HỒNG NUDE #E9B8C5)
+         ĐẦY ĐỦ 21 CHỨC NĂNG TRONG 9 TAB RÕ RÀNG
+    =================================================================================== -->
+    <div id="area-admin" class="view-section hidden flex-1 flex flex-col lg:flex-row min-h-[calc(100vh-52px)] bg-cream">
+
+        <!-- SIDEBAR HỒNG NUDE (#E9B8C5) -->
+        <aside class="w-full lg:w-72 bg-nude text-charcoal p-5 flex flex-col justify-between shrink-0 border-r border-borderLight shadow-sm">
+            <div class="space-y-5">
+                <!-- Admin Brand Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-charcoal/15">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-btn bg-surface text-primary font-serif font-bold text-lg flex items-center justify-center shadow-sm">S</div>
+                        <div>
+                            <p class="font-serif font-bold text-base text-charcoal leading-none">SERENE ADMIN</p>
+                            <span class="text-[11px] font-semibold text-charcoal/75">Quản trị 21 chức năng (.NET 10)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9 Tabs Phân hệ Quản trị rõ ràng -->
+                <div class="space-y-1.5 text-xs font-semibold">
+                    <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-1">01. Bảng điều khiển & Báo cáo</p>
+                    <button onclick="openAdminTab('dashboard')" id="adm-nav-dashboard" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-btn bg-surface text-charcoal shadow-sm transition font-bold">
+                        <i class="ph-fill ph-squares-four text-primary text-base"></i> 1. Dashboard & Thống kê (STT 2, 20)
+                    </button>
+
+                    <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-2.5">02. Quản lý Dữ liệu & Kho</p>
+                    <button onclick="openAdminTab('sanpham')" id="adm-nav-sanpham" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <i class="ph-fill ph-package text-base"></i> 2. Sản phẩm & Hình ảnh (STT 5, 6)
+                    </button>
+                    <button onclick="openAdminTab('danhmuc')" id="adm-nav-danhmuc" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <i class="ph-fill ph-folders text-base"></i> 3. Danh mục & Thương hiệu (STT 3, 4)
+                    </button>
+                    <button onclick="openAdminTab('tonkho')" id="adm-nav-tonkho" class="w-full flex items-center justify-between px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <span class="flex items-center gap-2.5"><i class="ph-fill ph-warning-octagon text-base"></i> 4. Tồn kho & Cảnh báo (STT 7)</span>
+                        <span class="px-1.5 py-0.5 rounded-full bg-statusDanger text-white text-[10px]">3</span>
+                    </button>
+                    <button onclick="openAdminTab('donhang')" id="adm-nav-donhang" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <i class="ph-fill ph-truck text-base"></i> 5. Quản lý Đơn hàng (UC04 - STT 8→11)
+                    </button>
+                    <button onclick="openAdminTab('thanhtoan')" id="adm-nav-thanhtoan" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <i class="ph-fill ph-credit-card text-base"></i> 6. Thanh toán & Hoàn tiền (STT 12→14)
+                    </button>
+                    <button onclick="openAdminTab('khuyenmai')" id="adm-nav-khuyenmai" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <i class="ph-fill ph-ticket text-base"></i> 7. Khuyến mãi & Banner (STT 15, 21)
+                    </button>
+                    <button onclick="openAdminTab('khachhang')" id="adm-nav-khachhang" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <i class="ph-fill ph-users-three text-base"></i> 8. TK Khách & TK Admin (STT 16, 17)
+                    </button>
+
+                    <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-2.5">03. Quản lý Tương tác</p>
+                    <button onclick="openAdminTab('tuongtac')" id="adm-nav-tuongtac" class="w-full flex items-center justify-between px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition">
+                        <span class="flex items-center gap-2.5"><i class="ph-fill ph-chat-centered-text text-base"></i> 9. Đánh giá & Khiếu nại (STT 18, 19)</span>
+                        <span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[10px]" id="adm-pending-rev-badge">1</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Footer Controls -->
+            <div class="pt-4 border-t border-charcoal/15 text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold">Admin: Quản trị viên</span>
+                    <button onclick="showToast('Mở form Đổi mật khẩu Admin (STT 1)')" class="underline hover:text-primary font-semibold">Đổi MK</button>
+                </div>
+                <button onclick="switchMainArea('customer')" class="w-full py-2 bg-surface hover:bg-charcoal hover:text-white text-charcoal rounded-btn font-bold text-center transition shadow-sm">
+                    ← Quay về Trang Khách Hàng
+                </button>
+            </div>
+        </aside>
+
+        <!-- NỘI DUNG CHÍNH CỦA ADMIN (Nền Trắng Kem #FFF9F5) -->
+        <div class="flex-1 p-5 sm:p-8 space-y-6 overflow-y-auto">
+            <!-- Thanh Tiêu đề Admin -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-4 sm:p-5 rounded-card border border-borderLight shadow-soft">
+                <div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-primary">Hệ thống Quản trị Serene Cosmetics (.NET 10 MVC)</span>
+                    <h2 id="admin-page-title" class="text-xl font-bold text-charcoal mt-0.5">1. Dashboard & Báo Cáo Thống Kê (STT 2 & 20)</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openAdminTab('donhang')" class="px-3.5 py-2 bg-pastel hover:bg-nude text-charcoal text-xs font-bold rounded-btn transition">
+                        Xử lý đơn hàng (UC04)
+                    </button>
+                    <button onclick="showToast('Đã đăng xuất tài khoản Admin (STT 1)!')" class="px-3.5 py-2 bg-cream border border-borderLight text-charcoal text-xs font-bold rounded-btn hover:border-primary transition">
+                        Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 1: DASHBOARD & THỐNG KÊ (STT 2, 20)
+            =========================================== -->
+            <div id="adm-view-dashboard" class="adm-view space-y-6">
+                <!-- 4 Thẻ thống kê màu Pastel dịu mắt -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div class="bg-[#F8DDE5]/70 p-5 rounded-card border border-nude shadow-soft space-y-1">
+                        <span class="text-xs font-bold text-charcoal uppercase">Tổng Doanh Thu</span>
+                        <p class="text-2xl font-bold text-charcoal pt-1">148.500.000đ</p>
+                        <p class="text-xs text-statusSuccess font-semibold">↑ +18.4% so với tháng trước</p>
+                    </div>
+                    <div class="bg-[#EFECE6] p-5 rounded-card border border-borderLight shadow-soft space-y-1 cursor-pointer" onclick="openAdminTab('donhang')">
+                        <span class="text-xs font-bold text-charcoal uppercase">Tổng Đơn Hàng</span>
+                        <p class="text-2xl font-bold text-charcoal pt-1" id="kpi-total-orders">342 đơn</p>
+                        <p class="text-xs text-primary font-semibold underline">Xem & cập nhật trạng thái →</p>
+                    </div>
+                    <div class="bg-[#E8F3EE] p-5 rounded-card border border-borderLight shadow-soft space-y-1 cursor-pointer" onclick="openAdminTab('sanpham')">
+                        <span class="text-xs font-bold text-charcoal uppercase">Số Lượng Sản Phẩm</span>
+                        <p class="text-2xl font-bold text-charcoal pt-1">48 sản phẩm</p>
+                        <p class="text-xs text-statusDanger font-semibold">3 sản phẩm sắp hết hàng</p>
+                    </div>
+                    <div class="bg-[#F7EFE8] p-5 rounded-card border border-borderLight shadow-soft space-y-1 cursor-pointer" onclick="openAdminTab('khachhang')">
+                        <span class="text-xs font-bold text-charcoal uppercase">Tổng Khách Hàng</span>
+                        <p class="text-2xl font-bold text-charcoal pt-1">1.280 khách</p>
+                        <p class="text-xs text-charcoal font-medium">+64 tài khoản mới tháng này</p>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ doanh thu & Trạng thái đơn hàng -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-8 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-bold text-charcoal text-base">Biểu đồ Doanh thu 6 tháng gần nhất (STT 20)</h3>
+                                <p class="text-xs text-muted">Tính trên các đơn hàng ở trạng thái Hoàn thành</p>
+                            </div>
+                            <span class="px-2.5 py-1 bg-cream border border-borderLight rounded text-xs font-semibold">Năm 2026</span>
+                        </div>
+                        <div class="h-52 flex items-end justify-between gap-4 pt-8 px-4 border-b border-borderLight">
+                            <div class="flex-1 flex flex-col items-center gap-1.5"><span class="text-[11px] text-muted">75Tr</span><div class="w-full max-w-[44px] h-20 bg-pastel rounded-t-btn"></div><span class="text-xs text-muted pb-1">T5</span></div>
+                            <div class="flex-1 flex flex-col items-center gap-1.5"><span class="text-[11px] text-muted">82Tr</span><div class="w-full max-w-[44px] h-24 bg-pastel rounded-t-btn"></div><span class="text-xs text-muted pb-1">T6</span></div>
+                            <div class="flex-1 flex flex-col items-center gap-1.5"><span class="text-[11px] text-muted">96Tr</span><div class="w-full max-w-[44px] h-28 bg-nude rounded-t-btn"></div><span class="text-xs text-muted pb-1">T7</span></div>
+                            <div class="flex-1 flex flex-col items-center gap-1.5"><span class="text-[11px] text-muted">110Tr</span><div class="w-full max-w-[44px] h-32 bg-nude rounded-t-btn"></div><span class="text-xs text-muted pb-1">T8</span></div>
+                            <div class="flex-1 flex flex-col items-center gap-1.5"><span class="text-[11px] text-muted">125Tr</span><div class="w-full max-w-[44px] h-36 bg-primary/80 rounded-t-btn"></div><span class="text-xs text-muted pb-1">T9</span></div>
+                            <div class="flex-1 flex flex-col items-center gap-1.5"><span class="text-[11px] font-bold text-primary">148.5Tr</span><div class="w-full max-w-[44px] h-44 bg-primary rounded-t-btn shadow-sm"></div><span class="text-xs font-bold text-charcoal pb-1">T10</span></div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                        <h3 class="font-bold text-charcoal text-base">Tỷ lệ Trạng thái Đơn hàng</h3>
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <div class="flex justify-between mb-1"><span>1. Chờ xác nhận</span><span class="font-bold text-statusWarning">24 đơn (7%)</span></div>
+                                <div class="w-full h-2 bg-cream rounded-full overflow-hidden"><div class="w-[12%] h-full bg-statusWarning"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>2. Đã xác nhận</span><span class="font-bold text-statusInfo">18 đơn (5%)</span></div>
+                                <div class="w-full h-2 bg-cream rounded-full overflow-hidden"><div class="w-[10%] h-full bg-statusInfo"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>3. Đang giao (Có ngày vận đơn)</span><span class="font-bold text-primary">30 đơn (9%)</span></div>
+                                <div class="w-full h-2 bg-cream rounded-full overflow-hidden"><div class="w-[18%] h-full bg-primary"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>4. Hoàn thành (Có ngày giao TC)</span><span class="font-bold text-statusSuccess">260 đơn (76%)</span></div>
+                                <div class="w-full h-2 bg-cream rounded-full overflow-hidden"><div class="w-[76%] h-full bg-statusSuccess"></div></div>
+                            </div>
+                            <div class="pt-2 border-t border-borderLight flex justify-between">
+                                <span>• Nhánh Đã hủy (Đã hoàn kho):</span><span class="font-bold text-statusDanger">10 đơn (3%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 2: QUẢN LÝ SẢN PHẨM & HÌNH ẢNH (STT 5, 6)
+            =========================================== -->
+            <div id="adm-view-sanpham" class="adm-view hidden space-y-6">
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-borderLight pb-3">
+                        <div>
+                            <h3 class="font-bold text-charcoal text-base">Quản lý Sản phẩm & Hình ảnh (STT 5 & 6)</h3>
+                            <p class="text-xs text-muted">Quy tắc Mục 2.4: Sản phẩm đã có đơn hàng sẽ chuyển sang <strong>Ngừng kinh doanh</strong> thay vì xóa vật lý.</p>
+                        </div>
+                        <button onclick="showToast('Đã mở form Thêm sản phẩm mới!')" class="px-4 py-2 bg-primary text-white text-xs font-bold rounded-btn">+ Thêm sản phẩm mới</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-cream border-b border-borderLight uppercase">
+                                    <th class="p-3">Mã SP</th>
+                                    <th class="p-3">Sản phẩm</th>
+                                    <th class="p-3">Danh mục / Thương hiệu</th>
+                                    <th class="p-3">Hình ảnh (STT 6)</th>
+                                    <th class="p-3">Giá bán</th>
+                                    <th class="p-3">Trạng thái</th>
+                                    <th class="p-3 text-right">Thao tác (STT 5)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-tbody" class="divide-y divide-borderLight"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 3: DANH MỤC & THƯƠNG HIỆU (STT 3, 4)
+            =========================================== -->
+            <div id="adm-view-danhmuc" class="adm-view hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Quản lý Danh mục -->
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex justify-between items-center border-b border-borderLight pb-3">
+                        <h3 class="font-bold text-charcoal text-base">Quản lý Danh mục Mỹ phẩm (STT 3)</h3>
+                        <button onclick="addCategoryAdmin()" class="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-btn">+ Thêm danh mục</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input id="new-cat-name" type="text" placeholder="Nhập tên danh mục mới..." class="flex-1 px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs">
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <thead><tr class="bg-cream font-bold"><th class="p-2.5">Mã DM</th><th class="p-2.5">Tên danh mục</th><th class="p-2.5 text-right">Thao tác</th></tr></thead>
+                        <tbody id="admin-cat-tbody" class="divide-y divide-borderLight">
+                            <tr><td class="p-2.5 font-mono">#DM01</td><td class="p-2.5 font-semibold">Chăm sóc da</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa danh mục #DM01')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa danh mục!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                            <tr><td class="p-2.5 font-mono">#DM02</td><td class="p-2.5 font-semibold">Trang điểm</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa danh mục #DM02')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa danh mục!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                            <tr><td class="p-2.5 font-mono">#DM03</td><td class="p-2.5 font-semibold">Làm sạch & Toner</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa danh mục #DM03')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa danh mục!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                            <tr><td class="p-2.5 font-mono">#DM04</td><td class="p-2.5 font-semibold">Chống nắng</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa danh mục #DM04')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa danh mục!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quản lý Thương hiệu -->
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex justify-between items-center border-b border-borderLight pb-3">
+                        <h3 class="font-bold text-charcoal text-base">Quản lý Thương hiệu (STT 4)</h3>
+                        <button onclick="addBrandAdmin()" class="px-3 py-1.5 bg-nude text-charcoal text-xs font-bold rounded-btn">+ Thêm thương hiệu</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input id="new-brand-name" type="text" placeholder="Nhập tên thương hiệu mới..." class="flex-1 px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs">
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <thead><tr class="bg-cream font-bold"><th class="p-2.5">Mã TH</th><th class="p-2.5">Tên thương hiệu</th><th class="p-2.5 text-right">Thao tác</th></tr></thead>
+                        <tbody id="admin-brand-tbody" class="divide-y divide-borderLight">
+                            <tr><td class="p-2.5 font-mono">#TH01</td><td class="p-2.5 font-semibold">LUNA SKIN</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa thương hiệu')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa thương hiệu!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                            <tr><td class="p-2.5 font-mono">#TH02</td><td class="p-2.5 font-semibold">SERENE ROSE</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa thương hiệu')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa thương hiệu!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                            <tr><td class="p-2.5 font-mono">#TH03</td><td class="p-2.5 font-semibold">LUMIVA</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa thương hiệu')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa thương hiệu!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                            <tr><td class="p-2.5 font-mono">#TH04</td><td class="p-2.5 font-semibold">LUNARA BERRY</td><td class="p-2.5 text-right space-x-2"><button onclick="showToast('Sửa thương hiệu')" class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove(); showToast('Đã xóa thương hiệu!')" class="text-statusDanger font-bold">Xóa</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 4: QUẢN LÝ TỒN KHO & CẢNH BÁO SẮP HẾT HÀNG (STT 7)
+            =========================================== -->
+            <div id="adm-view-tonkho" class="adm-view hidden space-y-6">
+                <div class="bg-[#FDF3E7] p-5 rounded-card border border-statusWarning/40 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-charcoal text-base flex items-center gap-2">
+                            <i class="ph-fill ph-warning-circle text-statusWarning text-xl"></i> Danh sách Cảnh báo Sắp hết hàng (Tồn kho ≤ 5)
+                        </h3>
+                        <span class="text-xs font-semibold text-statusDanger">Cần nhập thêm hàng ngay</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-surface p-4 rounded-btn border border-borderLight flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-charcoal">Phấn Nước Glow Petal Cushion</p>
+                                <p class="text-statusDanger font-bold mt-0.5">Tồn hiện tại: <span id="low-stock-1">3</span> sản phẩm</p>
+                            </div>
+                            <button onclick="document.getElementById('low-stock-1').innerText='53'; showToast('Đã nhập thêm +50 sản phẩm vào kho!');" class="px-3 py-1.5 bg-primary text-white rounded-btn font-bold">+ Nhập 50</button>
+                        </div>
+                        <div class="bg-surface p-4 rounded-btn border border-borderLight flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-charcoal">Mặt Nạ Ngủ Berry Sleeping Mask</p>
+                                <p class="text-statusDanger font-bold mt-0.5">Tồn hiện tại: <span id="low-stock-2">4</span> sản phẩm</p>
+                            </div>
+                            <button onclick="document.getElementById('low-stock-2').innerText='54'; showToast('Đã nhập thêm +50 sản phẩm vào kho!');" class="px-3 py-1.5 bg-primary text-white rounded-btn font-bold">+ Nhập 50</button>
+                        </div>
+                        <div class="bg-surface p-4 rounded-btn border border-borderLight flex items-center justify-between">
+                            <div>
+                                <p class="font-bold text-charcoal">Sữa Rửa Mặt Amino Gentle</p>
+                                <p class="text-statusDanger font-bold mt-0.5">Tồn hiện tại: <span id="low-stock-3">2</span> sản phẩm</p>
+                            </div>
+                            <button onclick="document.getElementById('low-stock-3').innerText='52'; showToast('Đã nhập thêm +50 sản phẩm vào kho!');" class="px-3 py-1.5 bg-primary text-white rounded-btn font-bold">+ Nhập 50</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 5: QUẢN LÝ ĐƠN HÀNG - UC04 (STT 8, 9, 10, 11)
+            =========================================== -->
+            <div id="adm-view-donhang" class="adm-view hidden bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                <div class="border-b border-borderLight pb-3">
+                    <span class="px-2.5 py-0.5 rounded bg-pastel text-primary font-mono text-xs font-bold">UC04 – Cập nhật trạng thái đơn hàng</span>
+                    <h3 class="font-bold text-charcoal text-base mt-1">Quản lý Đơn hàng & Ghi nhận Ngày vận đơn / Ngày giao thành công (STT 8→11)</h3>
+                    <p class="text-xs text-muted">
+                        • Khi chuyển sang <strong>Đang giao</strong>: Hệ thống tự động ghi nhận <strong>Ngày vận đơn</strong>.<br>
+                        • Khi chuyển sang <strong>Hoàn thành</strong>: Hệ thống tự động ghi nhận <strong>Ngày giao hàng thành công</strong>.
+                    </p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-cream border-b border-borderLight uppercase">
+                                <th class="p-3">Mã đơn</th>
+                                <th class="p-3">Khách hàng / Tổng tiền</th>
+                                <th class="p-3">Ngày đặt</th>
+                                <th class="p-3">Ngày vận đơn (STT 10)</th>
+                                <th class="p-3">Ngày giao TC (STT 11)</th>
+                                <th class="p-3">Trạng thái hiện tại</th>
+                                <th class="p-3 text-right">Cập nhật trạng thái tuần tự (UC04)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-table" class="divide-y divide-borderLight"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 6: THANH TOÁN, HOÀN TIỀN & PHƯƠNG THỨC TT (STT 12, 13, 14)
+            =========================================== -->
+            <div id="adm-view-thanhtoan" class="adm-view hidden space-y-6">
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <h3 class="font-bold text-charcoal text-base">Theo dõi Giao dịch Thanh toán & Cập nhật Hoàn tiền (STT 12 & 13)</h3>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <tr class="bg-cream font-bold uppercase">
+                            <th class="p-3">Mã GD</th><th class="p-3">Đơn hàng</th><th class="p-3">Phương thức</th><th class="p-3">Số tiền</th><th class="p-3">Trạng thái</th><th class="p-3 text-right">Cập nhật hoàn tiền</th>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-mono">#GD901</td><td class="p-3 font-bold">#DH2048</td><td class="p-3">COD (Bắt buộc)</td><td class="p-3 font-bold text-primary">1.110.000đ</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-[#FDF3E7] text-statusWarning font-semibold">Chờ thu tiền COD</span></td>
+                            <td class="p-3 text-right text-muted">Thu khi giao thành công</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-mono">#GD889</td><td class="p-3 font-bold">#DH2041 (Đã hủy)</td><td class="p-3">VNPay Sandbox</td><td class="p-3 font-bold text-primary">540.000đ</td>
+                            <td class="p-3"><span id="refund-badge" class="px-2 py-0.5 rounded-full bg-[#FCEAEA] text-statusDanger font-semibold">Cần hoàn tiền</span></td>
+                            <td class="p-3 text-right">
+                                <button onclick="document.getElementById('refund-badge').className='px-2 py-0.5 rounded-full bg-[#E6F4EE] text-statusSuccess font-semibold'; document.getElementById('refund-badge').innerText='Đã hoàn tiền 100%'; showToast('Đã cập nhật trạng thái Hoàn tiền cho giao dịch #GD889 (STT 13)!');" class="px-3 py-1.5 bg-primary text-white rounded-btn font-bold">Xác nhận Đã hoàn tiền</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-charcoal text-base">Quản lý Phương thức Thanh toán (STT 14)</h3>
+                        <button onclick="showToast('Thêm phương thức thanh toán mới')" class="px-3 py-1.5 bg-nude text-charcoal text-xs font-bold rounded-btn">+ Thêm phương thức</button>
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <tr class="bg-cream font-bold"><th class="p-2.5">Mã</th><th class="p-2.5">Tên phương thức</th><th class="p-2.5">Loại ưu tiên</th><th class="p-2.5">Trạng thái</th></tr>
+                        <tr><td class="p-2.5 font-mono font-bold">COD</td><td class="p-2.5 font-semibold">Thanh toán khi nhận hàng (COD)</td><td class="p-2.5"><span class="px-2 py-0.5 rounded bg-primary text-white font-bold">Bắt buộc</span></td><td class="p-2.5 text-statusSuccess font-bold">Đang hoạt động</td></tr>
+                        <tr><td class="p-2.5 font-mono font-bold">VNPAY</td><td class="p-2.5 font-semibold">Thanh toán trực tuyến Sandbox</td><td class="p-2.5"><span class="px-2 py-0.5 rounded bg-cream border border-borderLight font-bold">Mở rộng</span></td><td class="p-2.5 text-statusSuccess font-bold">Đang hoạt động</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 7: KHUYẾN MÃI & BANNER/SLIDER (STT 15, 21)
+            =========================================== -->
+            <div id="adm-view-khuyenmai" class="adm-view hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex justify-between items-center border-b border-borderLight pb-3">
+                        <h3 class="font-bold text-charcoal text-base">Quản lý Mã Khuyến Mãi (STT 15 - UC03)</h3>
+                        <button onclick="showToast('Tạo mã khuyến mãi mới')" class="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-btn">+ Tạo mã mới</button>
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <tr class="bg-cream font-bold"><th class="p-2.5">Mã KM</th><th class="p-2.5">Mức giảm</th><th class="p-2.5">Đơn tối thiểu</th><th class="p-2.5 text-right">Thao tác</th></tr>
+                        <tr><td class="p-2.5 font-mono font-bold text-primary">ROSE50</td><td class="p-2.5">Giảm 50.000đ</td><td class="p-2.5">500.000đ</td><td class="p-2.5 text-right"><button class="text-primary font-bold">Sửa</button></td></tr>
+                        <tr><td class="p-2.5 font-mono font-bold text-primary">LUNA10</td><td class="p-2.5">Giảm 10% (Tối đa 80K)</td><td class="p-2.5">400.000đ</td><td class="p-2.5 text-right"><button class="text-primary font-bold">Sửa</button></td></tr>
+                        <tr><td class="p-2.5 font-mono font-bold text-primary">VIP100</td><td class="p-2.5">Giảm 100.000đ</td><td class="p-2.5">1.000.000đ</td><td class="p-2.5 text-right"><button class="text-primary font-bold">Sửa</button></td></tr>
+                    </table>
+                </div>
+
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex justify-between items-center border-b border-borderLight pb-3">
+                        <div>
+                            <h3 class="font-bold text-charcoal text-base">Quản lý Banner / Slider (STT 21)</h3>
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-pastel text-primary font-bold">Chức năng Mở rộng (Mục 2.8)</span>
+                        </div>
+                        <button onclick="showToast('Thêm Banner mới')" class="px-3 py-1.5 bg-nude text-charcoal text-xs font-bold rounded-btn">+ Thêm Banner</button>
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <tr class="bg-cream font-bold"><th class="p-2.5">Tiêu đề Banner</th><th class="p-2.5">Vị trí</th><th class="p-2.5 text-right">Thao tác</th></tr>
+                        <tr><td class="p-2.5 font-semibold">BST Dưỡng Sáng Cánh Hoa Hồng -25%</td><td class="p-2.5 text-statusSuccess font-bold">Hero Trang chủ</td><td class="p-2.5 text-right"><button class="text-primary font-bold">Sửa</button></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 8: TÀI KHOẢN KHÁCH HÀNG & ADMIN (STT 16, 17)
+            =========================================== -->
+            <div id="adm-view-khachhang" class="adm-view hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <h3 class="font-bold text-charcoal text-base border-b border-borderLight pb-3">Quản lý Tài khoản Khách hàng (STT 16)</h3>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <tr class="bg-cream font-bold"><th class="p-2.5">Họ tên</th><th class="p-2.5">Email</th><th class="p-2.5">Trạng thái</th><th class="p-2.5 text-right">Khóa / Mở</th></tr>
+                        <tr>
+                            <td class="p-2.5 font-semibold">Nguyễn Thị Minh Anh</td>
+                            <td class="p-2.5">minhanh@email.com</td>
+                            <td class="p-2.5"><span id="cust-acc-1" class="text-statusSuccess font-bold">Đang hoạt động</span></td>
+                            <td class="p-2.5 text-right"><button onclick="const el=document.getElementById('cust-acc-1'); el.innerText=el.innerText==='Đang hoạt động'?'Đã khóa':'Đang hoạt động'; el.className=el.innerText==='Đã khóa'?'text-statusDanger font-bold':'text-statusSuccess font-bold'; showToast('Đã cập nhật trạng thái tài khoản khách hàng!');" class="text-statusDanger font-bold hover:underline">Khóa / Mở</button></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div class="flex justify-between items-center border-b border-borderLight pb-3">
+                        <h3 class="font-bold text-charcoal text-base">Quản lý Tài khoản Admin (STT 17)</h3>
+                        <button onclick="showToast('Thêm tài khoản Quản trị viên mới')" class="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-btn">+ Thêm Admin</button>
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <tr class="bg-cream font-bold"><th class="p-2.5">Email Admin</th><th class="p-2.5">Quyền hạn</th><th class="p-2.5 text-right">Thao tác</th></tr>
+                        <tr>
+                            <td class="p-2.5 font-semibold">admin.serene@cosmetics.vn</td>
+                            <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-pastel text-primary font-bold">Quản trị viên</span></td>
+                            <td class="p-2.5 text-right"><button onclick="showToast('Cập nhật tài khoản Admin')" class="text-primary font-bold">Cập nhật</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 ADMIN TAB 9: DUYỆT ĐÁNH GIÁ (UC05) & XỬ LÝ KHIẾU NẠI (STT 18, 19)
+            =========================================== -->
+            <div id="adm-view-tuongtac" class="adm-view hidden space-y-6">
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div>
+                        <h3 class="font-bold text-charcoal text-base">Duyệt hoặc Từ chối Đánh giá Sản phẩm (STT 18 & UC05)</h3>
+                        <p class="text-xs text-muted">Khi Admin bấm <strong>Duyệt</strong>, đánh giá sẽ xuất hiện công khai ngay tại trang Chi tiết sản phẩm.</p>
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <thead>
+                            <tr class="bg-cream font-bold uppercase">
+                                <th class="p-3">Khách hàng</th><th class="p-3">Sản phẩm</th><th class="p-3">Số sao</th><th class="p-3">Nhận xét</th><th class="p-3">Trạng thái</th><th class="p-3 text-right">Duyệt / Từ chối</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reviews-table" class="divide-y divide-borderLight"></tbody>
+                    </table>
+                </div>
+
+                <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+                    <div>
+                        <h3 class="font-bold text-charcoal text-base">Tiếp nhận, Phản hồi & Cập nhật Trạng thái Khiếu nại (STT 19)</h3>
+                        <p class="text-xs text-muted">Cập nhật trạng thái và phản hồi trực tiếp sang bảng theo dõi của Khách hàng</p>
+                    </div>
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <thead>
+                            <tr class="bg-cream font-bold uppercase">
+                                <th class="p-3">Mã KN</th><th class="p-3">Đơn hàng</th><th class="p-3">Nội dung</th><th class="p-3">Trạng thái</th><th class="p-3">Phản hồi của Admin</th><th class="p-3 text-right">Lưu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-complaints-table" class="divide-y divide-borderLight"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ==================================================================================
+         PHÂN KHU 3: BỘ QUY CHUẨN DESIGN SYSTEM & SƠ ĐỒ KIẾN TRÚC MVC (.NET 10)
+    =================================================================================== -->
+    <main id="area-design-system" class="view-section hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-10">
+        <div class="bg-surface border border-borderLight rounded-card p-6 sm:p-8 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="space-y-2 max-w-3xl">
+                <span class="px-3 py-1 rounded-full bg-pastel text-primary text-xs font-bold">Chuẩn hóa toàn bộ hệ thống</span>
+                <h1 class="text-2xl sm:text-3xl font-bold text-charcoal">Bộ Quy Chuẩn Design System & Bảng Màu</h1>
+                <p class="text-sm text-muted leading-relaxed">
+                    Dùng chung một bộ quy chuẩn Header, Sidebar, Nút bấm, Thẻ sản phẩm, Khung Voucher và Bảng dữ liệu cho toàn bộ các trang để nhóm code không bị lệch form.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="switchMainArea('customer')" class="px-4 py-2.5 bg-primary text-white text-xs font-bold rounded-btn">Xem Giao diện Khách</button>
+                <button onclick="switchMainArea('admin')" class="px-4 py-2.5 bg-nude text-charcoal text-xs font-bold rounded-btn">Xem Giao diện Admin</button>
+            </div>
+        </div>
+
+        <!-- 6 Ô màu chuẩn bấm để copy -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-bold text-charcoal">1. Bảng màu chuẩn (Bấm vào từng thẻ để copy mã HEX)</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div onclick="copyHex('#F8DDE5', 'Hồng pastel')" class="bg-surface p-3 rounded-card border border-borderLight shadow-soft cursor-pointer hover:border-primary"><div class="h-20 rounded-btn bg-[#F8DDE5] mb-2"></div><p class="font-bold text-sm">Hồng pastel</p><p class="text-xs font-mono text-primary font-bold">#F8DDE5</p><p class="text-[11px] text-muted">Màu nhấn nhẹ</p></div>
+                <div onclick="copyHex('#FFF9F5', 'Trắng kem')" class="bg-surface p-3 rounded-card border border-borderLight shadow-soft cursor-pointer hover:border-primary"><div class="h-20 rounded-btn bg-[#FFF9F5] border border-borderLight mb-2"></div><p class="font-bold text-sm">Trắng kem</p><p class="text-xs font-mono text-primary font-bold">#FFF9F5</p><p class="text-[11px] text-muted">Nền chính</p></div>
+                <div onclick="copyHex('#E9B8C5', 'Hồng nude')" class="bg-surface p-3 rounded-card border border-borderLight shadow-soft cursor-pointer hover:border-primary"><div class="h-20 rounded-btn bg-[#E9B8C5] mb-2"></div><p class="font-bold text-sm">Hồng nude</p><p class="text-xs font-mono text-primary font-bold">#E9B8C5</p><p class="text-[11px] text-muted">Nút & Sidebar Admin</p></div>
+                <div onclick="copyHex('#C87991', 'Hồng đậm')" class="bg-surface p-3 rounded-card border border-borderLight shadow-soft cursor-pointer hover:border-primary"><div class="h-20 rounded-btn bg-[#C87991] mb-2"></div><p class="font-bold text-sm">Hồng đậm</p><p class="text-xs font-mono text-primary font-bold">#C87991</p><p class="text-[11px] text-muted">Nút CTA chính</p></div>
+                <div onclick="copyHex('#65545A', 'Nâu xám')" class="bg-surface p-3 rounded-card border border-borderLight shadow-soft cursor-pointer hover:border-primary"><div class="h-20 rounded-btn bg-[#65545A] mb-2"></div><p class="font-bold text-sm">Nâu xám</p><p class="text-xs font-mono text-primary font-bold">#65545A</p><p class="text-[11px] text-muted">Chữ chính</p></div>
+                <div onclick="copyHex('#FFFFFF', 'Trắng')" class="bg-surface p-3 rounded-card border border-borderLight shadow-soft cursor-pointer hover:border-primary"><div class="h-20 rounded-btn bg-[#FFFFFF] border border-borderLight mb-2"></div><p class="font-bold text-sm">Trắng</p><p class="text-xs font-mono text-primary font-bold">#FFFFFF</p><p class="text-[11px] text-muted">Thẻ sản phẩm / Bảng</p></div>
+            </div>
+        </section>
+
+        <!-- Phân chia trang triển khai -->
+        <section class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <h2 class="text-xl font-bold text-charcoal">2. Bảng Phân Chia Trang Triển Khai Cho Nhóm (.NET 10 MVC)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-cream border-b border-borderLight uppercase font-bold">
+                            <th class="p-3">Khu vực</th>
+                            <th class="p-3">Các trang thành phần</th>
+                            <th class="p-3"> Phong cách áp dụng</th>
+                            <th class="p-3 text-right">Mở nhanh</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        <tr><td class="p-3 font-bold">Khách hàng</td><td class="p-3">Trang chủ (`TrangChu`), Sản phẩm (`SanPham`), Chi tiết SP (`ChiTietSanPham`)</td><td class="p-3">Lumiva + LUNA</td><td class="p-3 text-right"><button onclick="openCustomerPage('trangchu')" class="text-primary font-bold hover:underline">Xem →</button></td></tr>
+                        <tr><td class="p-3 font-bold">Mua hàng</td><td class="p-3">Giỏ hàng (`GioHang`), Đặt hàng (`DatHang`), Thanh toán (`ThanhToan`)</td><td class="p-3">Serene Rose (Vừa nhập vừa chọn KM)</td><td class="p-3 text-right"><button onclick="openCustomerPage('giohang')" class="text-primary font-bold hover:underline">Xem →</button></td></tr>
+                        <tr><td class="p-3 font-bold">Tài khoản & Hỗ trợ</td><td class="p-3">Đăng nhập, Đăng ký, Quên mật khẩu, Đơn hàng của tôi, Đánh giá, Khiếu nại</td><td class="p-3">Lunara + Serene Mauve</td><td class="p-3 text-right"><button onclick="openCustomerPage('taikhoan')" class="text-primary font-bold hover:underline">Xem →</button></td></tr>
+                        <tr><td class="p-3 font-bold">Admin & Quản trị</td><td class="p-3">Dashboard, Sản phẩm, Ảnh, Danh mục, Thương hiệu, Tồn kho, Đơn hàng, Khuyến mãi, Đánh giá, Khiếu nại</td><td class="p-3">Nền trắng kem `#FFF9F5` + Sidebar `#E9B8C5`</td><td class="p-3 text-right"><button onclick="switchMainArea('admin')" class="text-primary font-bold hover:underline">Xem Admin →</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- ==========================================
+         JAVASCRIPT LOGIC TOÀN HỆ THỐNG
+    =========================================== -->
+    <script>
+        // 1. Dữ liệu 8 sản phẩm mỹ phẩm
+        const products = [
+            {
+                id: 1,
+                code: '#SP01',
+                name: 'Tinh Chất Dưỡng Sáng Cấp Ẩm Rose Glow Serum 50ml',
+                brand: 'LUNA SKIN',
+                category: 'Chăm sóc da',
+                price: 450000,
+                oldPrice: 550000,
+                discount: '-18%',
+                rating: '4.9 (128)',
+                stock: 85,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: true,
+                cartQty: 1
+            },
+            {
+                id: 2,
+                code: '#SP02',
+                name: 'Kem Dưỡng Ẩm Phục Hồi Hoa Hồng Velvet Barrier Cream',
+                brand: 'SERENE ROSE',
+                category: 'Chăm sóc da',
+                price: 390000,
+                oldPrice: 460000,
+                discount: '-15%',
+                rating: '4.8 (94)',
+                stock: 62,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1608248597359-0e6d526a6828?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: true,
+                cartQty: 1
+            },
+            {
+                id: 3,
+                code: '#SP03',
+                name: 'Nước Hoa Hồng Cân Bằng Dịu Nhẹ Lumiva Rose Toner',
+                brand: 'LUMIVA',
+                category: 'Làm sạch',
+                price: 320000,
+                oldPrice: 380000,
+                discount: '-16%',
+                rating: '4.9 (210)',
+                stock: 110,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: true,
+                cartQty: 1
+            },
+            {
+                id: 4,
+                code: '#SP04',
+                name: 'Son Kem Lì Mịn Môi Velvet Rose Lip Tint #02 Hồng Đất',
+                brand: 'SERENE ROSE',
+                category: 'Trang điểm',
+                price: 260000,
+                oldPrice: 310000,
+                discount: '-16%',
+                rating: '5.0 (315)',
+                stock: 95,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: false,
+                cartQty: 0
+            },
+            {
+                id: 5,
+                code: '#SP05',
+                name: 'Kem Chống Nắng Nâng Tông Tự Nhiên UV Rosy Tone-Up SPF50+',
+                brand: 'LUNA SKIN',
+                category: 'Chống nắng',
+                price: 360000,
+                oldPrice: 420000,
+                discount: '-14%',
+                rating: '4.8 (176)',
+                stock: 48,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: false,
+                cartQty: 0
+            },
+            {
+                id: 6,
+                code: '#SP06',
+                name: 'Phấn Nước Căng Bóng Kiềm Dầu Glow Petal Cushion SPF45',
+                brand: 'LUMIVA',
+                category: 'Trang điểm',
+                price: 520000,
+                oldPrice: 600000,
+                discount: '-13%',
+                rating: '4.9 (88)',
+                stock: 3,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: false,
+                cartQty: 0
+            },
+            {
+                id: 7,
+                code: '#SP07',
+                name: 'Mặt Nạ Ngủ Cấp Nước Quả Mọng Berry Sleeping Mask 70g',
+                brand: 'LUNARA BERRY',
+                category: 'Chăm sóc da',
+                price: 340000,
+                oldPrice: 400000,
+                discount: '-15%',
+                rating: '4.9 (142)',
+                stock: 4,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: false,
+                cartQty: 0
+            },
+            {
+                id: 8,
+                code: '#SP08',
+                name: 'Sữa Rửa Mặt Tạo Bọt Dịu Nhẹ Amino Gentle Cleanser 150ml',
+                brand: 'LUMIVA',
+                category: 'Làm sạch',
+                price: 245000,
+                oldPrice: 290000,
+                discount: '-15%',
+                rating: '4.8 (190)',
+                stock: 2,
+                status: 'Đang kinh doanh',
+                image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=600&q=80',
+                selectedInCart: false,
+                cartQty: 0
+            }
+        ];
+
+        // 2. Danh sách Mã khuyến mãi (Hỗ trợ vừa nhập tay vừa bấm chọn trực tiếp)
+        const vouchers = [
+            {
+                code: 'ROSE50',
+                title: 'Giảm cố định 50.000đ',
+                desc: 'Đơn tối thiểu 500.000đ · HSD: 30/12/2026',
+                minOrder: 500000,
+                type: 'fixed',
+                value: 50000,
+                maxDiscount: 50000
+            },
+            {
+                code: 'LUNA10',
+                title: 'Giảm 10% (Tối đa 80.000đ)',
+                desc: 'Đơn tối thiểu 400.000đ · Còn 42 lượt dùng',
+                minOrder: 400000,
+                type: 'percent',
+                value: 10,
+                maxDiscount: 80000
+            },
+            {
+                code: 'VIP100',
+                title: 'Giảm ngay 100.000đ',
+                desc: 'Đơn tối thiểu 1.000.000đ · Dành cho đơn lớn',
+                minOrder: 1000000,
+                type: 'fixed',
+                value: 100000,
+                maxDiscount: 100000
+            }
+        ];
+
+        let selectedVoucherCode = 'ROSE50';
+        let currentDetailProductId = 1;
+        // Trạng thái Mua Ngay trực tiếp (không qua Giỏ hàng): null hoặc { id, qty }
+        let buyNowItem = null;
+
+        // Helper lấy danh sách sản phẩm và tổng tiền của phiên Đặt hàng hiện tại (Mua ngay hoặc Giỏ hàng)
+        function getActiveCheckoutItems() {
+            if (buyNowItem) {
+                const p = products.find(item => item.id === buyNowItem.id);
+                if (p) {
+                    return [{ product: p, qty: buyNowItem.qty }];
+                }
+            }
+            return products
+                .filter(p => p.cartQty > 0 && p.selectedInCart)
+                .map(p => ({ product: p, qty: p.cartQty }));
+        }
+
+        function getActiveCheckoutSubtotal() {
+            return getActiveCheckoutItems().reduce((sum, item) => sum + item.product.price * item.qty, 0);
+        }
+
+        // 3. Danh sách Đơn hàng chuẩn 4 trạng thái + Nhánh hủy
+        const orders = [
+            {
+                code: '#DH2048',
+                customer: 'Nguyễn Thị Minh Anh',
+                itemsSummary: 'Combo Dưỡng Ẩm Serene Rose (3 sản phẩm)',
+                total: 1110000,
+                paymentMethod: 'COD',
+                orderDate: '01/11/2026 09:15',
+                waybillDate: null,
+                deliveredDate: null,
+                status: 'Chờ xác nhận'
+            },
+            {
+                code: '#DH2046',
+                customer: 'Nguyễn Thị Minh Anh',
+                itemsSummary: 'Kem Chống Nắng UV Rosy SPF50+ × 1',
+                total: 360000,
+                paymentMethod: 'COD',
+                orderDate: '29/10/2026 14:20',
+                waybillDate: '30/10/2026 08:30 (MVĐ: SPX88291)',
+                deliveredDate: null,
+                status: 'Đang giao'
+            },
+            {
+                code: '#DH2045',
+                customer: 'Nguyễn Thị Minh Anh',
+                itemsSummary: 'Tinh Chất Rose Glow Serum 50ml + Son Kem Velvet Rose',
+                total: 730000,
+                paymentMethod: 'COD',
+                orderDate: '20/10/2026 10:00',
+                waybillDate: '21/10/2026 09:00 (MVĐ: GHN44102)',
+                deliveredDate: '23/10/2026 16:45',
+                status: 'Hoàn thành'
+            }
+        ];
+
+        // 4. Danh sách Đánh giá (UC05) & Khiếu nại (Mục 2.5.5)
+        const reviewsList = [
+            {
+                id: 1,
+                customer: 'Nguyễn Thị Minh Anh',
+                product: 'Tinh Chất Rose Glow Serum 50ml (#DH2045)',
+                stars: 5,
+                comment: 'Serum thấm nhanh, mùi hoa hồng tự nhiên rất dễ chịu, da căng mịn ngay sáng hôm sau.',
+                status: 'Đã duyệt'
+            },
+            {
+                id: 2,
+                customer: 'Lê Thanh Thảo',
+                product: 'Kem Dưỡng Velvet Barrier Cream (#DH2038)',
+                stars: 5,
+                comment: 'Chất kem mềm mịn như nhung, dưỡng ẩm mùa thu đông cực kỳ hợp.',
+                status: 'Chờ duyệt'
+            }
+        ];
+
+        const complaintsList = [
+            {
+                code: '#KN01',
+                orderCode: '#DH2039',
+                customer: 'Nguyễn Thị Minh Anh',
+                reason: 'Hộp giấy bên ngoài hơi móp nhẹ khi vận chuyển',
+                status: 'Đã giải quyết',
+                reply: 'Shop xin lỗi bạn và đã gửi tặng mã VIP100 vào tài khoản của bạn ạ!'
+            },
+            {
+                code: '#KN02',
+                orderCode: '#DH2045',
+                customer: 'Nguyễn Thị Minh Anh',
+                reason: 'Nhờ shop tư vấn thứ tự thoa Serum Rose và Kem dưỡng B5',
+                status: 'Đang xử lý',
+                reply: 'Bạn thoa Toner -> Serum Rose Glow -> khóa ẩm bằng Kem dưỡng nhé!'
+            }
+        ];
+
+        function formatVND(num) {
+            return num.toLocaleString('vi-VN') + 'đ';
+        }
+
+        // Render danh sách thẻ Voucher trên Trang chủ, Giỏ hàng và Đặt hàng
+        function renderVoucherSelectors(subtotal) {
+            // Trang chủ
+            const homeContainer = document.getElementById('home-voucher-list');
+            if (homeContainer) {
+                homeContainer.innerHTML = vouchers.map(v => {
+                    const isSelected = selectedVoucherCode === v.code;
+                    return `
+                        <div class="bg-surface p-4 rounded-card border-2 ${isSelected ? 'border-primary bg-pastel/25' : 'border-nude'} shadow-soft flex items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="px-2 py-0.5 rounded bg-pastel text-primary font-mono font-bold text-xs">${v.code}</span>
+                                <p class="font-bold text-charcoal text-sm">${v.title}</p>
+                                <p class="text-[11px] text-muted">${v.desc}</p>
+                            </div>
+                            <button onclick="selectVoucherByClick('${v.code}')" class="px-3 py-2 ${isSelected ? 'bg-statusSuccess text-white' : 'bg-primary hover:bg-primaryHover text-white'} text-xs font-bold rounded-btn shrink-0 transition">
+                                ${isSelected ? '✓ Đang chọn' : 'Chọn dùng ngay'}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Giỏ hàng & Đặt hàng
+            const renderCardList = () => vouchers.map(v => {
+                const eligible = subtotal >= v.minOrder;
+                const isSelected = selectedVoucherCode === v.code && eligible;
+                return `
+                    <div onclick="selectVoucherByClick('${v.code}')" class="p-3 rounded-btn border ${isSelected ? 'border-2 border-primary bg-pastel/40' : 'border-borderLight bg-surface hover:border-primary'} flex items-center justify-between gap-2 cursor-pointer transition">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded bg-pastel text-primary font-mono font-bold text-xs">${v.code}</span>
+                                <span class="font-bold text-charcoal text-xs">${v.title}</span>
+                            </div>
+                            <p class="text-[11px] ${eligible ? 'text-muted' : 'text-statusDanger font-semibold'}">
+                                ${eligible ? v.desc : `Chưa đủ điều kiện: Cần đơn tối thiểu ${formatVND(v.minOrder)}`}
+                            </p>
+                        </div>
+                        <button type="button" class="px-2.5 py-1.5 rounded text-[11px] font-bold shrink-0 ${isSelected ? 'bg-primary text-white' : (eligible ? 'bg-nude text-charcoal hover:bg-primary hover:text-white' : 'bg-cream text-muted')}">
+                            ${isSelected ? '✓ Đã chọn' : (eligible ? 'Chọn mã' : 'Chưa đủ ĐK')}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            const cartCards = document.getElementById('cart-voucher-cards');
+            const checkoutCards = document.getElementById('checkout-voucher-cards');
+            if (cartCards) cartCards.innerHTML = renderCardList();
+            if (checkoutCards) checkoutCards.innerHTML = renderCardList();
+        }
+
+        // Bấm chọn trực tiếp thẻ Voucher
+        function selectVoucherByClick(code) {
+            const v = vouchers.find(item => item.code === code);
+            if (!v) return;
+
+            const isCheckoutVisible = !document.getElementById('cust-page-thanhtoan').classList.contains('hidden');
+            const cartSubtotal = products.filter(p => p.cartQty > 0 && p.selectedInCart).reduce((s, i) => s + i.price * i.cartQty, 0);
+            const subtotal = isCheckoutVisible ? getActiveCheckoutSubtotal() : cartSubtotal;
+
+            document.getElementById('promo-input').value = code;
+            document.getElementById('cart-promo-input').value = code;
+
+            if (subtotal < v.minOrder) {
+                selectedVoucherCode = '';
+                updatePromoFeedback(`✕ Đơn hàng hiện tại (${formatVND(subtotal)}) chưa đạt mức tối thiểu ${formatVND(v.minOrder)} của mã ${code}.`, false);
+                showToast(`Ngoại lệ UC03: Đơn hàng cần đạt tối thiểu ${formatVND(v.minOrder)} để dùng mã ${code}!`);
+            } else {
+                selectedVoucherCode = code;
+                updatePromoFeedback(`✓ Đã chọn mã ${v.code}: ${v.title}.`, true);
+                showToast(`UC03: Đã chọn và áp dụng mã khuyến mãi ${v.code}!`);
+            }
+            renderCart();
+        }
+
+        // Nhập mã vào ô input và bấm Áp dụng
+        function applyPromoFromInput(inputId) {
+            const raw = document.getElementById(inputId).value.trim().toUpperCase();
+            document.getElementById('promo-input').value = raw;
+            document.getElementById('cart-promo-input').value = raw;
+
+            if (!raw) {
+                removePromoCode();
+                return;
+            }
+            const found = vouchers.find(v => v.code === raw);
+            if (!found) {
+                selectedVoucherCode = '';
+                updatePromoFeedback(`✕ Mã "${raw}" không tồn tại, đã hết hạn hoặc hết lượt sử dụng (Ngoại lệ UC03).`, false);
+                showToast(`Ngoại lệ UC03: Mã "${raw}" không hợp lệ!`);
+                renderCart();
+                return;
+            }
+            selectVoucherByClick(found.code);
+        }
+
+        function removePromoCode() {
+            selectedVoucherCode = '';
+            document.getElementById('promo-input').value = '';
+            document.getElementById('cart-promo-input').value = '';
+            updatePromoFeedback('Đã bỏ chọn mã khuyến mãi. Hệ thống tính lại tổng tiền gốc.', true);
+            renderCart();
+            showToast('Đã xóa mã khuyến mãi (UC03)!');
+        }
+
+        function updatePromoFeedback(msg, isSuccess) {
+            ['promo-feedback', 'cart-promo-feedback'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.className = isSuccess ? 'text-[11px] text-statusSuccess font-semibold' : 'text-[11px] text-statusDanger font-semibold';
+                    el.innerText = msg;
+                }
+            });
+        }
+
+        function calculateDiscountAmount(subtotal) {
+            if (!selectedVoucherCode) return 0;
+            const v = vouchers.find(item => item.code === selectedVoucherCode);
+            if (!v || subtotal < v.minOrder) return 0;
+            let discount = v.type === 'fixed' ? v.value : Math.round((subtotal * v.value) / 100);
+            if (v.maxDiscount) discount = Math.min(discount, v.maxDiscount);
+            return Math.min(discount, subtotal);
+        }
+
+        // Render Thẻ sản phẩm (Có đủ 2 nút: Thêm giỏ + Mua ngay vào thẳng Thanh toán)
+        function createProductCardHTML(p) {
+            return `
+                <div class="bg-surface rounded-card border border-borderLight overflow-hidden shadow-soft hover:shadow-hover transition group flex flex-col justify-between">
+                    <div>
+                        <div onclick="viewProductDetail(${p.id})" class="relative aspect-square bg-cream overflow-hidden cursor-pointer">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary text-white shadow-sm">${p.discount}</span>
+                        </div>
+                        <div class="p-4 space-y-1.5">
+                            <div class="flex items-center justify-between text-[11px] text-muted">
+                                <span class="uppercase tracking-wider font-bold text-primary">${p.brand}</span>
+                                <span class="flex items-center gap-1 text-amber-500 font-bold">★ ${p.rating}</span>
+                            </div>
+                            <h4 onclick="viewProductDetail(${p.id})" class="font-bold text-charcoal text-sm line-clamp-2 cursor-pointer hover:text-primary transition">${p.name}</h4>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-1 space-y-2.5">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-base font-bold text-primary">${formatVND(p.price)}</span>
+                            <span class="text-xs text-muted line-through">${formatVND(p.oldPrice)}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="addToCart(${p.id})" class="py-2 bg-cream hover:bg-pastel text-charcoal text-xs font-bold rounded-btn border border-borderLight transition flex items-center justify-center gap-1">
+                                <i class="ph-bold ph-shopping-bag"></i> + Thêm giỏ
+                            </button>
+                            <button onclick="buyNowDirect(${p.id}, 1)" class="py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition flex items-center justify-center gap-1 shadow-sm">
+                                <i class="ph-fill ph-lightning"></i> Mua ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterByCategoryFromHome(catName) {
+            openCustomerPage('sanpham');
+            const radio = document.querySelector(`input[name="cat"][value="${catName}"]`);
+            if (radio) radio.checked = true;
+            filterCatalog();
+        }
+
+        function filterCatalog() {
+            const search = (document.getElementById('catalog-search')?.value || '').toLowerCase();
+            const sort = document.getElementById('catalog-sort')?.value || 'default';
+            const cat = document.querySelector('input[name="cat"]:checked')?.value || 'all';
+            const brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
+            const price = document.querySelector('input[name="price"]:checked')?.value || 'all';
+
+            let filtered = products.filter(p => p.status === 'Đang kinh doanh').filter(p => {
+                const matchSearch = p.name.toLowerCase().includes(search) || p.brand.toLowerCase().includes(search);
+                const matchCat = cat === 'all' || p.category === cat;
+                const matchBrand = brand === 'all' || p.brand === brand;
+                let matchPrice = true;
+                if (price === 'under300') matchPrice = p.price < 300000;
+                if (price === '300to500') matchPrice = p.price >= 300000 && p.price <= 500000;
+                if (price === 'over500') matchPrice = p.price > 500000;
+                return matchSearch && matchCat && matchBrand && matchPrice;
+            });
+
+            if (sort === 'asc') filtered.sort((a, b) => a.price - b.price);
+            if (sort === 'desc') filtered.sort((a, b) => b.price - a.price);
+
+            const catalogGrid = document.getElementById('catalog-product-grid');
+            if (catalogGrid) {
+                catalogGrid.innerHTML = filtered.length
+                    ? filtered.map(createProductCardHTML).join('')
+                    : `<div class="col-span-full bg-surface p-8 rounded-card border border-borderLight text-center text-sm text-muted">Không tìm thấy sản phẩm phù hợp với bộ lọc.</div>`;
+            }
+        }
+
+        function resetCatalogFilters() {
+            document.getElementById('catalog-search').value = '';
+            document.getElementById('catalog-sort').value = 'default';
+            document.querySelector('input[name="cat"][value="all"]').checked = true;
+            document.querySelector('input[name="brand"][value="all"]').checked = true;
+            document.querySelector('input[name="price"][value="all"]').checked = true;
+            filterCatalog();
+        }
+
+        function viewProductDetail(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+            currentDetailProductId = p.id;
+            document.getElementById('detail-main-img').src = p.image;
+            document.getElementById('detail-brand').innerText = p.brand;
+            document.getElementById('detail-title').innerText = p.name;
+            document.getElementById('detail-breadcrumb').innerText = p.name;
+            document.getElementById('detail-price').innerText = formatVND(p.price);
+            document.getElementById('detail-oldprice').innerText = formatVND(p.oldPrice);
+            document.getElementById('detail-stock').innerText = `● ${p.status} · Tồn kho: ${p.stock}`;
+            document.getElementById('detail-qty').innerText = '1';
+            openCustomerPage('chitiet');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchDetailTab(tab) {
+            ['mota', 'thanhphan', 'congdung'].forEach(t => {
+                document.getElementById('dtab-' + t).classList.toggle('hidden', t !== tab);
+                const btn = document.getElementById('dtab-btn-' + t);
+                btn.className = t === tab
+                    ? 'pb-2.5 border-b-2 border-primary text-primary'
+                    : 'pb-2.5 border-b-2 border-transparent text-muted hover:text-charcoal';
+            });
+        }
+
+        function updateDetailQty(delta) {
+            const el = document.getElementById('detail-qty');
+            let current = parseInt(el.innerText) || 1;
+            el.innerText = Math.max(1, current + delta);
+        }
+
+        function addCurrentDetailToCart() {
+            const qty = parseInt(document.getElementById('detail-qty').innerText) || 1;
+            const p = products.find(item => item.id === currentDetailProductId);
+            if (p) {
+                p.cartQty = (p.cartQty || 0) + qty;
+                p.selectedInCart = true;
+                renderCart();
+                showToast(`Đã thêm ${qty} × "${p.name}" vào giỏ hàng!`);
+            }
+        }
+
+        // Bấm "Mua ngay" từ trang Chi tiết sản phẩm -> Đi thẳng sang 05. DatHang & ThanhToan (KHÔNG thêm vào giỏ hàng)
+        function buyNowFromDetail() {
+            const qty = parseInt(document.getElementById('detail-qty').innerText) || 1;
+            buyNowDirect(currentDetailProductId, qty);
+        }
+
+        // Bấm "Mua ngay" từ bất kỳ Thẻ sản phẩm nào hoặc từ trang Chi tiết -> Chuyển thẳng tới Đặt hàng & Thanh toán
+        function buyNowDirect(productId, qty = 1) {
+            const p = products.find(item => item.id === productId);
+            if (!p) return;
+            buyNowItem = { id: p.id, qty: qty };
+            renderCart();
+            openCustomerPage('thanhtoan');
+            showToast(`⚡ Mua ngay: Chuyển thẳng "${p.name}" (×${qty}) tới Đặt hàng & Thanh toán (Không thêm vào giỏ hàng)!`);
+        }
+
+        // Bấm "Tiến hành Đặt hàng" từ trang Giỏ hàng -> Tắt chế độ Mua ngay để thanh toán các món trong Giỏ hàng
+        function proceedToCheckoutFromCart() {
+            buyNowItem = null;
+            renderCart();
+            openCustomerPage('thanhtoan');
+        }
+
+        // Cho phép người dùng chuyển từ chế độ Mua ngay về lại chế độ Thanh toán Giỏ hàng ngay tại trang 05
+        function switchCheckoutToCartMode() {
+            buyNowItem = null;
+            renderCart();
+            showToast('Đã chuyển về chế độ thanh toán các sản phẩm từ Giỏ hàng!');
+        }
+
+        function changeBuyNowQty(delta) {
+            if (!buyNowItem) return;
+            buyNowItem.qty = Math.max(1, buyNowItem.qty + delta);
+            renderCart();
+        }
+
+        function addToCart(id) {
+            const p = products.find(item => item.id === id);
+            if (p) {
+                p.cartQty = (p.cartQty || 0) + 1;
+                p.selectedInCart = true;
+                renderCart();
+                showToast(`Đã thêm "${p.name}" vào giỏ hàng!`);
+            }
+        }
+
+        function removeFromCart(id) {
+            const p = products.find(item => item.id === id);
+            if (p) {
+                p.cartQty = 0;
+                p.selectedInCart = false;
+                renderCart();
+                showToast(`Đã xóa sản phẩm khỏi giỏ hàng!`);
+            }
+        }
+
+        function renderCart() {
+            const cartItems = products.filter(p => p.cartQty > 0);
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('header-cart-count');
+            if (badge) badge.innerText = cartItems.reduce((sum, i) => sum + i.cartQty, 0);
+
+            if (container) {
+                if (cartItems.length === 0) {
+                    container.innerHTML = `<div class="p-8 text-center text-xs text-muted">Giỏ hàng đang trống. Hãy thêm sản phẩm trước khi đặt hàng (UC01).</div>`;
+                } else {
+                    container.innerHTML = cartItems.map(item => `
+                        <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-cream/40 transition">
+                            <div class="flex items-center gap-3.5">
+                                <input type="checkbox" ${item.selectedInCart ? 'checked' : ''} onchange="toggleCartItem(${item.id}, this.checked)" class="custom-checkbox shrink-0">
+                                <img src="${item.image}" class="w-14 h-14 rounded-btn object-cover border border-borderLight shrink-0">
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase text-primary">${item.brand}</span>
+                                    <h4 class="text-xs sm:text-sm font-bold text-charcoal">${item.name}</h4>
+                                    <p class="text-xs font-bold text-primary mt-0.5">${formatVND(item.price)}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end gap-4 pl-7 sm:pl-0">
+                                <div class="inline-flex items-center border border-borderLight rounded-btn bg-surface">
+                                    <button onclick="changeCartQty(${item.id}, -1)" class="px-2.5 py-1 text-xs font-bold hover:bg-pastel">-</button>
+                                    <span class="px-3 py-1 text-xs font-bold border-x border-borderLight">${item.cartQty}</span>
+                                    <button onclick="changeCartQty(${item.id}, 1)" class="px-2.5 py-1 text-xs font-bold hover:bg-pastel">+</button>
+                                </div>
+                                <span class="text-xs sm:text-sm font-bold text-charcoal w-24 text-right">${formatVND(item.price * item.cartQty)}</span>
+                                <button onclick="removeFromCart(${item.id})" class="text-muted hover:text-statusDanger transition" title="Xóa">
+                                    <i class="ph-bold ph-trash text-base"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // 1. Tính toán cho trang 04. GioHang
+            const selectedCart = cartItems.filter(i => i.selectedInCart);
+            const cartSubtotal = selectedCart.reduce((sum, i) => sum + i.price * i.cartQty, 0);
+            const cartDiscount = calculateDiscountAmount(cartSubtotal);
+            const cartTotal = Math.max(0, cartSubtotal - cartDiscount);
+
+            document.getElementById('summary-selected-count').innerText = `${selectedCart.length} sản phẩm`;
+            document.getElementById('summary-subtotal').innerText = formatVND(cartSubtotal);
+            document.getElementById('summary-discount').innerText = `-${formatVND(cartDiscount)}`;
+            document.getElementById('summary-total').innerText = formatVND(cartTotal);
+
+            // 2. Tính toán cho trang 05. DatHang & ThanhToan (Hỗ trợ cả chế độ MUA NGAY trực tiếp hoặc từ Giỏ hàng)
+            const activeCheckoutItems = getActiveCheckoutItems();
+            const checkoutSubtotal = getActiveCheckoutSubtotal();
+            const checkoutDiscount = calculateDiscountAmount(checkoutSubtotal);
+            const checkoutTotal = Math.max(0, checkoutSubtotal - checkoutDiscount);
+
+            // Cập nhật giao diện danh sách món đang đặt ở trang 05
+            const buyNowBanner = document.getElementById('buy-now-banner');
+            const modeBadge = document.getElementById('checkout-mode-badge');
+            const previewBox = document.getElementById('checkout-items-preview');
+
+            if (buyNowBanner && modeBadge) {
+                if (buyNowItem) {
+                    buyNowBanner.classList.remove('hidden');
+                    modeBadge.className = 'px-2.5 py-0.5 rounded-full bg-primary text-white text-[11px] font-bold';
+                    modeBadge.innerText = '⚡ Chế độ Mua ngay';
+                } else {
+                    buyNowBanner.classList.add('hidden');
+                    modeBadge.className = 'px-2.5 py-0.5 rounded-full bg-pastel text-primary text-[11px] font-bold';
+                    modeBadge.innerText = `Từ Giỏ hàng (${activeCheckoutItems.length} món)`;
+                }
+            }
+
+            if (previewBox) {
+                if (activeCheckoutItems.length === 0) {
+                    previewBox.innerHTML = `<p class="text-xs text-muted text-center py-3">Chưa có sản phẩm nào được chọn để đặt hàng.</p>`;
+                } else {
+                    previewBox.innerHTML = activeCheckoutItems.map(({ product, qty }) => `
+                        <div class="py-2 first:pt-0 last:pb-0 flex items-center justify-between gap-3 text-xs">
+                            <div class="flex items-center gap-2.5">
+                                <img src="${product.image}" class="w-11 h-11 rounded object-cover border border-borderLight shrink-0">
+                                <div>
+                                    <p class="font-bold text-charcoal line-clamp-1">${product.name}</p>
+                                    <p class="text-[11px] text-muted">${formatVND(product.price)} × ${qty}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                ${buyNowItem ? `
+                                    <div class="inline-flex items-center border border-borderLight rounded bg-surface">
+                                        <button onclick="changeBuyNowQty(-1)" class="px-2 py-0.5 font-bold hover:bg-pastel">-</button>
+                                        <span class="px-2 py-0.5 font-bold border-x border-borderLight">${qty}</span>
+                                        <button onclick="changeBuyNowQty(1)" class="px-2 py-0.5 font-bold hover:bg-pastel">+</button>
+                                    </div>
+                                ` : ''}
+                                <span class="font-bold text-primary">${formatVND(product.price * qty)}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            if (document.getElementById('checkout-subtotal')) {
+                document.getElementById('checkout-subtotal').innerText = formatVND(checkoutSubtotal);
+                document.getElementById('checkout-discount').innerText = `-${formatVND(checkoutDiscount)}`;
+                document.getElementById('checkout-total').innerText = formatVND(checkoutTotal);
+            }
+
+            // Render danh sách thẻ Voucher theo đúng ngữ cảnh tổng tiền
+            const isCheckoutVisible = !document.getElementById('cust-page-thanhtoan').classList.contains('hidden');
+            renderVoucherSelectors(isCheckoutVisible ? checkoutSubtotal : cartSubtotal);
+        }
+
+        function toggleCartItem(id, checked) {
+            const p = products.find(i => i.id === id);
+            if (p) p.selectedInCart = checked;
+            renderCart();
+        }
+
+        function toggleAllCart(checked) {
+            products.forEach(p => { if (p.cartQty > 0) p.selectedInCart = checked; });
+            renderCart();
+        }
+
+        function changeCartQty(id, delta) {
+            const p = products.find(i => i.id === id);
+            if (!p) return;
+            p.cartQty = Math.max(1, p.cartQty + delta);
+            renderCart();
+        }
+
+        // Render Đơn hàng Khách hàng (Kèm Thanh tiến trình 4 bước trực quan)
+        function getStatusBadgeHTML(status) {
+            if (status === 'Chờ xác nhận') return `<span class="px-2.5 py-1 rounded-full bg-[#FDF3E7] text-statusWarning font-bold text-xs">● 1. Chờ xác nhận</span>`;
+            if (status === 'Đã xác nhận') return `<span class="px-2.5 py-1 rounded-full bg-[#EBF3F9] text-statusInfo font-bold text-xs">● 2. Đã xác nhận</span>`;
+            if (status === 'Đang giao') return `<span class="px-2.5 py-1 rounded-full bg-pastel text-primary font-bold text-xs">● 3. Đang giao</span>`;
+            if (status === 'Hoàn thành') return `<span class="px-2.5 py-1 rounded-full bg-[#E6F4EE] text-statusSuccess font-bold text-xs">● 4. Hoàn thành</span>`;
+            return `<span class="px-2.5 py-1 rounded-full bg-[#FCEAEA] text-statusDanger font-bold text-xs">● Đã hủy (Đã hoàn tồn kho)</span>`;
+        }
+
+        function renderCustomerOrders() {
+            const container = document.getElementById('customer-orders-list');
+            if (!container) return;
+
+            const stepOrder = ['Chờ xác nhận', 'Đã xác nhận', 'Đang giao', 'Hoàn thành'];
+
+            container.innerHTML = orders.map(o => {
+                const currentIdx = stepOrder.indexOf(o.status);
+                const progressHTML = o.status === 'Đã hủy'
+                    ? `<div class="p-2.5 rounded bg-[#FCEAEA] text-statusDanger text-xs font-bold">Đơn hàng đã bị hủy · Hệ thống đã hoàn lại số lượng tồn kho (UC02).</div>`
+                    : `<div class="grid grid-cols-4 gap-2 pt-2">
+                        ${stepOrder.map((st, idx) => `
+                            <div class="text-center">
+                                <div class="h-1.5 rounded-full ${idx <= currentIdx ? 'bg-primary' : 'bg-borderLight'} mb-1"></div>
+                                <span class="text-[11px] font-bold ${idx <= currentIdx ? 'text-primary' : 'text-muted'}">${idx + 1}. ${st}</span>
+                            </div>
+                        `).join('')}
+                       </div>`;
+
+                return `
+                    <div class="p-5 rounded-card bg-cream border border-borderLight space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-borderLight pb-2.5 text-xs">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono font-bold text-sm text-charcoal">${o.code}</span>
+                                <span class="text-muted">Phương thức: <strong>${o.paymentMethod}</strong></span>
+                            </div>
+                            ${getStatusBadgeHTML(o.status)}
+                        </div>
+
+                        ${progressHTML}
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center text-xs pt-2">
+                            <div class="md:col-span-5 space-y-1">
+                                <p class="font-bold text-charcoal text-sm">${o.itemsSummary}</p>
+                                <p class="text-primary font-bold text-sm">Tổng thanh toán: ${formatVND(o.total)}</p>
+                            </div>
+
+                            <div class="md:col-span-4 bg-surface p-3 rounded-btn border border-borderLight space-y-1 text-[11px]">
+                                <p><span class="text-muted">• Ngày đặt hàng:</span> <strong class="text-charcoal">${o.orderDate}</strong></p>
+                                <p><span class="text-muted">• Ngày vận đơn:</span> <strong class="text-charcoal">${o.waybillDate || 'Chưa bàn giao ĐVVC'}</strong></p>
+                                ${o.status === 'Hoàn thành' ? `<p class="text-statusSuccess"><span class="font-bold">• Ngày giao thành công:</span> <strong>${o.deliveredDate}</strong></p>` : ''}
+                            </div>
+
+                            <div class="md:col-span-3 flex flex-wrap md:justify-end gap-2">
+                                ${o.status === 'Chờ xác nhận' ? `
+                                    <button onclick="cancelOrderUC02('${o.code}')" class="px-3.5 py-2 bg-surface border border-statusDanger text-statusDanger hover:bg-[#FCEAEA] font-bold rounded-btn transition">
+                                        Hủy đơn hàng (UC02)
+                                    </button>
+                                ` : ''}
+                                ${o.status === 'Hoàn thành' ? `
+                                    <button onclick="document.getElementById('review-product-select').focus(); showToast('Mời bạn chọn số sao ở khung UC05 bên dưới để đánh giá đơn ' + '${o.code}');" class="px-3.5 py-2 bg-primary text-white font-bold rounded-btn transition">
+                                        ★ Đánh giá SP (UC05)
+                                    </button>
+                                ` : ''}
+                                ${(o.status !== 'Chờ xác nhận' && o.status !== 'Hoàn thành') ? `
+                                    <span class="text-[11px] text-muted italic">Đã qua bước Chờ xác nhận (Không thể hủy)</span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Bảng Sản phẩm bên Admin (Kèm nút Quản lý ảnh & Ngừng kinh doanh)
+        function renderAdminProducts() {
+            const tbody = document.getElementById('admin-products-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td class="p-3 font-mono font-bold">${p.code}</td>
+                    <td class="p-3 font-bold text-charcoal flex items-center gap-2.5">
+                        <img src="${p.image}" class="w-10 h-10 rounded object-cover border border-borderLight">
+                        <span>${p.name}</span>
+                    </td>
+                    <td class="p-3">${p.category}<br><span class="text-[11px] text-primary font-bold">${p.brand}</span></td>
+                    <td class="p-3">
+                        <button onclick="openImageModal('${p.name}')" class="px-2.5 py-1 rounded bg-pastel text-charcoal font-bold hover:bg-nude transition">
+                            <i class="ph-fill ph-images"></i> Quản lý ảnh
+                        </button>
+                    </td>
+                    <td class="p-3 font-bold text-primary">${formatVND(p.price)}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${p.status === 'Đang kinh doanh' ? 'bg-[#E6F4EE] text-statusSuccess' : 'bg-[#FCEAEA] text-statusDanger'}">
+                            ${p.status}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right space-x-2">
+                        <button onclick="toggleStopSellingProduct(${p.id})" class="px-2.5 py-1 rounded border ${p.status === 'Đang kinh doanh' ? 'border-statusDanger text-statusDanger hover:bg-[#FCEAEA]' : 'border-statusSuccess text-statusSuccess hover:bg-[#E6F4EE]'} font-bold transition">
+                            ${p.status === 'Đang kinh doanh' ? 'Ngừng kinh doanh' : 'Mở bán lại'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleStopSellingProduct(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+            p.status = p.status === 'Đang kinh doanh' ? 'Ngừng kinh doanh' : 'Đang kinh doanh';
+            renderAdminProducts();
+            filterCatalog();
+            showToast(`Đã chuyển "${p.name}" sang trạng thái "${p.status}" (Bảo toàn lịch sử đơn hàng theo Mục 2.4)!`);
+        }
+
+        function openImageModal(productName) {
+            document.getElementById('img-modal-product-name').innerText = productName;
+            document.getElementById('image-modal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('image-modal').classList.add('hidden');
+        }
+
+        function addProductImageModal() {
+            const url = document.getElementById('new-img-url').value.trim();
+            if (!url) return;
+            const grid = document.getElementById('img-modal-grid');
+            grid.insertAdjacentHTML('beforeend', `
+                <div class="relative group rounded-btn overflow-hidden border border-borderLight aspect-square bg-cream">
+                    <img src="${url}" class="w-full h-full object-cover">
+                    <button onclick="this.parentElement.remove(); showToast('Đã xóa ảnh phụ sản phẩm!');" class="absolute top-1.5 right-1.5 bg-statusDanger text-white w-6 h-6 rounded-full text-xs flex items-center justify-center">✕</button>
+                </div>
+            `);
+            showToast('Đã thêm hình ảnh sản phẩm mới (STT 6)!');
+        }
+
+        function addCategoryAdmin() {
+            const name = document.getElementById('new-cat-name').value.trim() || 'Chăm sóc cơ thể';
+            document.getElementById('admin-cat-tbody').insertAdjacentHTML('beforeend', `
+                <tr><td class="p-2.5 font-mono">#DM0${Math.floor(5 + Math.random()*5)}</td><td class="p-2.5 font-semibold">${name}</td><td class="p-2.5 text-right space-x-2"><button class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove()" class="text-statusDanger font-bold">Xóa</button></td></tr>
+            `);
+            document.getElementById('new-cat-name').value = '';
+            showToast(`Đã thêm danh mục "${name}" (STT 3)!`);
+        }
+
+        function addBrandAdmin() {
+            const name = document.getElementById('new-brand-name').value.trim() || 'SERENE MAUVE';
+            document.getElementById('admin-brand-tbody').insertAdjacentHTML('beforeend', `
+                <tr><td class="p-2.5 font-mono">#TH0${Math.floor(5 + Math.random()*5)}</td><td class="p-2.5 font-semibold">${name}</td><td class="p-2.5 text-right space-x-2"><button class="text-primary font-bold">Sửa</button><button onclick="this.closest('tr').remove()" class="text-statusDanger font-bold">Xóa</button></td></tr>
+            `);
+            document.getElementById('new-brand-name').value = '';
+            showToast(`Đã thêm thương hiệu "${name}" (STT 4)!`);
+        }
+
+        // Render Bảng Đơn hàng bên Admin (UC04)
+        function renderAdminOrders() {
+            const tbody = document.getElementById('admin-orders-table');
+            if (!tbody) return;
+            tbody.innerHTML = orders.map(o => {
+                let nextBtn = `<span class="text-muted italic">Đã hoàn tất chu trình</span>`;
+                if (o.status === 'Chờ xác nhận') {
+                    nextBtn = `<button onclick="advanceOrderStatusUC04('${o.code}', 'Đã xác nhận')" class="px-3 py-1.5 bg-statusInfo text-white rounded-btn font-bold">1. Xác nhận đơn</button>`;
+                } else if (o.status === 'Đã xác nhận') {
+                    nextBtn = `<button onclick="advanceOrderStatusUC04('${o.code}', 'Đang giao')" class="px-3 py-1.5 bg-primary text-white rounded-btn font-bold">2. Chuyển Đang giao (+Ghi Ngày vận đơn)</button>`;
+                } else if (o.status === 'Đang giao') {
+                    nextBtn = `<button onclick="advanceOrderStatusUC04('${o.code}', 'Hoàn thành')" class="px-3 py-1.5 bg-statusSuccess text-white rounded-btn font-bold">3. Xác nhận Hoàn thành (+Ghi Ngày giao TC)</button>`;
+                }
+                return `
+                    <tr>
+                        <td class="p-3 font-mono font-bold">${o.code}</td>
+                        <td class="p-3 font-bold">${o.customer}<br><span class="text-primary">${formatVND(o.total)}</span></td>
+                        <td class="p-3">${o.orderDate}</td>
+                        <td class="p-3">${o.waybillDate || '<span class="text-muted">—</span>'}</td>
+                        <td class="p-3">${o.deliveredDate ? `<span class="text-statusSuccess font-bold">${o.deliveredDate}</span>` : '<span class="text-muted">—</span>'}</td>
+                        <td class="p-3">${getStatusBadgeHTML(o.status)}</td>
+                        <td class="p-3 text-right">${nextBtn}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function cancelOrderUC02(code) {
+            const o = orders.find(item => item.code === code);
+            if (!o || o.status !== 'Chờ xác nhận') return;
+            o.status = 'Đã hủy';
+            renderCustomerOrders();
+            renderAdminOrders();
+            showToast(`UC02 Thành công: Đã hủy đơn ${code} và hoàn lại số lượng tồn kho đúng 1 lần!`);
+        }
+
+        function advanceOrderStatusUC04(code, nextStatus) {
+            const o = orders.find(item => item.code === code);
+            if (!o) return;
+            const nowStr = '01/11/2026 16:10';
+            o.status = nextStatus;
+            if (nextStatus === 'Đang giao') {
+                o.waybillDate = `${nowStr} (MVĐ: SPX${Math.floor(10000 + Math.random()*89999)})`;
+                showToast(`UC04: Đơn ${code} đã chuyển sang "Đang giao" & tự động ghi Ngày vận đơn!`);
+            } else if (nextStatus === 'Hoàn thành') {
+                o.deliveredDate = nowStr;
+                showToast(`UC04: Đơn ${code} đã chuyển sang "Hoàn thành" & tự động ghi Ngày giao thành công!`);
+            } else {
+                showToast(`UC04: Đã xác nhận đơn hàng ${code}!`);
+            }
+            renderAdminOrders();
+            renderCustomerOrders();
+        }
+
+        function placeOrderUC01() {
+            const activeItems = getActiveCheckoutItems();
+            if (activeItems.length === 0) {
+                showToast('Ngoại lệ UC01: Vui lòng chọn ít nhất 1 sản phẩm để đặt mua!');
+                return;
+            }
+            const subtotal = getActiveCheckoutSubtotal();
+            const discount = calculateDiscountAmount(subtotal);
+            const total = Math.max(0, subtotal - discount);
+            const payMethod = document.querySelector('input[name="paymethod"]:checked')?.value || 'COD';
+            const newCode = '#DH' + Math.floor(2050 + Math.random() * 45);
+            const wasBuyNow = Boolean(buyNowItem);
+
+            // Trừ tồn kho của các sản phẩm trong đơn vừa đặt (UC01 Bước 9)
+            activeItems.forEach(({ product, qty }) => {
+                product.stock = Math.max(0, product.stock - qty);
+            });
+
+            orders.unshift({
+                code: newCode,
+                customer: document.getElementById('checkout-name').value || 'Nguyễn Thị Minh Anh',
+                itemsSummary: activeItems.map(i => `${i.product.name} (×${i.qty})`).join(', '),
+                total: total,
+                paymentMethod: payMethod,
+                orderDate: '01/11/2026 16:05',
+                waybillDate: null,
+                deliveredDate: null,
+                status: 'Chờ xác nhận'
+            });
+
+            // Nếu đặt qua Mua ngay thì chỉ xóa phiên buyNowItem, giữ nguyên Giỏ hàng của khách!
+            if (wasBuyNow) {
+                buyNowItem = null;
+            }
+
+            renderCart();
+            renderCustomerOrders();
+            renderAdminOrders();
+            renderAdminProducts();
+            showToast(`UC01 Thành công: Đã tạo đơn hàng ${newCode} (${wasBuyNow ? 'Mua ngay trực tiếp - Không qua giỏ hàng' : 'Từ giỏ hàng'}) ở trạng thái "Chờ xác nhận"!`);
+            openCustomerPage('taikhoan');
+        }
+
+        // Render Đánh giá công khai (trang Chi tiết SP) & Bảng duyệt bên Admin (UC05)
+        function renderReviewsEverywhere() {
+            const publicContainer = document.getElementById('public-approved-reviews');
+            if (publicContainer) {
+                const approved = reviewsList.filter(r => r.status === 'Đã duyệt');
+                publicContainer.innerHTML = approved.map(r => `
+                    <div class="p-3.5 rounded-btn bg-cream border border-borderLight space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-charcoal">${r.customer}</span>
+                            <span class="text-amber-500 font-bold">${'★'.repeat(r.stars)} (${r.stars}/5)</span>
+                        </div>
+                        <p class="text-muted">${r.comment}</p>
+                        <p class="text-[10px] text-statusSuccess font-semibold">✓ Đã mua hàng & Được Admin duyệt hiển thị</p>
+                    </div>
+                `).join('');
+            }
+
+            const adminTbody = document.getElementById('admin-reviews-table');
+            if (adminTbody) {
+                adminTbody.innerHTML = reviewsList.map(r => `
+                    <tr>
+                        <td class="p-3 font-bold">${r.customer}</td>
+                        <td class="p-3">${r.product}</td>
+                        <td class="p-3 text-amber-500 font-bold">${'★'.repeat(r.stars)} (${r.stars})</td>
+                        <td class="p-3">${r.comment}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${r.status === 'Đã duyệt' ? 'bg-[#E6F4EE] text-statusSuccess' : (r.status === 'Chờ duyệt' ? 'bg-[#FDF3E7] text-statusWarning' : 'bg-[#FCEAEA] text-statusDanger')}">
+                                ${r.status}
+                            </span>
+                        </td>
+                        <td class="p-3 text-right space-x-1.5">
+                            <button onclick="updateReviewStatusAdmin(${r.id}, 'Đã duyệt')" class="px-2.5 py-1 bg-statusSuccess text-white rounded-btn font-bold">Duyệt</button>
+                            <button onclick="updateReviewStatusAdmin(${r.id}, 'Từ chối')" class="px-2.5 py-1 bg-statusDanger text-white rounded-btn font-bold">Từ chối</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            const pendingCount = reviewsList.filter(r => r.status === 'Chờ duyệt').length;
+            const badge = document.getElementById('adm-pending-rev-badge');
+            if (badge) badge.innerText = pendingCount;
+        }
+
+        function submitReviewUC05() {
+            const product = document.getElementById('review-product-select').value;
+            const stars = parseInt(document.getElementById('review-star-select').value) || 5;
+            const comment = document.getElementById('review-comment').value.trim() || 'Sản phẩm chính hãng, đóng gói cẩn thận!';
+            reviewsList.unshift({
+                id: Date.now(),
+                customer: 'Nguyễn Thị Minh Anh',
+                product: product,
+                stars: stars,
+                comment: comment,
+                status: 'Chờ duyệt'
+            });
+            document.getElementById('review-comment').value = '';
+            renderReviewsEverywhere();
+            showToast('UC05: Đã gửi đánh giá ở trạng thái "Chờ duyệt"! Bạn có thể sang Admin (Tab 9) để bấm Duyệt.');
+        }
+
+        function updateReviewStatusAdmin(id, newStatus) {
+            const r = reviewsList.find(item => item.id === id);
+            if (!r) return;
+            r.status = newStatus;
+            renderReviewsEverywhere();
+            showToast(`UC05: Đã cập nhật đánh giá thành "${newStatus}"!`);
+        }
+
+        // Render Khiếu nại ở cả Khách hàng và Admin
+        function renderComplaintsEverywhere() {
+            const custTbody = document.getElementById('customer-complaints-table');
+            if (custTbody) {
+                custTbody.innerHTML = complaintsList.map(c => `
+                    <tr>
+                        <td class="p-2.5 font-mono font-bold">${c.code}</td>
+                        <td class="p-2.5 font-bold">${c.orderCode}</td>
+                        <td class="p-2.5">${c.reason}</td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${c.status === 'Đã giải quyết' ? 'bg-[#E6F4EE] text-statusSuccess' : 'bg-[#FDF3E7] text-statusWarning'}">${c.status}</span></td>
+                        <td class="p-2.5 text-charcoal">${c.reply}</td>
+                    </tr>
+                `).join('');
+            }
+
+            const admTbody = document.getElementById('admin-complaints-table');
+            if (admTbody) {
+                admTbody.innerHTML = complaintsList.map((c, idx) => `
+                    <tr>
+                        <td class="p-3 font-mono font-bold">${c.code}</td>
+                        <td class="p-3 font-bold">${c.orderCode}</td>
+                        <td class="p-3">${c.reason}</td>
+                        <td class="p-3">
+                            <select id="kn-st-${idx}" class="px-2 py-1 bg-cream border border-borderLight rounded font-bold">
+                                <option value="Chờ xử lý" ${c.status==='Chờ xử lý'?'selected':''}>Chờ xử lý</option>
+                                <option value="Đang xử lý" ${c.status==='Đang xử lý'?'selected':''}>Đang xử lý</option>
+                                <option value="Đã giải quyết" ${c.status==='Đã giải quyết'?'selected':''}>Đã giải quyết</option>
+                                <option value="Từ chối" ${c.status==='Từ chối'?'selected':''}>Từ chối</option>
+                            </select>
+                        </td>
+                        <td class="p-3">
+                            <input id="kn-rep-${idx}" type="text" value="${c.reply}" class="w-full px-2.5 py-1 bg-cream border border-borderLight rounded">
+                        </td>
+                        <td class="p-3 text-right">
+                            <button onclick="saveComplaintAdmin(${idx})" class="px-3 py-1 bg-primary text-white rounded-btn font-bold">Lưu</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function submitComplaintCustomer() {
+            const orderCode = document.getElementById('complaint-order').value || '#DH2045';
+            const reason = document.getElementById('complaint-reason').value.trim() || 'Cần hỗ trợ kiểm tra đơn hàng';
+            complaintsList.unshift({
+                code: '#KN0' + (complaintsList.length + 1),
+                orderCode: orderCode,
+                customer: 'Nguyễn Thị Minh Anh',
+                reason: reason,
+                status: 'Chờ xử lý',
+                reply: 'Hệ thống đã tiếp nhận, chờ Admin phản hồi...'
+            });
+            document.getElementById('complaint-reason').value = '';
+            renderComplaintsEverywhere();
+            showToast('Đã gửi khiếu nại mới ở trạng thái "Chờ xử lý"!');
+        }
+
+        function saveComplaintAdmin(idx) {
+            const c = complaintsList[idx];
+            if (!c) return;
+            c.status = document.getElementById('kn-st-' + idx).value;
+            c.reply = document.getElementById('kn-rep-' + idx).value;
+            renderComplaintsEverywhere();
+            showToast(`Đã cập nhật trạng thái "${c.status}" và phản hồi cho khiếu nại ${c.code}!`);
+        }
+
+        // Điều hướng giữa 3 Phân khu chính
+        function switchMainArea(area) {
+            ['customer', 'admin', 'design-system'].forEach(a => {
+                document.getElementById('area-' + a).classList.toggle('hidden', a !== area);
+                const btn = document.getElementById('tab-area-' + a);
+                if (a === area) {
+                    btn.className = 'flex-1 md:flex-initial justify-center px-3.5 py-2 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-primary text-white shadow-sm';
+                } else if (a === 'admin') {
+                    btn.className = 'flex-1 md:flex-initial justify-center px-3.5 py-2 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-white/10 text-pastel hover:bg-white/20 border border-nude/40';
+                } else {
+                    btn.className = 'flex-1 md:flex-initial justify-center px-3.5 py-2 rounded-md text-xs font-bold transition flex items-center gap-1.5 text-white/80 hover:text-white hover:bg-white/10';
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openCustomerPage(page) {
+            switchMainArea('customer');
+            ['trangchu', 'sanpham', 'chitiet', 'giohang', 'thanhtoan', 'taikhoan'].forEach(p => {
+                document.getElementById('cust-page-' + p).classList.toggle('hidden', p !== page);
+                const btn = document.getElementById('subtab-' + p);
+                if (btn) {
+                    btn.className = p === page
+                        ? 'px-3 py-1.5 rounded-btn font-bold bg-primary text-white shadow-sm transition'
+                        : 'px-3 py-1.5 rounded-btn font-medium bg-surface text-charcoal hover:bg-nude/50 transition';
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openAdminTab(tab) {
+            const titles = {
+                'dashboard': '1. Dashboard & Báo Cáo Thống Kê (STT 2 & 20)',
+                'sanpham': '2. Quản Lý Sản Phẩm & Hình Ảnh Sản Phẩm (STT 5 & 6)',
+                'danhmuc': '3. Quản Lý Danh Mục & Thương Hiệu (STT 3 & 4)',
+                'tonkho': '4. Quản Lý Tồn Kho & Cảnh Báo Sắp Hết Hàng (STT 7)',
+                'donhang': '5. Quản Lý Đơn Hàng & Ghi Ngày Vận Đơn / Ngày Giao TC (UC04 - STT 8→11)',
+                'thanhtoan': '6. Giao Dịch Thanh Toán, Hoàn Tiền & Phương Thức TT (STT 12, 13, 14)',
+                'khuyenmai': '7. Quản Lý Mã Khuyến Mãi & Banner/Slider Mở Rộng (STT 15, 21)',
+                'khachhang': '8. Quản Lý Tài Khoản Khách Hàng & Tài Khoản Admin (STT 16, 17)',
+                'tuongtac': '9. Duyệt Đánh Giá (UC05) & Xử Lý Khiếu Nại (STT 18 & 19)'
+            };
+            Object.keys(titles).forEach(t => {
+                document.getElementById('adm-view-' + t).classList.toggle('hidden', t !== tab);
+                const nav = document.getElementById('adm-nav-' + t);
+                if (nav) {
+                    nav.className = t === tab
+                        ? 'w-full flex items-center justify-between px-3 py-2.5 rounded-btn bg-surface text-charcoal shadow-sm transition font-bold'
+                        : 'w-full flex items-center justify-between px-3 py-2 rounded-btn hover:bg-surface/60 text-charcoal transition';
+                }
+            });
+            document.getElementById('admin-page-title').innerText = titles[tab];
+        }
+
+        function copyHex(hex, name) {
+            const temp = document.createElement('textarea');
+            temp.value = hex;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast(`Đã sao chép ${name}: ${hex}`);
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.add('hidden'), 3200);
+        }
+
+        window.onload = function () {
+            const homeGrid = document.getElementById('home-product-grid');
+            if (homeGrid) homeGrid.innerHTML = products.slice(0, 4).map(createProductCardHTML).join('');
+
+            const relatedGrid = document.getElementById('related-products-grid');
+            if (relatedGrid) relatedGrid.innerHTML = products.slice(1, 3).map(createProductCardHTML).join('');
+
+            updatePromoFeedback('✓ Đang áp dụng mã ROSE50: Giảm cố định 50.000đ (Đơn tối thiểu ≥ 500.000đ).', true);
+            filterCatalog();
+            renderCart();
+            renderCustomerOrders();
+            renderAdminProducts();
+            renderAdminOrders();
+            renderReviewsEverywhere();
+            renderComplaintsEverywhere();
+        };
+    </script>
+</body>
+</html>

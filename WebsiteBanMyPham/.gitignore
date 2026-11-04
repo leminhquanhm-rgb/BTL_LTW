@@ -1,0 +1,27 @@
+## Build and output
+bin/
+obj/
+out/
+
+## Visual Studio & IDE
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+.vscode/
+
+## OS generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+## Keep important project assets
+!Database/
+!Documents/
+!AGENTS.md
+!wwwroot/uploads/**
+!wwwroot/images/**
+
