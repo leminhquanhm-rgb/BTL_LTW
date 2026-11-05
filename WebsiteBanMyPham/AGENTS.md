@@ -142,6 +142,7 @@ WebsiteBanMyPham/
 │       ├── Controllers/
 │       └── Views/
 │
+├── Constants/
 ├── Controllers/
 ├── Models/
 ├── ViewModels/
@@ -850,6 +851,8 @@ Cấu hình Role Claims:
 -   Cấu hình LoginPath và AccessDeniedPath: chưa đăng nhập thì chuyển sang đăng nhập, sai vai trò thì báo không có quyền.
 -   Kiểm tra quyền tại Controller hoặc Action ở phía server; ẩn nút trên giao diện không thay thế việc này.
 -   Phải thử: Admin vào được khu vực Admin; khách hàng và người chưa đăng nhập không vào được.
+-   Khi dựng đăng nhập ở Bước 5: dùng CookieAuthenticationEvents.OnValidatePrincipal kiểm tra TrangThai của tài khoản trong database; tài khoản bị khóa giữa phiên thì RejectPrincipal và đăng xuất ngay.
+-   Chức năng đăng nhập chỉ kiểm tra khóa sau khi mật khẩu đúng; ViewModel đăng nhập chỉ yêu cầu bắt buộc nhập và độ dài tối đa, không áp quy tắc độ dài tối thiểu của mật khẩu mới.
 
 ### 8.2. Kiểm tra quyền sở hữu
 
@@ -943,7 +946,7 @@ Bước 2 – Kết nối database
 -   Scaffold DbContext và toàn bộ Model từ database với --no-onconfiguring --use-database-names --no-pluralize (giữ đúng tên bảng và cột như MaTK, MaCTDH, TaiKhoan, VW_DanhGia; nếu không, EF đổi thành MaTk, MaCtdh, VwDanhGia); không tạo Model thủ công.
 -   Đăng ký DbContext trong Program.cs; kiểm tra quan hệ và kết nối.
 
-Bước 3 – ViewModel và Services
+Bước 3 – ViewModel và Services (chia hai phần: 3A tài khoản và đăng nhập; 3B giỏ hàng, khuyến mãi, đơn hàng)
 
 -   Đối chiếu Model đã scaffold với SQL (chỉ kiểm tra, không viết lại Model).
 -   Cài BCrypt.Net-Next; cấu hình Cookie Authentication và Authorization trong Program.cs (LoginPath, AccessDeniedPath, Role Claims).
@@ -1100,6 +1103,8 @@ Sau báo cáo phải dừng và chờ người dùng xác nhận.
 -   Giao diện sử dụng tiếng Việt có dấu.
 -   Tiền tệ hiển thị theo định dạng 135.000đ.
 -   Ngày giờ hiển thị theo định dạng dd/MM/yyyy HH:mm.
+-   Các cột ngày giờ lưu vào database dùng DateTime.Now (giờ địa phương, khớp SYSDATETIME() của SQL Server); không trộn DateTime.UtcNow (trừ ExpiresUtc của cookie).
+-   Hằng số vai trò và trạng thái đặt trong thư mục Constants/ (ví dụ VaiTroConstant).
 -   Tên trạng thái trong code phải khai báo tập trung trong static class hằng số phù hợp.
 -   Ví dụ: TrangThaiDonHang.ChoXacNhan, TrangThaiDanhGia.DaDuyet.
 -   Không viết chuỗi trạng thái rải rác trong nhiều Controller hoặc Service.

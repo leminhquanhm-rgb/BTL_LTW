@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebsiteBanMyPham.Models;
+using WebsiteBanMyPham.Services;
 
 namespace WebsiteBanMyPham
 {
@@ -15,6 +17,22 @@ namespace WebsiteBanMyPham
             builder.Services.AddDbContext<WebsiteBanMyPhamContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Cấu hình Cookie Authentication
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/TaiKhoan/DangNhap";
+                    options.AccessDeniedPath = "/TaiKhoan/TuChoiTruyCap";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                    options.SlidingExpiration = true;
+                });
+
+            // Đăng ký Services nghiệp vụ
+            builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -28,6 +46,8 @@ namespace WebsiteBanMyPham
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            // Authentication phải đặt trước Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
