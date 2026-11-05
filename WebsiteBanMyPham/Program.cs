@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using WebsiteBanMyPham.Models;
+
 namespace WebsiteBanMyPham
 {
     public class Program
@@ -8,6 +11,9 @@ namespace WebsiteBanMyPham
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<WebsiteBanMyPhamContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

@@ -940,7 +940,7 @@ Bước 2 – Kết nối database
 -   Kiểm tra SQL Server và database WebsiteBanMyPham đã được tạo bằng script.
 -   Cấu hình Connection String (appsettings.Development.json, User Secrets hoặc biến môi trường).
 -   Cài package: Microsoft.EntityFrameworkCore.SqlServer và Microsoft.EntityFrameworkCore.Design (cùng phiên bản 10.0.x), công cụ dotnet-ef.
--   Scaffold DbContext và toàn bộ Model từ database với --no-onconfiguring; không tạo Model thủ công.
+-   Scaffold DbContext và toàn bộ Model từ database với --no-onconfiguring --use-database-names --no-pluralize (giữ đúng tên bảng và cột như MaTK, MaCTDH, TaiKhoan, VW_DanhGia; nếu không, EF đổi thành MaTk, MaCtdh, VwDanhGia); không tạo Model thủ công.
 -   Đăng ký DbContext trong Program.cs; kiểm tra quan hệ và kết nối.
 
 Bước 3 – ViewModel và Services
