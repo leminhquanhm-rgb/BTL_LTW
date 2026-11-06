@@ -1,14 +1,23 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using WebsiteBanMyPham.Models;
+using WebsiteBanMyPham.Services;
 
 namespace WebsiteBanMyPham.Controllers
 {
     public class TrangChuController : Controller
     {
-        public IActionResult Index()
+        private readonly ISanPhamService _sanPhamService;
+
+        public TrangChuController(ISanPhamService sanPhamService)
         {
-            return View();
+            _sanPhamService = sanPhamService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var model = await _sanPhamService.LayDanhSachTrangChuAsync();
+            return View(model);
         }
 
         public IActionResult Privacy()
@@ -23,4 +32,3 @@ namespace WebsiteBanMyPham.Controllers
         }
     }
 }
-

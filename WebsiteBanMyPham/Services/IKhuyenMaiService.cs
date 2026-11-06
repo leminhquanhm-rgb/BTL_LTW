@@ -6,6 +6,7 @@ namespace WebsiteBanMyPham.Services
     {
         Task<KhuyenMaiKetQuaViewModel> TinhGiamAsync(string? code, decimal tongTienHang);
         Task<List<KhuyenMaiItemViewModel>> LayDanhSachMaKhaDungAsync(decimal tongTienHang);
+        Task<List<KhuyenMaiItemViewModel>> LayKhuyenMaiDangDienRaAsync();
     }
 }
 

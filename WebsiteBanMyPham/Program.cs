@@ -58,6 +58,7 @@ namespace WebsiteBanMyPham
 
             // Đăng ký Services nghiệp vụ
             builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
+            builder.Services.AddScoped<ISanPhamService, SanPhamService>();
             builder.Services.AddScoped<IGioHangService, GioHangService>();
             builder.Services.AddScoped<IKhuyenMaiService, KhuyenMaiService>();
             builder.Services.AddScoped<IDonHangService, DonHangService>();

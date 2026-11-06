@@ -1,0 +1,137 @@
+@model WebsiteBanMyPham.ViewModels.SanPhamIndexViewModel
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+
+@{
+    ViewData["Title"] = L["Product_CatalogTitle"];
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <!-- Tiêu đề trang & Thanh tìm kiếm + Sắp xếp -->
+    <div class="pb-4 border-b border-borderLight flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <p class="text-xs text-muted flex items-center gap-1.5">
+                <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+                <span>/</span>
+                <span class="text-charcoal font-semibold">@L["Product_Breadcrumb"]</span>
+            </p>
+            <h1 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal mt-1">@L["Product_CatalogTitle"]</h1>
+        </div>
+
+        <!-- Ô tìm kiếm và Select sắp xếp -->
+        <div class="flex flex-wrap items-center gap-2.5">
+            <!-- Ô tìm kiếm kèm debounce 300ms (Điều chỉnh 3) -->
+            <div class="relative w-full sm:w-64">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm pointer-events-none"></i>
+                <input type="text" form="catalog-filter-form" name="tuKhoa" value="@Model.Filter.TuKhoa"
+                       placeholder="@L["Placeholder_SearchProduct"]"
+                       oninput="onCatalogSearchInput(this, '@L["Toast_NetworkError"]')"
+                       class="w-full pl-9 pr-3.5 py-2 bg-surface border border-borderLight rounded-btn text-xs text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition shadow-sm" />
+            </div>
+
+            <!-- Thứ tự sắp xếp -->
+            <select form="catalog-filter-form" name="sapXep"
+                    onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')"
+                    class="px-3 py-2 bg-surface border border-borderLight rounded-btn text-xs text-charcoal font-semibold focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition shadow-sm cursor-pointer">
+                <option value="moiNhat" selected="@(Model.Filter.SapXep == "moiNhat")">@L["Product_SortDefault"]</option>
+                <option value="banChay" selected="@(Model.Filter.SapXep == "banChay")">@L["Product_SortBestSeller"]</option>
+                <option value="giaTang" selected="@(Model.Filter.SapXep == "giaTang")">@L["Product_SortPriceAsc"]</option>
+                <option value="giaGiam" selected="@(Model.Filter.SapXep == "giaGiam")">@L["Product_SortPriceDesc"]</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Bố cục chính: Cột bộ lọc bên trái (lg:col-span-3) & Lưới sản phẩm bên phải (lg:col-span-9) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Cột bộ lọc bên trái -->
+        <aside class="lg:col-span-3 space-y-5">
+            <form id="catalog-filter-form" method="get" asp-action="Index" class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-5">
+                <input type="hidden" name="trang" value="1" />
+
+                <!-- Tiêu đề bộ lọc & Nút Đặt lại -->
+                <div class="flex items-center justify-between border-b border-borderLight pb-3">
+                    <h3 class="font-bold text-charcoal text-sm flex items-center gap-1.5">
+                        <i class="ph-fill ph-funnel text-primary"></i>
+                        <span>@L["Product_FilterTitle"]</span>
+                    </h3>
+                    <button type="button" onclick="document.getElementById('catalog-filter-form').reset(); onCatalogFilterChange('@L["Toast_NetworkError"]')"
+                            class="text-xs text-primary font-semibold hover:underline">
+                        @L["Product_ResetFilter"]
+                    </button>
+                </div>
+
+                <!-- 1. Danh mục mỹ phẩm -->
+                <div class="space-y-2">
+                    <p class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_CategoryFilter"]</p>
+                    <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
+                        <input type="radio" name="danhMuc" value="" checked="@(!Model.Filter.DanhMuc.HasValue)"
+                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                        <span>@L["Product_AllCategories"]</span>
+                    </label>
+                    @foreach (var dm in Model.DanhSachDanhMuc)
+                    {
+                        <label class="flex items-center justify-between text-xs text-charcoal/90 cursor-pointer select-none">
+                            <span class="flex items-center gap-2">
+                                <input type="radio" name="danhMuc" value="@dm.MaDM" checked="@(Model.Filter.DanhMuc == dm.MaDM)"
+                                       onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                                <span>@LocHelper.TenDanhMuc(dm.MaDM, dm.TenDM)</span>
+                            </span>
+                            <span class="text-[11px] text-muted">(@dm.SoLuongSanPham)</span>
+                        </label>
+                    }
+                </div>
+
+                <!-- 2. Thương hiệu -->
+                <div class="space-y-2 pt-3 border-t border-borderLight">
+                    <p class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_BrandFilter"]</p>
+                    <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
+                        <input type="radio" name="thuongHieu" value="" checked="@(!Model.Filter.ThuongHieu.HasValue)"
+                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                        <span>@L["Product_AllBrands"]</span>
+                    </label>
+                    @foreach (var th in Model.DanhSachThuongHieu)
+                    {
+                        <label class="flex items-center justify-between text-xs text-charcoal/90 cursor-pointer select-none">
+                            <span class="flex items-center gap-2">
+                                <input type="radio" name="thuongHieu" value="@th.MaTH" checked="@(Model.Filter.ThuongHieu == th.MaTH)"
+                                       onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                                <span>@th.TenTH</span>
+                            </span>
+                            <span class="text-[11px] text-muted">(@th.SoLuongSanPham)</span>
+                        </label>
+                    }
+                </div>
+
+                <!-- 3. Khoảng giá (Quy ước theo Điều chỉnh 6) -->
+                <div class="space-y-2 pt-3 border-t border-borderLight">
+                    <p class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_PriceFilter"]</p>
+                    <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
+                        <input type="radio" name="mucGia" value="all" checked="@(string.IsNullOrEmpty(Model.Filter.MucGia) || Model.Filter.MucGia == "all")"
+                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                        <span>@L["Product_AllPrices"]</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
+                        <input type="radio" name="mucGia" value="under300" checked="@(Model.Filter.MucGia == "under300")"
+                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                        <span>@L["Product_PriceUnder300"]</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
+                        <input type="radio" name="mucGia" value="300to500" checked="@(Model.Filter.MucGia == "300to500")"
+                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                        <span>@L["Product_Price300to500"]</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
+                        <input type="radio" name="mucGia" value="over500" checked="@(Model.Filter.MucGia == "over500")"
+                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                        <span>@L["Product_PriceOver500"]</span>
+                    </label>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Khung chứa Lưới sản phẩm & Phân trang AJAX (Điều chỉnh 3 & 4) -->
+        <main class="lg:col-span-9" id="catalog-product-container">
+            <partial name="_SanPhamGridPartial" model="Model" />
+        </main>
+    </div>
+</div>
+

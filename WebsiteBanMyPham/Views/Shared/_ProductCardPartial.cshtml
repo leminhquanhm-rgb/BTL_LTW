@@ -1,0 +1,92 @@
+@model WebsiteBanMyPham.ViewModels.SanPhamItemViewModel
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+
+<div class="bg-surface rounded-card border border-borderLight overflow-hidden shadow-soft hover:shadow-hover transition group flex flex-col justify-between">
+    <div>
+        <!-- Ảnh sản phẩm kèm nhãn giảm giá & hết hàng -->
+        <a asp-controller="ChiTietSanPham" asp-action="Index" asp-route-id="@Model.MaSP"
+           class="block relative aspect-square bg-cream overflow-hidden cursor-pointer">
+            <img src="@(string.IsNullOrEmpty(Model.AnhChinh) ? "/images/placeholder.svg" : Model.AnhChinh)"
+                 alt="@Model.TenSP"
+                 onerror="this.src='/images/placeholder.svg'"
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+
+            @if (Model.PhanTramGiam > 0)
+            {
+                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary text-white shadow-sm">
+                    -@Model.PhanTramGiam%
+                </span>
+            }
+
+            @if (!Model.ConHang)
+            {
+                <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-charcoal/80 text-white backdrop-blur shadow-sm">
+                    @L["Product_OutOfStock"]
+                </span>
+            }
+        </a>
+
+        <!-- Thông tin thương hiệu, đánh giá sao & tên -->
+        <div class="p-3.5 sm:p-4 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-muted">
+                <span class="uppercase tracking-wider font-bold text-primary truncate max-w-[65%]">
+                    @Model.TenThuongHieu
+                </span>
+                <span class="flex items-center gap-1 text-amber-500 font-bold shrink-0">
+                    <i class="ph-fill ph-star"></i>
+                    <span>@Model.DiemSaoTrungBinh.ToString("0.0")</span>
+                    @if (Model.SoDanhGia > 0)
+                    {
+                        <span class="text-muted/70 font-normal text-[10px]">(@Model.SoDanhGia)</span>
+                    }
+                </span>
+            </div>
+
+            <h4 class="font-bold text-charcoal text-xs sm:text-sm line-clamp-2 hover:text-primary transition leading-snug">
+                <a asp-controller="ChiTietSanPham" asp-action="Index" asp-route-id="@Model.MaSP">
+                    @Model.TenSP
+                </a>
+            </h4>
+        </div>
+    </div>
+
+    <!-- Khối giá bán và nút hành động -->
+    <div class="px-3.5 pb-3.5 sm:px-4 sm:pb-4 pt-1 space-y-2.5">
+        <div class="flex items-baseline gap-2">
+            <span class="text-sm sm:text-base font-bold text-primary">
+                @LocHelper.FormatCurrency(Model.Gia)
+            </span>
+            @if (Model.GiaGoc.HasValue && Model.GiaGoc.Value > Model.Gia)
+            {
+                <span class="text-xs text-muted line-through">
+                    @LocHelper.FormatCurrency(Model.GiaGoc.Value)
+                </span>
+            }
+        </div>
+
+        <!-- Hai nút hành động: Thêm giỏ và Mua ngay (ở 5B hiển thị giao diện, vô hiệu khi hết hàng) -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+            @if (Model.ConHang)
+            {
+                <button type="button"
+                        class="py-2 bg-cream hover:bg-pastel text-charcoal font-bold rounded-btn border border-borderLight transition flex items-center justify-center gap-1 shadow-sm">
+                    <i class="ph-bold ph-shopping-bag"></i>
+                    <span>@L["Product_AddToCart"]</span>
+                </button>
+                <button type="button"
+                        class="py-2 bg-primary hover:bg-primaryHover text-white font-bold rounded-btn transition flex items-center justify-center gap-1 shadow-sm">
+                    <i class="ph-fill ph-lightning"></i>
+                    <span>@L["Product_BuyNow"]</span>
+                </button>
+            }
+            else
+            {
+                <button type="button" disabled
+                        class="col-span-2 py-2 bg-cream text-muted font-bold rounded-btn border border-borderLight/60 cursor-not-allowed opacity-75 text-center">
+                    @L["Product_OutOfStock"]
+                </button>
+            }
+        </div>
+    </div>
+</div>
+

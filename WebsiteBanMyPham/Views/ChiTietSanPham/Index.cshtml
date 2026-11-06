@@ -1,0 +1,233 @@
+@model WebsiteBanMyPham.ViewModels.SanPhamChiTietViewModel
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+
+@{
+    ViewData["Title"] = Model.TenSP;
+    var mainImage = Model.DanhSachAnh.FirstOrDefault() ?? "/images/placeholder.svg";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-10">
+    <!-- Breadcrumb điều hướng -->
+    <div class="text-xs text-muted flex items-center gap-2">
+        <a asp-controller="SanPham" asp-action="Index" class="text-primary font-semibold hover:underline flex items-center gap-1">
+            <i class="ph ph-arrow-left"></i>
+            <span>@L["Product_BackToCatalog"]</span>
+        </a>
+        <span>/</span>
+        <span class="text-charcoal font-medium truncate max-w-md">@Model.TenSP</span>
+    </div>
+
+    <!-- Khung chính: Thư viện ảnh (lg:col-span-6) & Thông tin chi tiết (lg:col-span-6) -->
+    <div class="bg-surface p-6 sm:p-8 rounded-card border border-borderLight shadow-soft grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Gallery Ảnh lớn + Thumbnails -->
+        <div class="lg:col-span-6 space-y-3">
+            <div class="aspect-square rounded-card overflow-hidden bg-cream border border-borderLight relative">
+                <img id="detail-main-img" src="@mainImage" alt="@Model.TenSP"
+                     onerror="this.src='/images/placeholder.svg'"
+                     class="w-full h-full object-cover transition duration-300" />
+
+                @if (Model.PhanTramGiam > 0)
+                {
+                    <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold bg-primary text-white shadow-sm">
+                        -@Model.PhanTramGiam%
+                    </span>
+                }
+            </div>
+
+            @if (Model.DanhSachAnh.Count > 1)
+            {
+                <div class="grid grid-cols-4 gap-3">
+                    @for (int i = 0; i < Model.DanhSachAnh.Count; i++)
+                    {
+                        var img = Model.DanhSachAnh[i];
+                        <div onclick="document.getElementById('detail-main-img').src = '@img'"
+                             class="aspect-square rounded-btn overflow-hidden border border-borderLight hover:border-primary cursor-pointer transition">
+                            <img src="@img" alt="Thumbnail @i" onerror="this.src='/images/placeholder.svg'" class="w-full h-full object-cover" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Thông tin chi tiết sản phẩm, giá, số lượng & nút mua -->
+        <div class="lg:col-span-6 space-y-5">
+            <!-- Huy hiệu thương hiệu & trạng thái kinh doanh -->
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="px-3 py-1 rounded-full bg-pastel text-primary text-xs font-bold uppercase tracking-wider">
+                    @Model.TenThuongHieu
+                </span>
+
+                @if (!Model.TrangThai)
+                {
+                    <span class="px-3 py-1 rounded-full bg-statusDanger/10 text-statusDanger text-xs font-bold">
+                        @L["Product_Discontinued"]
+                    </span>
+                }
+                else if (!Model.ConHang)
+                {
+                    <span class="px-3 py-1 rounded-full bg-charcoal/80 text-white text-xs font-bold">
+                        @L["Product_OutOfStock"]
+                    </span>
+                }
+                else
+                {
+                    <span class="px-3 py-1 rounded-full bg-[#E6F4EE] text-statusSuccess text-xs font-semibold">
+                        ● @L["Product_InStock"] · @L["Product_StockRemaining"] @Model.SoLuongTon
+                    </span>
+                }
+            </div>
+
+            <!-- Tên sản phẩm -->
+            <h1 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal leading-snug">
+                @Model.TenSP
+            </h1>
+
+            <!-- Điểm sao trung bình & Số đánh giá -->
+            <div class="flex items-center gap-3 text-xs">
+                <span class="flex items-center gap-1 text-amber-500 font-bold text-sm">
+                    <i class="ph-fill ph-star"></i>
+                    <span>@Model.DiemSaoTrungBinh.ToString("0.0")</span>
+                </span>
+                <span class="text-muted">
+                    | @Model.SoDanhGia @L["Product_TabReviews"]
+                </span>
+                <span class="text-muted/60">
+                    | @L["Product_ReviewsNote"]
+                </span>
+            </div>
+
+            <!-- Khối giá bán -->
+            <div class="flex items-baseline gap-3 p-4 rounded-btn bg-cream border border-borderLight">
+                <span class="text-2xl sm:text-3xl font-bold text-primary">
+                    @LocHelper.FormatCurrency(Model.Gia)
+                </span>
+                @if (Model.GiaGoc.HasValue && Model.GiaGoc.Value > Model.Gia)
+                {
+                    <span class="text-sm text-muted line-through">
+                        @LocHelper.FormatCurrency(Model.GiaGoc.Value)
+                    </span>
+                    <span class="px-2 py-0.5 rounded bg-primary text-white text-xs font-semibold">
+                        -@Model.PhanTramGiam%
+                    </span>
+                }
+            </div>
+
+            <!-- Điều chỉnh số lượng & Nút Thêm giỏ / Mua ngay (ở 5B hiển thị giao diện, vô hiệu khi hết hàng) -->
+            <div class="pt-2 flex flex-wrap items-center gap-3">
+                <div class="inline-flex items-center border border-borderLight rounded-btn bg-cream">
+                    <button type="button" onclick="adjustDetailQty(-1)" class="px-3.5 py-2.5 text-charcoal hover:bg-pastel font-bold transition select-none">-</button>
+                    <span id="detail-qty" class="px-4 py-2.5 text-sm font-bold border-x border-borderLight bg-surface select-none">1</span>
+                    <button type="button" onclick="adjustDetailQty(1)" class="px-3.5 py-2.5 text-charcoal hover:bg-pastel font-bold transition select-none">+</button>
+                </div>
+
+                @if (Model.ConHang)
+                {
+                    <button type="button"
+                            class="flex-1 py-3 px-5 bg-cream hover:bg-pastel text-charcoal text-xs sm:text-sm font-bold rounded-btn border border-borderLight transition shadow-sm flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-shopping-bag text-base"></i>
+                        <span>@L["Product_AddToCart"]</span>
+                    </button>
+
+                    <button type="button"
+                            class="py-3 px-6 bg-primary hover:bg-primaryHover text-white text-xs sm:text-sm font-bold rounded-btn transition shadow-soft flex items-center justify-center gap-1.5">
+                        <i class="ph-fill ph-lightning text-base"></i>
+                        <span>@L["Product_BuyNow"]</span>
+                    </button>
+                }
+                else
+                {
+                    <button type="button" disabled
+                            class="flex-1 py-3 px-5 bg-cream text-muted text-xs sm:text-sm font-bold rounded-btn border border-borderLight/60 cursor-not-allowed opacity-75 text-center">
+                        @(Model.TrangThai ? L["Product_OutOfStock"] : L["Product_Discontinued"])
+                    </button>
+                }
+            </div>
+
+            <!-- Khối mô tả sản phẩm (Hiển thị văn bản mã hóa an toàn, không Html.Raw theo quy chuẩn 5B) -->
+            <div class="pt-4 border-t border-borderLight space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_TabDescription"]</h3>
+                <div class="text-xs sm:text-sm text-charcoal/80 leading-relaxed whitespace-pre-line bg-cream/40 p-4 rounded-btn border border-borderLight/60">
+                    @(string.IsNullOrWhiteSpace(Model.MoTa) ? "Mô tả sản phẩm đang được cập nhật." : Model.MoTa)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Khu vực 2 cột bên dưới: Đánh giá đã duyệt (UC05) & Sản phẩm liên quan cùng danh mục -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Cột trái: Đánh giá từ khách hàng đã mua (Tối đa 10 đánh giá DaDuyet mới nhất) -->
+        <div class="lg:col-span-6 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <div class="border-b border-borderLight pb-3">
+                <h3 class="font-serif text-lg font-bold text-charcoal">@L["Product_TabReviews"]</h3>
+                <p class="text-xs text-muted">@L["Product_ReviewsNote"]</p>
+            </div>
+
+            @if (Model.DanhGiaMoiNhat.Any())
+            {
+                <div class="space-y-3">
+                    @foreach (var dg in Model.DanhGiaMoiNhat)
+                    {
+                        <div class="p-4 rounded-card bg-cream border border-borderLight space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-charcoal text-xs">@dg.TenKhachHang</span>
+                                <span class="text-amber-500 font-bold text-xs">
+                                    @for (int s = 0; s < dg.SoSao; s++)
+                                    {
+                                        <i class="ph-fill ph-star"></i>
+                                    }
+                                </span>
+                            </div>
+                            <p class="text-xs text-charcoal/80 leading-relaxed">@dg.NoiDung</p>
+                            <span class="text-[10px] text-muted block">@LocHelper.FormatDateTime(dg.NgayTao)</span>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="p-8 text-center text-xs text-muted">
+                    <p>@L["Product_NoReviewsYet"]</p>
+                </div>
+            }
+        </div>
+
+        <!-- Cột phải: Sản phẩm cùng danh mục gợi ý mua kèm -->
+        <div class="lg:col-span-6 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <div class="border-b border-borderLight pb-3">
+                <h3 class="font-serif text-lg font-bold text-charcoal">@L["Product_RelatedTitle"]</h3>
+                <p class="text-xs text-muted">@L["Product_RelatedSubtitle"]</p>
+            </div>
+
+            @if (Model.SanPhamLienQuan.Any())
+            {
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach (var sp in Model.SanPhamLienQuan)
+                    {
+                        <partial name="_ProductCardPartial" model="sp" />
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="p-8 text-center text-xs text-muted">
+                    <p>Không có sản phẩm liên quan nào khác trong danh mục này.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function adjustDetailQty(delta) {
+            var el = document.getElementById('detail-qty');
+            if (!el) return;
+            var val = parseInt(el.innerText) || 1;
+            val += delta;
+            if (val < 1) val = 1;
+            if (val > 99) val = 99;
+            el.innerText = val;
+        }
+    </script>
+}
+

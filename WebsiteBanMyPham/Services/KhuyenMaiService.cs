@@ -144,5 +144,33 @@ namespace WebsiteBanMyPham.Services
                 SoLuotDaDung = k.SoLuotDaDung
             }).ToList();
         }
+
+        public async Task<List<KhuyenMaiItemViewModel>> LayKhuyenMaiDangDienRaAsync()
+        {
+            var now = DateTime.Now;
+
+            var list = await _context.KhuyenMai
+                .AsNoTracking()
+                .Where(k => k.TrangThai
+                            && now >= k.NgayBatDau
+                            && now <= k.NgayKetThuc
+                            && (k.SoLuotToiDa == null || k.SoLuotDaDung < k.SoLuotToiDa))
+                .OrderByDescending(k => k.GiaTriGiam)
+                .ToListAsync();
+
+            return list.Select(k => new KhuyenMaiItemViewModel
+            {
+                MaKM = k.MaKM,
+                Code = k.Code,
+                TenKM = k.TenKM,
+                LoaiGiam = k.LoaiGiam,
+                GiaTriGiam = k.GiaTriGiam,
+                GiamToiDa = k.GiamToiDa,
+                DonToiThieu = k.DonToiThieu,
+                NgayKetThuc = k.NgayKetThuc,
+                SoLuotToiDa = k.SoLuotToiDa,
+                SoLuotDaDung = k.SoLuotDaDung
+            }).ToList();
+        }
     }
 }

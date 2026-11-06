@@ -92,3 +92,114 @@ function togglePassword(inputId, btn) {
         }
     }
 }
+
+// 6. Sao chép mã khuyến mãi vào Clipboard
+function copyPromoCode(code, successMsg) {
+    if (!code) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(function () {
+            showToast(successMsg || code, true);
+        }).catch(function () {
+            showToast(code, true);
+        });
+    } else {
+        var tempInput = document.createElement("input");
+        tempInput.value = code;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        showToast(successMsg || code, true);
+    }
+}
+
+// 7. AJAX Lọc sản phẩm & Phân trang (Debounce 300ms + AbortController + History State)
+var catalogFilterAbortController = null;
+var catalogSearchDebounceTimer = null;
+
+function applyCatalogFilters(resetPage, errorMsg) {
+    var form = document.getElementById("catalog-filter-form");
+    var container = document.getElementById("catalog-product-container");
+    if (!form || !container) return;
+
+    if (resetPage) {
+        var pageInput = form.querySelector("input[name='trang']");
+        if (pageInput) pageInput.value = "1";
+    }
+
+    var formData = new FormData(form);
+    var params = new URLSearchParams();
+
+    formData.forEach(function (value, key) {
+        if (value && value.toString().trim() !== "" && value !== "all") {
+            params.append(key, value.toString().trim());
+        }
+    });
+
+    var url = form.action.split("?")[0] + (params.toString() ? "?" + params.toString() : "");
+    fetchCatalogProducts(url, true, errorMsg);
+}
+
+function fetchCatalogProducts(url, updateHistory, errorMsg) {
+    var container = document.getElementById("catalog-product-container");
+    if (!container) return;
+
+    if (catalogFilterAbortController) {
+        catalogFilterAbortController.abort();
+    }
+    catalogFilterAbortController = new AbortController();
+
+    // Hiệu ứng mờ nhẹ báo trạng thái đang tải
+    container.classList.add("opacity-50", "pointer-events-none");
+
+    fetch(url, {
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        signal: catalogFilterAbortController.signal
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP status " + response.status);
+        }
+        return response.text();
+    })
+    .then(function (html) {
+        container.innerHTML = html;
+        container.classList.remove("opacity-50", "pointer-events-none");
+
+        if (updateHistory) {
+            window.history.pushState(null, "", url);
+        }
+    })
+    .catch(function (err) {
+        container.classList.remove("opacity-50", "pointer-events-none");
+        if (err.name === "AbortError") {
+            return;
+        }
+        showToast(errorMsg || "Lỗi tải dữ liệu. Vui lòng thử lại.", false);
+    });
+}
+
+function onCatalogSearchInput(input, errorMsg) {
+    clearTimeout(catalogSearchDebounceTimer);
+    catalogSearchDebounceTimer = setTimeout(function () {
+        applyCatalogFilters(true, errorMsg);
+    }, 300);
+}
+
+function onCatalogFilterChange(errorMsg) {
+    applyCatalogFilters(true, errorMsg);
+}
+
+function onCatalogPaginationClick(e, link, errorMsg) {
+    if (e) e.preventDefault();
+    if (!link || !link.href) return;
+    fetchCatalogProducts(link.href, true, errorMsg);
+}
+
+window.addEventListener("popstate", function () {
+    if (document.getElementById("catalog-product-container")) {
+        fetchCatalogProducts(window.location.href, false);
+    }
+});

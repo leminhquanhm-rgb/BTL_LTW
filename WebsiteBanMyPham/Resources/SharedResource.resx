@@ -603,7 +603,7 @@
     <value>Bộ sưu tập Dưỡng Sáng Cánh Hoa Hồng</value>
   </data>
   <data name="Home_HeroTitle" xml:space="preserve">
-    <value>Làn da căng bóng tự nhiên cùng Serene Rose</value>
+    <value>Làn da căng bóng tự nhiên cùng Serene Cosmetics</value>
   </data>
   <data name="Home_HeroDesc" xml:space="preserve">
     <value>Dòng sản phẩm thuần chay lành tính chiết xuất từ cánh hoa hồng tươi, mang lại nét rạng rỡ và thuần khiết cho làn da bạn.</value>
@@ -639,7 +639,7 @@
     <value>Thành phần phân trang</value>
   </data>
   <data name="Home_PromoSectionTitle" xml:space="preserve">
-    <value>Khu vực ưu đãi &amp; Mã khuyến mãi</value>
+    <value>Ví Voucher Khuyến Mãi Của Shop</value>
   </data>
   <data name="Home_PromoSectionDesc" xml:space="preserve">
     <value>Các chương trình khuyến mãi và ví voucher chính thức sẽ được hiển thị đầy đủ tại đây ở Bước 5.</value>
@@ -827,5 +827,179 @@
   </data>
   <data name="Placeholder_Address" xml:space="preserve">
     <value>Số nhà, tên đường, phường/xã, quận/huyện...</value>
+  </data>
+  <data name="Home_HeroBadge" xml:space="preserve">
+    <value>Chăm sóc da mỗi ngày</value>
+  </data>
+  <data name="Home_HeroSubtitle" xml:space="preserve">
+    <value>Tinh hoa mỹ phẩm an toàn với công thức dịu nhẹ và thành phần minh bạch.</value>
+  </data>
+  <data name="Home_Feature1_Title" xml:space="preserve">
+    <value>100% Chính hãng</value>
+  </data>
+  <data name="Home_Feature1_Desc" xml:space="preserve">
+    <value>Sản phẩm nguồn gốc rõ ràng</value>
+  </data>
+  <data name="Home_Feature2_Title" xml:space="preserve">
+    <value>Thanh toán khi nhận hàng</value>
+  </data>
+  <data name="Home_Feature2_Desc" xml:space="preserve">
+    <value>Hỗ trợ phương thức COD</value>
+  </data>
+  <data name="Home_Feature3_Title" xml:space="preserve">
+    <value>Theo dõi đơn hàng dễ dàng</value>
+  </data>
+  <data name="Home_Feature3_Desc" xml:space="preserve">
+    <value>Cập nhật tiến trình nhanh chóng</value>
+  </data>
+  <data name="Home_BestSellerTitle" xml:space="preserve">
+    <value>Sản phẩm bán chạy</value>
+  </data>
+  <data name="Home_BestSellerSubtitle" xml:space="preserve">
+    <value>Được khách hàng lựa chọn nhiều nhất</value>
+  </data>
+  <data name="Home_NewArrivalsTitle" xml:space="preserve">
+    <value>Sản phẩm mới ra mắt</value>
+  </data>
+  <data name="Home_NewArrivalsSubtitle" xml:space="preserve">
+    <value>Những sản phẩm mới nhất tại cửa hàng</value>
+  </data>
+  <data name="Home_PromoSectionSubtitle" xml:space="preserve">
+    <value>Bấm sao chép mã để áp dụng khi thanh toán</value>
+  </data>
+  <data name="Home_PromoCopyCode" xml:space="preserve">
+    <value>Sao chép mã</value>
+  </data>
+  <data name="Home_PromoCopied" xml:space="preserve">
+    <value>Đã sao chép!</value>
+  </data>
+  <data name="Home_CategorySectionTitle" xml:space="preserve">
+    <value>Danh Mục Mỹ Phẩm</value>
+  </data>
+  <data name="Home_CategorySectionSubtitle" xml:space="preserve">
+    <value>Chăm sóc toàn diện theo từng bước làm đẹp</value>
+  </data>
+  <data name="Home_ViewAllCategories" xml:space="preserve">
+    <value>Xem tất cả danh mục →</value>
+  </data>
+  <data name="Home_ViewAllProducts" xml:space="preserve">
+    <value>Xem tất cả sản phẩm →</value>
+  </data>
+  <data name="Product_CatalogTitle" xml:space="preserve">
+    <value>Cửa Hàng Mỹ Phẩm</value>
+  </data>
+  <data name="Product_Breadcrumb" xml:space="preserve">
+    <value>Cửa hàng mỹ phẩm</value>
+  </data>
+  <data name="Product_FilterTitle" xml:space="preserve">
+    <value>Bộ lọc sản phẩm</value>
+  </data>
+  <data name="Product_ResetFilter" xml:space="preserve">
+    <value>Đặt lại</value>
+  </data>
+  <data name="Product_CategoryFilter" xml:space="preserve">
+    <value>1. Danh mục mỹ phẩm</value>
+  </data>
+  <data name="Product_AllCategories" xml:space="preserve">
+    <value>Tất cả danh mục</value>
+  </data>
+  <data name="Product_BrandFilter" xml:space="preserve">
+    <value>2. Thương hiệu</value>
+  </data>
+  <data name="Product_AllBrands" xml:space="preserve">
+    <value>Tất cả thương hiệu</value>
+  </data>
+  <data name="Product_PriceFilter" xml:space="preserve">
+    <value>3. Khoảng giá</value>
+  </data>
+  <data name="Product_AllPrices" xml:space="preserve">
+    <value>Tất cả mức giá</value>
+  </data>
+  <data name="Product_PriceUnder300" xml:space="preserve">
+    <value>Dưới 300.000đ</value>
+  </data>
+  <data name="Product_Price300to500" xml:space="preserve">
+    <value>Từ 300.000đ - 500.000đ</value>
+  </data>
+  <data name="Product_PriceOver500" xml:space="preserve">
+    <value>Trên 500.000đ</value>
+  </data>
+  <data name="Product_SortDefault" xml:space="preserve">
+    <value>Sắp xếp: Mới nhất</value>
+  </data>
+  <data name="Product_SortPriceAsc" xml:space="preserve">
+    <value>Giá: Tăng dần (Thấp → Cao)</value>
+  </data>
+  <data name="Product_SortPriceDesc" xml:space="preserve">
+    <value>Giá: Giảm dần (Cao → Thấp)</value>
+  </data>
+  <data name="Product_SortBestSeller" xml:space="preserve">
+    <value>Bán chạy nhất</value>
+  </data>
+  <data name="Product_TotalResults" xml:space="preserve">
+    <value>sản phẩm</value>
+  </data>
+  <data name="Product_NoResults" xml:space="preserve">
+    <value>Không tìm thấy sản phẩm phù hợp với bộ lọc.</value>
+  </data>
+  <data name="Product_DiscountTag" xml:space="preserve">
+    <value>Giảm</value>
+  </data>
+  <data name="Product_OutOfStock" xml:space="preserve">
+    <value>Hết hàng</value>
+  </data>
+  <data name="Product_Discontinued" xml:space="preserve">
+    <value>Ngừng kinh doanh</value>
+  </data>
+  <data name="Product_InStock" xml:space="preserve">
+    <value>Đang kinh doanh</value>
+  </data>
+  <data name="Product_AddToCart" xml:space="preserve">
+    <value>+ Thêm giỏ</value>
+  </data>
+  <data name="Product_BuyNow" xml:space="preserve">
+    <value>Mua ngay</value>
+  </data>
+  <data name="Product_BackToCatalog" xml:space="preserve">
+    <value>Quay lại Cửa hàng</value>
+  </data>
+  <data name="Product_StockRemaining" xml:space="preserve">
+    <value>Tồn kho:</value>
+  </data>
+  <data name="Product_Quantity" xml:space="preserve">
+    <value>Số lượng</value>
+  </data>
+  <data name="Product_TabDescription" xml:space="preserve">
+    <value>1. Mô tả sản phẩm</value>
+  </data>
+  <data name="Product_TabReviews" xml:space="preserve">
+    <value>Đánh giá từ khách hàng</value>
+  </data>
+  <data name="Product_NoReviewsYet" xml:space="preserve">
+    <value>Chưa có đánh giá nào cho sản phẩm này.</value>
+  </data>
+  <data name="Product_RelatedTitle" xml:space="preserve">
+    <value>Sản phẩm liên quan gợi ý mua kèm</value>
+  </data>
+  <data name="Product_ReviewsNote" xml:space="preserve">
+    <value>Chỉ hiển thị các đánh giá đã được duyệt</value>
+  </data>
+  <data name="Api_Error_InvalidPriceRangeTitle" xml:space="preserve">
+    <value>Khoảng giá không hợp lệ</value>
+  </data>
+  <data name="Api_Error_InvalidPriceRangeDetail" xml:space="preserve">
+    <value>Giá tối thiểu (giaTu) không được lớn hơn giá tối đa (giaDen).</value>
+  </data>
+  <data name="Api_Error_NotFoundTitle" xml:space="preserve">
+    <value>Không tìm thấy tài nguyên</value>
+  </data>
+  <data name="Api_Error_ProductNotFoundDetail" xml:space="preserve">
+    <value>Không tìm thấy sản phẩm có mã {0}.</value>
+  </data>
+  <data name="Placeholder_SearchProduct" xml:space="preserve">
+    <value>Tìm tên sản phẩm, thương hiệu...</value>
+  </data>
+  <data name="Toast_NetworkError" xml:space="preserve">
+    <value>Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.</value>
   </data>
 </root>

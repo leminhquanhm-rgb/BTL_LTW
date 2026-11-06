@@ -1,0 +1,119 @@
+@model WebsiteBanMyPham.ViewModels.SanPhamIndexViewModel
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+
+<div class="space-y-5">
+    <!-- Thanh thông báo kết quả tìm kiếm / lọc -->
+    <div class="flex items-center justify-between text-xs text-muted pb-2 border-b border-borderLight">
+        <p>
+            <span>@L["Product_TotalResults"]:</span>
+            <strong class="text-charcoal font-bold text-sm ml-1">@Model.TongSoKetQua</strong>
+        </p>
+    </div>
+
+    @if (!Model.DanhSachSanPham.Items.Any())
+    {
+        <!-- Khung thông báo không tìm thấy sản phẩm -->
+        <div class="p-12 text-center bg-surface rounded-card border border-borderLight shadow-soft space-y-3">
+            <div class="w-14 h-14 mx-auto rounded-full bg-pastel/70 text-primary flex items-center justify-center text-2xl">
+                <i class="ph ph-magnifying-glass"></i>
+            </div>
+            <h3 class="font-bold text-charcoal text-base">@L["Product_NoResults"]</h3>
+            <p class="text-xs text-muted max-w-sm mx-auto">
+                Vui lòng thử tìm kiếm bằng từ khóa khác hoặc xóa bớt các tiêu chí lọc để xem thêm sản phẩm.
+            </p>
+            <button type="button" onclick="document.getElementById('catalog-filter-form').reset(); onCatalogFilterChange('@L["Toast_NetworkError"]')"
+                    class="mt-2 px-4 py-2 bg-primary text-white text-xs font-bold rounded-btn transition shadow-sm inline-flex items-center gap-1.5">
+                <i class="ph ph-arrow-counter-clockwise"></i>
+                <span>@L["Product_ResetFilter"]</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <!-- Lưới sản phẩm: 2 cột mobile, 3 cột tablet, 4 cột desktop -->
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+            @foreach (var sp in Model.DanhSachSanPham.Items)
+            {
+                <partial name="_ProductCardPartial" model="sp" />
+            }
+        </div>
+
+        <!-- Phân trang AJAX giữ nguyên query string -->
+        @if (Model.DanhSachSanPham.TotalPages > 1)
+        {
+            var pIndex = Model.DanhSachSanPham.PageIndex;
+            var tPages = Model.DanhSachSanPham.TotalPages;
+
+            var queryDict = Context.Request.Query.ToDictionary(q => q.Key, q => q.Value.ToString());
+
+            string MakeUrl(int p)
+            {
+                var d = new Dictionary<string, string>(queryDict, StringComparer.OrdinalIgnoreCase);
+                d["trang"] = p.ToString();
+                return $"{Context.Request.Path}?" + string.Join("&", d.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
+            }
+
+            <nav class="flex items-center justify-center gap-1.5 pt-6 text-xs font-semibold" aria-label="Pagination">
+                @if (pIndex > 1)
+                {
+                    <a href="@MakeUrl(pIndex - 1)"
+                       onclick="onCatalogPaginationClick(event, this, '@L["Toast_NetworkError"]')"
+                       class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition flex items-center gap-1">
+                        <i class="ph ph-caret-left"></i>
+                        <span>@L["Pagination_Previous"]</span>
+                    </a>
+                }
+                else
+                {
+                    <span class="px-3 py-1.5 rounded-btn bg-cream border border-borderLight text-muted/60 cursor-not-allowed flex items-center gap-1">
+                        <i class="ph ph-caret-left"></i>
+                        <span>@L["Pagination_Previous"]</span>
+                    </span>
+                }
+
+                @for (int i = 1; i <= tPages; i++)
+                {
+                    if (i == 1 || i == tPages || (i >= pIndex - 2 && i <= pIndex + 2))
+                    {
+                        if (i == pIndex)
+                        {
+                            <span class="px-3 py-1.5 rounded-btn bg-primary text-white font-bold shadow-sm">
+                                @i
+                            </span>
+                        }
+                        else
+                        {
+                            <a href="@MakeUrl(i)"
+                               onclick="onCatalogPaginationClick(event, this, '@L["Toast_NetworkError"]')"
+                               class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition">
+                                @i
+                            </a>
+                        }
+                    }
+                    else if (i == pIndex - 3 || i == pIndex + 3)
+                    {
+                        <span class="px-1 text-muted">...</span>
+                    }
+                }
+
+                @if (pIndex < tPages)
+                {
+                    <a href="@MakeUrl(pIndex + 1)"
+                       onclick="onCatalogPaginationClick(event, this, '@L["Toast_NetworkError"]')"
+                       class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition flex items-center gap-1">
+                        <span>@L["Pagination_Next"]</span>
+                        <i class="ph ph-caret-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <span class="px-3 py-1.5 rounded-btn bg-cream border border-borderLight text-muted/60 cursor-not-allowed flex items-center gap-1">
+                        <span>@L["Pagination_Next"]</span>
+                        <i class="ph ph-caret-right"></i>
+                    </span>
+                }
+            </nav>
+        }
+    }
+</div>
+

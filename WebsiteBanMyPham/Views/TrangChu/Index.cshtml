@@ -1,109 +1,300 @@
+@model WebsiteBanMyPham.ViewModels.TrangChuViewModel
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+
 @{
-    ViewData["Title"] = L["Nav_Home"].Value;
+    ViewData["Title"] = L["Nav_Home"];
 }
 
-<div class="space-y-12 pb-16">
-    
-    <!-- Hero Banner Mỹ Phẩm -->
-    <section class="bg-gradient-to-r from-pastel/55 via-cream to-pastel/30 border-b border-borderLight py-10 lg:py-14">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
+<div class="flex-1 space-y-12 sm:space-y-16 pb-16">
+    <!-- 1. HERO BANNER KHUYẾN MÃI & TRÌNH CHIẾU BANNER -->
+    <section class="bg-gradient-to-r from-pastel/55 via-cream to-pastel/30 border-b border-borderLight">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 lg:py-14 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <!-- Cột trái: Giới thiệu thương hiệu & 3 khối cam kết chính -->
             <div class="lg:col-span-6 space-y-5">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-nude text-primary text-xs font-semibold shadow-sm">
                     <i class="ph-fill ph-sparkle"></i>
-                    <span>@L["Home_HeroTag"]</span>
+                    <span>@L["Home_HeroBadge"]</span>
                 </div>
-                <h1 class="text-3xl sm:text-5xl font-bold text-charcoal leading-tight font-serif">
+
+                <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-charcoal leading-tight">
                     @L["Home_HeroTitle"]
                 </h1>
-                <p class="text-sm sm:text-base text-muted leading-relaxed">
-                    @L["Home_HeroDesc"]
+
+                <p class="text-xs sm:text-sm text-muted leading-relaxed max-w-xl">
+                    @L["Home_HeroSubtitle"]
                 </p>
-                <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <a asp-controller="SanPham" asp-action="Index" class="px-6 py-3 bg-primary hover:bg-primaryHover text-white text-sm font-semibold rounded-btn transition shadow-soft flex items-center gap-2">
-                        @L["Home_ShopNow"] <i class="ph ph-arrow-right"></i>
+
+                <div class="flex flex-wrap items-center gap-3 pt-1">
+                    <a asp-controller="SanPham" asp-action="Index"
+                       class="px-6 py-3 bg-primary hover:bg-primaryHover text-white text-xs sm:text-sm font-semibold rounded-btn transition shadow-soft flex items-center gap-2">
+                        <span>@L["Home_ShopNow"]</span>
+                        <i class="ph ph-arrow-right"></i>
                     </a>
-                    <a href="#promo-section" class="px-5 py-3 bg-surface hover:bg-pastel/50 text-charcoal border border-nude text-sm font-semibold rounded-btn transition flex items-center gap-1.5">
-                        <i class="ph-fill ph-ticket text-primary"></i> @L["Home_GetVoucher"]
-                    </a>
+                    <button type="button" onclick="document.getElementById('promo-section').scrollIntoView({behavior:'smooth'})"
+                            class="px-5 py-3 bg-surface hover:bg-pastel/50 text-charcoal border border-nude text-xs sm:text-sm font-semibold rounded-btn transition flex items-center gap-1.5">
+                        <i class="ph-fill ph-ticket text-primary"></i>
+                        <span>@L["Home_GetVoucher"]</span>
+                    </button>
+                </div>
+
+                <!-- 3 Khối đặc điểm: Chính hãng, Thanh toán COD, Theo dõi đơn hàng (Điều chỉnh 1) -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-borderLight text-xs">
+                    <div class="space-y-0.5">
+                        <p class="font-bold text-charcoal text-xs sm:text-sm flex items-center gap-1">
+                            <i class="ph-fill ph-check-circle text-statusSuccess"></i> @L["Home_Feature1_Title"]
+                        </p>
+                        <p class="text-muted text-[11px]">@L["Home_Feature1_Desc"]</p>
+                    </div>
+                    <div class="space-y-0.5">
+                        <p class="font-bold text-charcoal text-xs sm:text-sm flex items-center gap-1">
+                            <i class="ph-fill ph-money text-primary"></i> @L["Home_Feature2_Title"]
+                        </p>
+                        <p class="text-muted text-[11px]">@L["Home_Feature2_Desc"]</p>
+                    </div>
+                    <div class="space-y-0.5">
+                        <p class="font-bold text-charcoal text-xs sm:text-sm flex items-center gap-1">
+                            <i class="ph-fill ph-package text-charcoal"></i> @L["Home_Feature3_Title"]
+                        </p>
+                        <p class="text-muted text-[11px]">@L["Home_Feature3_Desc"]</p>
+                    </div>
                 </div>
             </div>
 
+            <!-- Cột phải: Slider Banner từ CSDL -->
             <div class="lg:col-span-6">
-                <div class="relative rounded-card overflow-hidden border border-borderLight shadow-soft bg-surface aspect-[16/10]">
-                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=80" alt="@L["Brand_Name"]" class="w-full h-full object-cover" />
-                </div>
-            </div>
+                @if (Model.Banners.Any())
+                {
+                    <div id="home-banner-carousel" class="relative rounded-card overflow-hidden border border-borderLight shadow-soft bg-surface aspect-[16/10] select-none">
+                        @for (int b = 0; b < Model.Banners.Count; b++)
+                        {
+                            var banner = Model.Banners[b];
+                            <div class="banner-slide absolute inset-0 transition-opacity duration-700 @(b == 0 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")"
+                                 data-slide-index="@b">
+                                <a href="@(string.IsNullOrEmpty(banner.LienKet) ? "/SanPham" : banner.LienKet)" class="block w-full h-full relative">
+                                    <img src="@banner.DuongDanAnh" alt="@(banner.TieuDe ?? "Serene Banner")"
+                                         onerror="this.src='/images/placeholder.svg'"
+                                         class="w-full h-full object-cover" />
+                                    @if (!string.IsNullOrEmpty(banner.TieuDe))
+                                    {
+                                        <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur p-3.5 rounded-card border border-nude shadow-soft max-w-sm">
+                                            <p class="font-serif font-bold text-charcoal text-sm sm:text-base leading-snug">@banner.TieuDe</p>
+                                        </div>
+                                    }
+                                </a>
+                            </div>
+                        }
 
-        </div>
-    </section>
+                        <!-- Nút điều hướng Carousel -->
+                        @if (Model.Banners.Count > 1)
+                        {
+                            <button type="button" onclick="prevBannerSlide()" class="absolute left-2.5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-surface/90 hover:bg-surface text-charcoal flex items-center justify-center shadow-md transition" aria-label="Previous">
+                                <i class="ph ph-caret-left text-base"></i>
+                            </button>
+                            <button type="button" onclick="nextBannerSlide()" class="absolute right-2.5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-surface/90 hover:bg-surface text-charcoal flex items-center justify-center shadow-md transition" aria-label="Next">
+                                <i class="ph ph-caret-right text-base"></i>
+                            </button>
 
-    <!-- Khối thử nghiệm giao diện & thành phần dùng chung (Trang tạm Bước 4) -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5">
-            <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-primary">@L["Common_Status"]</span>
-                <h2 class="text-xl font-bold text-charcoal mt-0.5">@L["Home_TestComponentsTitle"]</h2>
-                <p class="text-xs text-muted">@L["Home_TestComponentsDesc"]</p>
-            </div>
-
-            <!-- Demo Status Badges Đơn Hàng -->
-            <div class="space-y-2">
-                <p class="text-xs font-bold text-charcoal">@L["Home_DemoOrderBadges"]:</p>
-                <div class="flex flex-wrap gap-2">
-                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.ChoXacNhan)' />
-                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.DaXacNhan)' />
-                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.DangGiao)' />
-                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.HoanThanh)' />
-                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.DaHuy)' />
-                </div>
-            </div>
-
-            <!-- Demo Status Badges Thanh Toán & Hoàn Tiền -->
-            <div class="space-y-2">
-                <p class="text-xs font-bold text-charcoal">@L["Home_DemoPaymentBadges"]:</p>
-                <div class="flex flex-wrap gap-2">
-                    <partial name="_StatusBadge" model='("ThanhToan", TrangThaiThanhToanConstant.ChuaThanhToan)' />
-                    <partial name="_StatusBadge" model='("ThanhToan", TrangThaiThanhToanConstant.DaThanhToan)' />
-                    <partial name="_StatusBadge" model='("ThanhToan", TrangThaiThanhToanConstant.ThatBai)' />
-                    <partial name="_StatusBadge" model='("HoanTiển", TrangThaiHoanTienConstant.KhongCan)' />
-                    <partial name="_StatusBadge" model='("HoanTien", TrangThaiHoanTienConstant.ChoHoan)' />
-                    <partial name="_StatusBadge" model='("HoanTien", TrangThaiHoanTienConstant.DaHoan)' />
-                </div>
-            </div>
-
-            <!-- Demo Nút bấm & Toast Trigger -->
-            <div class="space-y-2 pt-2 border-t border-borderLight">
-                <p class="text-xs font-bold text-charcoal">@L["Home_DemoButtons"]:</p>
-                <div class="flex flex-wrap gap-2">
-                    <button type="button" onclick="showToast('@L["Toast_DemoSuccess"]', true)" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-semibold rounded-btn transition shadow-sm">
-                        @L["Home_TriggerSuccessToast"]
-                    </button>
-                    <button type="button" onclick="showToast('@L["Toast_DemoError"]', false)" class="px-4 py-2 bg-surface hover:bg-cream border border-borderLight text-charcoal text-xs font-semibold rounded-btn transition">
-                        @L["Home_TriggerErrorToast"]
-                    </button>
-                </div>
-            </div>
-
-            <!-- Demo Phân trang -->
-            <div class="pt-2 border-t border-borderLight">
-                <p class="text-xs font-bold text-charcoal mb-2">@L["Home_DemoPagination"]:</p>
-                @{
-                    ViewData["PageIndex"] = 2;
-                    ViewData["TotalPages"] = 5;
+                            <!-- Indicators (Chấm tròn vị trí) -->
+                            <div class="absolute bottom-2.5 right-4 z-20 flex items-center gap-1.5">
+                                @for (int i = 0; i < Model.Banners.Count; i++)
+                                {
+                                    <button type="button" onclick="goToBannerSlide(@i)"
+                                            class="banner-indicator w-2.5 h-2.5 rounded-full transition-all @(i == 0 ? "bg-primary w-5" : "bg-white/70 hover:bg-white")"
+                                            data-indicator-index="@i" aria-label="Slide @(i+1)"></button>
+                                }
+                            </div>
+                        }
+                    </div>
                 }
-                <partial name="_Pagination" />
+                else
+                {
+                    <div class="relative rounded-card overflow-hidden border border-borderLight shadow-soft bg-surface aspect-[16/10]">
+                        <img src="/images/placeholder.svg" alt="Serene Cosmetics" class="w-full h-full object-cover" />
+                    </div>
+                }
             </div>
         </div>
     </section>
 
-    <!-- Khu vực neo Khuyến Mãi (id="promo-section") -->
-    <section id="promo-section" class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="bg-pastel/40 p-6 rounded-card border border-borderLight text-center space-y-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-primary">@L["Nav_Promotions"]</span>
-            <h3 class="text-lg font-bold text-charcoal">@L["Home_PromoSectionTitle"]</h3>
-            <p class="text-xs text-muted">@L["Home_PromoSectionDesc"]</p>
-        </div>
-    </section>
+    <!-- 2. VÍ VOUCHER KHUYẾN MÃI (Bấm sao chép mã) -->
+    @if (Model.KhuyenMaiDangDienRa.Any())
+    {
+        <section id="promo-section" class="max-w-7xl mx-auto px-4 sm:px-6 space-y-4">
+            <div class="flex flex-wrap items-end justify-between gap-2 border-b border-borderLight pb-3">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-primary font-bold">@L["Home_PromoSectionTitle"]</span>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-charcoal mt-0.5">@L["Home_PromoSectionSubtitle"]</h2>
+                </div>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach (var km in Model.KhuyenMaiDangDienRa)
+                {
+                    <div class="bg-surface p-4 rounded-card border border-borderLight shadow-soft flex items-center justify-between gap-3 relative overflow-hidden group hover:border-primary transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded font-mono font-bold text-xs bg-pastel text-primary border border-nude">
+                                    @km.Code
+                                </span>
+                                <span class="text-[11px] font-bold text-statusSuccess">
+                                    @(km.LoaiGiam == LoaiGiamGiaConstant.PhanTram ? $"-{km.GiaTriGiam:0}%" : $"-{LocHelper.FormatCurrency(km.GiaTriGiam)}")
+                                </span>
+                            </div>
+                            <p class="font-bold text-xs text-charcoal line-clamp-1">@km.TenKM</p>
+                            <p class="text-[11px] text-muted">
+                                Đơn tối thiểu: <span class="font-semibold text-charcoal">@LocHelper.FormatCurrency(km.DonToiThieu)</span>
+                            </p>
+                        </div>
+                        <button type="button" onclick="copyPromoCode('@km.Code', '@L["Home_PromoCopied"]')"
+                                class="shrink-0 px-3 py-1.5 rounded-btn bg-cream hover:bg-primary hover:text-white text-charcoal border border-borderLight text-xs font-semibold transition flex items-center gap-1 shadow-sm">
+                            <i class="ph ph-copy"></i>
+                            <span>@L["Home_PromoCopyCode"]</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <!-- 3. DANH MỤC MỸ PHẨM -->
+    @if (Model.DanhMucNoiBat.Any())
+    {
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-5">
+            <div class="flex items-end justify-between border-b border-borderLight pb-3">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-primary font-bold">@L["Home_CategorySectionTitle"]</span>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-charcoal mt-0.5">@L["Home_CategorySectionSubtitle"]</h2>
+                </div>
+                <a asp-controller="SanPham" asp-action="Index" class="text-xs font-bold text-primary hover:underline">
+                    @L["Home_ViewAllCategories"]
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                @foreach (var dm in Model.DanhMucNoiBat)
+                {
+                    <a asp-controller="SanPham" asp-action="Index" asp-route-danhMuc="@dm.MaDM"
+                       class="group bg-surface p-4 rounded-card border border-borderLight shadow-soft hover:border-primary transition text-center space-y-2 block">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-cream group-hover:bg-pastel flex items-center justify-center text-primary text-2xl transition">
+                            <i class="ph ph-sparkle"></i>
+                        </div>
+                        <h3 class="font-bold text-charcoal text-xs sm:text-sm group-hover:text-primary transition line-clamp-1">
+                            @LocHelper.TenDanhMuc(dm.MaDM, dm.TenDM)
+                        </h3>
+                        <p class="text-[11px] text-muted">@dm.SoLuongSanPham @L["Product_TotalResults"]</p>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+
+    <!-- 4. SẢN PHẨM BÁN CHẠY (8 sản phẩm) -->
+    @if (Model.SanPhamBanChay.Any())
+    {
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-5">
+            <div class="flex flex-wrap items-end justify-between gap-3 border-b border-borderLight pb-3">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-primary font-bold">@L["Home_BestSellerTitle"]</span>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-charcoal mt-0.5">@L["Home_BestSellerSubtitle"]</h2>
+                </div>
+                <a asp-controller="SanPham" asp-action="Index" asp-route-sapXep="banChay"
+                   class="px-3.5 py-1.5 bg-cream hover:bg-pastel text-charcoal text-xs font-bold rounded-btn border border-borderLight transition">
+                    @L["Home_ViewAllProducts"]
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+                @foreach (var sp in Model.SanPhamBanChay)
+                {
+                    <partial name="_ProductCardPartial" model="sp" />
+                }
+            </div>
+        </section>
+    }
+
+    <!-- 5. SẢN PHẨM MỚI RA MẮT (8 sản phẩm) -->
+    @if (Model.SanPhamMoi.Any())
+    {
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-5">
+            <div class="flex flex-wrap items-end justify-between gap-3 border-b border-borderLight pb-3">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-primary font-bold">@L["Home_NewArrivalsTitle"]</span>
+                    <h2 class="font-serif text-xl sm:text-2xl font-bold text-charcoal mt-0.5">@L["Home_NewArrivalsSubtitle"]</h2>
+                </div>
+                <a asp-controller="SanPham" asp-action="Index" asp-route-sapXep="moiNhat"
+                   class="px-3.5 py-1.5 bg-cream hover:bg-pastel text-charcoal text-xs font-bold rounded-btn border border-borderLight transition">
+                    @L["Home_ViewAllProducts"]
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+                @foreach (var sp in Model.SanPhamMoi)
+                {
+                    <partial name="_ProductCardPartial" model="sp" />
+                }
+            </div>
+        </section>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        var currentBannerSlide = 0;
+        var bannerSlides = document.querySelectorAll('.banner-slide');
+        var bannerIndicators = document.querySelectorAll('.banner-indicator');
+        var bannerInterval = null;
+
+        function showBannerSlide(index) {
+            if (!bannerSlides.length) return;
+            if (index < 0) index = bannerSlides.length - 1;
+            if (index >= bannerSlides.length) index = 0;
+            currentBannerSlide = index;
+
+            bannerSlides.forEach(function (slide, i) {
+                if (i === currentBannerSlide) {
+                    slide.classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+                    slide.classList.add('opacity-100', 'z-10');
+                } else {
+                    slide.classList.remove('opacity-100', 'z-10');
+                    slide.classList.add('opacity-0', 'z-0', 'pointer-events-none');
+                }
+            });
+
+            bannerIndicators.forEach(function (dot, i) {
+                if (i === currentBannerSlide) {
+                    dot.className = 'banner-indicator w-5 h-2.5 rounded-full bg-primary transition-all';
+                } else {
+                    dot.className = 'banner-indicator w-2.5 h-2.5 rounded-full bg-white/70 hover:bg-white transition-all';
+                }
+            });
+        }
+
+        function nextBannerSlide() {
+            showBannerSlide(currentBannerSlide + 1);
+            resetBannerAutoPlay();
+        }
+
+        function prevBannerSlide() {
+            showBannerSlide(currentBannerSlide - 1);
+            resetBannerAutoPlay();
+        }
+
+        function goToBannerSlide(index) {
+            showBannerSlide(index);
+            resetBannerAutoPlay();
+        }
+
+        function resetBannerAutoPlay() {
+            if (bannerInterval) clearInterval(bannerInterval);
+            bannerInterval = setInterval(function () {
+                showBannerSlide(currentBannerSlide + 1);
+            }, 5000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (bannerSlides.length > 1) {
+                resetBannerAutoPlay();
+            }
+        });
+    </script>
+}
