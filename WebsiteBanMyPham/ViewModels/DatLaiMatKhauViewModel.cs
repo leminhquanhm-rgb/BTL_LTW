@@ -4,28 +4,27 @@ namespace WebsiteBanMyPham.ViewModels
 {
     public class DatLaiMatKhauViewModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập địa chỉ email")]
-        [EmailAddress(ErrorMessage = "Địa chỉ email không đúng định dạng")]
-        [StringLength(150, ErrorMessage = "Email không được vượt quá 150 ký tự")]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [EmailAddress(ErrorMessage = "Validation_Email")]
+        [StringLength(150, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_Email")]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập mã OTP")]
-        [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "Mã OTP phải gồm 6 chữ số")]
-        [Display(Name = "Mã OTP")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "Validation_OtpLength")]
+        [Display(Name = "Label_MaOtp")]
         public string Otp { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập mật khẩu mới")]
-        [StringLength(72, MinimumLength = 6, ErrorMessage = "Mật khẩu mới phải từ 6 đến 72 ký tự")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [StringLength(72, MinimumLength = 6, ErrorMessage = "Validation_StringLength")]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu mới")]
+        [Display(Name = "Label_MatKhauMoi")]
         public string MatKhauMoi { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu mới")]
+        [Required(ErrorMessage = "Validation_Required")]
         [DataType(DataType.Password)]
-        [Compare("MatKhauMoi", ErrorMessage = "Mật khẩu xác nhận không khớp")]
-        [Display(Name = "Xác nhận mật khẩu mới")]
+        [Compare("MatKhauMoi", ErrorMessage = "Validation_ComparePassword")]
+        [Display(Name = "Label_XacNhanMatKhauMoi")]
         public string XacNhanMatKhauMoi { get; set; } = null!;
     }
 }
-

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
 
@@ -8,10 +10,17 @@ namespace WebsiteBanMyPham.Services
     public class KhuyenMaiService : IKhuyenMaiService
     {
         private readonly WebsiteBanMyPhamContext _context;
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ILocalizationHelper _localizationHelper;
 
-        public KhuyenMaiService(WebsiteBanMyPhamContext context)
+        public KhuyenMaiService(
+            WebsiteBanMyPhamContext context,
+            IStringLocalizer<SharedResource> localizer,
+            ILocalizationHelper localizationHelper)
         {
             _context = context;
+            _localizer = localizer;
+            _localizationHelper = localizationHelper;
         }
 
         public async Task<KhuyenMaiKetQuaViewModel> TinhGiamAsync(string? code, decimal tongTienHang)
@@ -24,7 +33,7 @@ namespace WebsiteBanMyPham.Services
             if (string.IsNullOrWhiteSpace(code))
             {
                 result.HopLe = false;
-                result.ThongBao = "Mã khuyến mãi không được để trống.";
+                result.ThongBao = _localizer["Msg_Promo_Required"].Value;
                 return result;
             }
 
@@ -37,14 +46,14 @@ namespace WebsiteBanMyPham.Services
             if (km == null)
             {
                 result.HopLe = false;
-                result.ThongBao = "Mã khuyến mãi không tồn tại trên hệ thống.";
+                result.ThongBao = _localizer["Msg_Promo_NotFound"].Value;
                 return result;
             }
 
             if (!km.TrangThai)
             {
                 result.HopLe = false;
-                result.ThongBao = "Chương trình khuyến mãi này đã tạm ngưng hoạt động.";
+                result.ThongBao = _localizer["Msg_Promo_Inactive"].Value;
                 return result;
             }
 
@@ -52,28 +61,28 @@ namespace WebsiteBanMyPham.Services
             if (now < km.NgayBatDau)
             {
                 result.HopLe = false;
-                result.ThongBao = $"Chương trình khuyến mãi chưa bắt đầu (bắt đầu từ {km.NgayBatDau:dd/MM/yyyy}).";
+                result.ThongBao = _localizer["Msg_Promo_NotStarted", _localizationHelper.FormatDateTime(km.NgayBatDau)].Value;
                 return result;
             }
 
             if (now > km.NgayKetThuc)
             {
                 result.HopLe = false;
-                result.ThongBao = "Mã khuyến mãi này đã hết hạn sử dụng.";
+                result.ThongBao = _localizer["Msg_Promo_Expired"].Value;
                 return result;
             }
 
             if (km.SoLuotToiDa.HasValue && km.SoLuotDaDung >= km.SoLuotToiDa.Value)
             {
                 result.HopLe = false;
-                result.ThongBao = "Mã khuyến mãi này đã hết lượt sử dụng.";
+                result.ThongBao = _localizer["Msg_Promo_OutOfUsage"].Value;
                 return result;
             }
 
             if (tongTienHang < km.DonToiThieu)
             {
                 result.HopLe = false;
-                result.ThongBao = $"Đơn hàng chưa đạt giá trị tối thiểu để áp dụng mã (yêu cầu từ {km.DonToiThieu:N0}đ).";
+                result.ThongBao = _localizer["Msg_Promo_MinOrderAmountNotMet", _localizationHelper.FormatCurrency(km.DonToiThieu)].Value;
                 return result;
             }
 
@@ -96,7 +105,7 @@ namespace WebsiteBanMyPham.Services
             tienGiam = Math.Min(tienGiam, tongTienHang);
 
             result.HopLe = true;
-            result.ThongBao = $"Áp dụng mã thành công! Bạn được giảm {tienGiam:N0}đ.";
+            result.ThongBao = _localizer["Msg_Promo_ApplySuccess", _localizationHelper.FormatCurrency(tienGiam)].Value;
             result.MaKM = km.MaKM;
             result.Code = km.Code;
             result.TenKM = km.TenKM;
@@ -137,4 +146,3 @@ namespace WebsiteBanMyPham.Services
         }
     }
 }
-

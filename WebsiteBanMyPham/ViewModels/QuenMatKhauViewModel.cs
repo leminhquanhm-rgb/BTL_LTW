@@ -4,11 +4,10 @@ namespace WebsiteBanMyPham.ViewModels
 {
     public class QuenMatKhauViewModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập địa chỉ email")]
-        [EmailAddress(ErrorMessage = "Địa chỉ email không đúng định dạng")]
-        [StringLength(150, ErrorMessage = "Email không được vượt quá 150 ký tự")]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [EmailAddress(ErrorMessage = "Validation_Email")]
+        [StringLength(150, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_Email")]
         public string Email { get; set; } = null!;
     }
 }
-

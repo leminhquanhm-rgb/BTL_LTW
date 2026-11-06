@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Validation_* -->
+  <data name="Validation_Required" xml:space="preserve">
+    <value>{0} không được để trống.</value>
+  </data>
+  <data name="Validation_Email" xml:space="preserve">
+    <value>{0} không đúng định dạng email.</value>
+  </data>
+  <data name="Validation_MaxLength" xml:space="preserve">
+    <value>{0} không được vượt quá {1} ký tự.</value>
+  </data>
+  <data name="Validation_MinLength" xml:space="preserve">
+    <value>{0} phải có ít nhất {1} ký tự.</value>
+  </data>
+  <data name="Validation_StringLength" xml:space="preserve">
+    <value>{0} phải từ {2} đến {1} ký tự.</value>
+  </data>
+  <data name="Validation_Phone" xml:space="preserve">
+    <value>Số điện thoại không đúng định dạng (bắt đầu bằng 0, độ dài 10-15 chữ số).</value>
+  </data>
+  <data name="Validation_ComparePassword" xml:space="preserve">
+    <value>Mật khẩu xác nhận không khớp.</value>
+  </data>
+  <data name="Validation_OtpLength" xml:space="preserve">
+    <value>Mã OTP phải gồm 6 chữ số.</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>{0} phải từ {1} đến {2}.</value>
+  </data>
+  <data name="Validation_RangeMin" xml:space="preserve">
+    <value>{0} phải lớn hơn hoặc bằng {1}.</value>
+  </data>
+
+  <!-- Label_* -->
+  <data name="Label_HoTen" xml:space="preserve">
+    <value>Họ và tên</value>
+  </data>
+  <data name="Label_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Label_MatKhau" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="Label_MatKhauHienTai" xml:space="preserve">
+    <value>Mật khẩu hiện tại</value>
+  </data>
+  <data name="Label_MatKhauMoi" xml:space="preserve">
+    <value>Mật khẩu mới</value>
+  </data>
+  <data name="Label_XacNhanMatKhau" xml:space="preserve">
+    <value>Xác nhận mật khẩu</value>
+  </data>
+  <data name="Label_XacNhanMatKhauMoi" xml:space="preserve">
+    <value>Xác nhận mật khẩu mới</value>
+  </data>
+  <data name="Label_SoDienThoai" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
+  <data name="Label_DiaChi" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
+  <data name="Label_GhiNhoDangNhap" xml:space="preserve">
+    <value>Ghi nhớ đăng nhập</value>
+  </data>
+  <data name="Label_MaOtp" xml:space="preserve">
+    <value>Mã OTP</value>
+  </data>
+  <data name="Label_VaiTro" xml:space="preserve">
+    <value>Vai trò</value>
+  </data>
+  <data name="Label_NgayTao" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="Label_NguonDat" xml:space="preserve">
+    <value>Nguồn đặt hàng</value>
+  </data>
+  <data name="Label_TenNguoiNhan" xml:space="preserve">
+    <value>Họ tên người nhận</value>
+  </data>
+  <data name="Label_SDTNguoiNhan" xml:space="preserve">
+    <value>Số điện thoại nhận</value>
+  </data>
+  <data name="Label_DiaChiGiao" xml:space="preserve">
+    <value>Địa chỉ giao hàng</value>
+  </data>
+  <data name="Label_GhiChu" xml:space="preserve">
+    <value>Ghi chú đơn hàng</value>
+  </data>
+  <data name="Label_PhuongThucThanhToan" xml:space="preserve">
+    <value>Phương thức thanh toán</value>
+  </data>
+  <data name="Label_MaKM" xml:space="preserve">
+    <value>Mã khuyến mãi</value>
+  </data>
+  <data name="Label_SoLuongMuaNgay" xml:space="preserve">
+    <value>Số lượng mua ngay</value>
+  </data>
+
+  <!-- Msg_Account_* -->
+  <data name="Msg_Account_EmailExists" xml:space="preserve">
+    <value>Email này đã được sử dụng. Vui lòng chọn email khác.</value>
+  </data>
+  <data name="Msg_Account_RegisterSuccess" xml:space="preserve">
+    <value>Đăng ký tài khoản thành công.</value>
+  </data>
+  <data name="Msg_Account_RegisterFailed" xml:space="preserve">
+    <value>Email này đã được sử dụng hoặc dữ liệu không hợp lệ. Vui lòng thử lại.</value>
+  </data>
+  <data name="Msg_Account_InvalidCredentials" xml:space="preserve">
+    <value>Email hoặc mật khẩu không đúng.</value>
+  </data>
+  <data name="Msg_Account_Locked" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa. Vui lòng liên hệ ban quản trị để được hỗ trợ.</value>
+  </data>
+  <data name="Msg_Account_NotFound" xml:space="preserve">
+    <value>Không tìm thấy thông tin tài khoản.</value>
+  </data>
+  <data name="Msg_Account_WrongCurrentPassword" xml:space="preserve">
+    <value>Mật khẩu hiện tại không đúng.</value>
+  </data>
+  <data name="Msg_Account_SameOldPassword" xml:space="preserve">
+    <value>Mật khẩu mới không được trùng với mật khẩu hiện tại.</value>
+  </data>
+  <data name="Msg_Account_ChangePasswordSuccess" xml:space="preserve">
+    <value>Đổi mật khẩu thành công.</value>
+  </data>
+  <data name="Msg_Account_OtpSentGeneral" xml:space="preserve">
+    <value>Nếu email của bạn tồn tại trên hệ thống, mã OTP đặt lại mật khẩu đã được tạo và gửi.</value>
+  </data>
+  <data name="Msg_Account_OtpInvalidOrExpired" xml:space="preserve">
+    <value>Mã OTP không hợp lệ hoặc đã hết hạn.</value>
+  </data>
+  <data name="Msg_Account_OtpExpiredNeedNew" xml:space="preserve">
+    <value>Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.</value>
+  </data>
+  <data name="Msg_Account_OtpLocked5Times" xml:space="preserve">
+    <value>Mã OTP đã bị vô hiệu hóa do nhập sai quá 5 lần. Vui lòng yêu cầu mã mới.</value>
+  </data>
+  <data name="Msg_Account_OtpIncorrectAttemptsLeft" xml:space="preserve">
+    <value>Mã OTP không đúng. Bạn còn {0} lần thử.</value>
+  </data>
+  <data name="Msg_Account_ResetPasswordSuccess" xml:space="preserve">
+    <value>Đặt lại mật khẩu thành công. Vui lòng đăng nhập bằng mật khẩu mới.</value>
+  </data>
+  <data name="Msg_Account_UpdateProfileSuccess" xml:space="preserve">
+    <value>Cập nhật thông tin tài khoản thành công.</value>
+  </data>
+
+  <!-- Msg_Cart_* -->
+  <data name="Msg_Cart_QuantityPositive" xml:space="preserve">
+    <value>Số lượng thêm vào giỏ phải lớn hơn 0.</value>
+  </data>
+  <data name="Msg_Cart_OnlyCustomer" xml:space="preserve">
+    <value>Chỉ tài khoản khách hàng đang hoạt động mới được sử dụng giỏ hàng.</value>
+  </data>
+  <data name="Msg_Cart_ProductStopped" xml:space="preserve">
+    <value>Sản phẩm không tồn tại hoặc đã ngừng kinh doanh.</value>
+  </data>
+  <data name="Msg_Cart_ProductOutOfStock" xml:space="preserve">
+    <value>Sản phẩm hiện đã hết hàng.</value>
+  </data>
+  <data name="Msg_Cart_ExceedStockDetailed" xml:space="preserve">
+    <value>Số lượng trong giỏ ({0}) + thêm ({1}) vượt quá tồn kho hiện tại ({2}).</value>
+  </data>
+  <data name="Msg_Cart_ExceedStock" xml:space="preserve">
+    <value>Số lượng yêu cầu ({0}) vượt quá số lượng tồn kho ({1}).</value>
+  </data>
+  <data name="Msg_Cart_ExceedStockAccumulated" xml:space="preserve">
+    <value>Số lượng sau khi cộng dồn ({0}) vượt quá tồn kho ({1}).</value>
+  </data>
+  <data name="Msg_Cart_AddFailed" xml:space="preserve">
+    <value>Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.</value>
+  </data>
+  <data name="Msg_Cart_QuantityMustBePositive" xml:space="preserve">
+    <value>Số lượng phải lớn hơn 0.</value>
+  </data>
+  <data name="Msg_Cart_InvalidAction" xml:space="preserve">
+    <value>Thao tác không hợp lệ.</value>
+  </data>
+  <data name="Msg_Cart_ItemNotFoundOrNotOwned" xml:space="preserve">
+    <value>Không tìm thấy sản phẩm trong giỏ hàng hoặc bạn không có quyền thao tác.</value>
+  </data>
+  <data name="Msg_Cart_ItemProductStopped" xml:space="preserve">
+    <value>Sản phẩm này đã ngừng kinh doanh.</value>
+  </data>
+  <data name="Msg_Cart_ItemDeleteNotFound" xml:space="preserve">
+    <value>Không tìm thấy dòng giỏ hàng hoặc bạn không có quyền xóa.</value>
+  </data>
+  <data name="Msg_Cart_StatusStopped" xml:space="preserve">
+    <value>Sản phẩm đã ngừng kinh doanh</value>
+  </data>
+  <data name="Msg_Cart_StatusOutOfStock" xml:space="preserve">
+    <value>Sản phẩm đã hết hàng</value>
+  </data>
+  <data name="Msg_Cart_StatusExceedStock" xml:space="preserve">
+    <value>Số lượng trong giỏ vượt quá tồn kho (còn lại: {0})</value>
+  </data>
+
+  <!-- Msg_Promo_* -->
+  <data name="Msg_Promo_Required" xml:space="preserve">
+    <value>Mã khuyến mãi không được để trống.</value>
+  </data>
+  <data name="Msg_Promo_NotFound" xml:space="preserve">
+    <value>Mã khuyến mãi không tồn tại trên hệ thống.</value>
+  </data>
+  <data name="Msg_Promo_Inactive" xml:space="preserve">
+    <value>Chương trình khuyến mãi này đã tạm ngưng hoạt động.</value>
+  </data>
+  <data name="Msg_Promo_NotStarted" xml:space="preserve">
+    <value>Chương trình khuyến mãi chưa bắt đầu (bắt đầu từ {0}).</value>
+  </data>
+  <data name="Msg_Promo_Expired" xml:space="preserve">
+    <value>Mã khuyến mãi này đã hết hạn sử dụng.</value>
+  </data>
+  <data name="Msg_Promo_OutOfUsage" xml:space="preserve">
+    <value>Mã khuyến mãi này đã hết lượt sử dụng.</value>
+  </data>
+  <data name="Msg_Promo_MinOrderAmountNotMet" xml:space="preserve">
+    <value>Đơn hàng chưa đạt giá trị tối thiểu để áp dụng mã (yêu cầu từ {0}).</value>
+  </data>
+  <data name="Msg_Promo_ApplySuccess" xml:space="preserve">
+    <value>Áp dụng mã thành công! Bạn được giảm {0}.</value>
+  </data>
+
+  <!-- Msg_Order_* -->
+  <data name="Msg_Order_UserInvalidOrLocked" xml:space="preserve">
+    <value>Tài khoản không hợp lệ hoặc đã bị khóa.</value>
+  </data>
+  <data name="Msg_Order_PaymentMethodUnavailable" xml:space="preserve">
+    <value>Phương thức thanh toán đã chọn không khả dụng.</value>
+  </data>
+  <data name="Msg_Order_SelectAtLeastOneCartItem" xml:space="preserve">
+    <value>Vui lòng chọn ít nhất một sản phẩm từ giỏ hàng để đặt.</value>
+  </data>
+  <data name="Msg_Order_CartItemsNotOwned" xml:space="preserve">
+    <value>Danh sách giỏ hàng không hợp lệ hoặc có sản phẩm không thuộc quyền sở hữu của bạn.</value>
+  </data>
+  <data name="Msg_Order_BuyNowInvalid" xml:space="preserve">
+    <value>Thông tin sản phẩm hoặc số lượng mua ngay không hợp lệ.</value>
+  </data>
+  <data name="Msg_Order_SourceInvalid" xml:space="preserve">
+    <value>Nguồn đặt hàng không hợp lệ.</value>
+  </data>
+  <data name="Msg_Order_ProductNotExist" xml:space="preserve">
+    <value>Một số sản phẩm không tồn tại trong hệ thống.</value>
+  </data>
+  <data name="Msg_Order_ProductStopped" xml:space="preserve">
+    <value>Sản phẩm '{0}' hiện đã ngừng kinh doanh.</value>
+  </data>
+  <data name="Msg_Order_ProductOutOfStock" xml:space="preserve">
+    <value>Sản phẩm '{0}' hiện đã hết hàng.</value>
+  </data>
+  <data name="Msg_Order_ProductStockInsufficient" xml:space="preserve">
+    <value>Sản phẩm '{0}' không đủ số lượng trong kho (chỉ còn {1}).</value>
+  </data>
+  <data name="Msg_Order_PromoInvalid" xml:space="preserve">
+    <value>Mã khuyến mãi không hợp lệ.</value>
+  </data>
+  <data name="Msg_Order_PromoExpiredOrOutOfUsage" xml:space="preserve">
+    <value>Mã khuyến mãi đã hết lượt sử dụng hoặc vừa hết hạn. Vui lòng thử lại.</value>
+  </data>
+  <data name="Msg_Order_StockDeductionFailed" xml:space="preserve">
+    <value>Sản phẩm '{0}' không đủ số lượng tồn kho hoặc đã ngừng kinh doanh khi xử lý.</value>
+  </data>
+  <data name="Msg_Order_CreateGeneralError" xml:space="preserve">
+    <value>Đã xảy ra lỗi trong quá trình đặt hàng. Dữ liệu của bạn chưa bị thay đổi, vui lòng thử lại.</value>
+  </data>
+  <data name="Msg_Order_CannotCancel" xml:space="preserve">
+    <value>Không thể hủy đơn hàng (đơn không thuộc về bạn, không ở trạng thái Chờ xác nhận hoặc đã được hủy trước đó).</value>
+  </data>
+  <data name="Msg_Order_CancelGeneralError" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi hủy đơn hàng. Vui lòng thử lại.</value>
+  </data>
+  <data name="Msg_Order_TrackingNumberMaxLength" xml:space="preserve">
+    <value>Mã vận đơn tối đa 50 ký tự.</value>
+  </data>
+  <data name="Msg_Order_AdminPermissionDenied" xml:space="preserve">
+    <value>Bạn không có quyền thực hiện thao tác quản trị này.</value>
+  </data>
+  <data name="Msg_Order_AdminCannotCancel" xml:space="preserve">
+    <value>Admin không thể chuyển trạng thái đơn hàng sang Đã hủy.</value>
+  </data>
+  <data name="Msg_Order_NotFound" xml:space="preserve">
+    <value>Không tìm thấy đơn hàng.</value>
+  </data>
+  <data name="Msg_Order_OnlineNotPaidYet" xml:space="preserve">
+    <value>Đơn hàng thanh toán trực tuyến chưa hoàn tất thanh toán, không thể xác nhận đơn.</value>
+  </data>
+  <data name="Msg_Order_InvalidStatusTransition" xml:space="preserve">
+    <value>Không thể chuyển từ trạng thái '{0}' sang '{1}'. Chỉ cho phép chuyển sang bước kế tiếp hợp lệ.</value>
+  </data>
+  <data name="Msg_Order_StatusChangedConcurrency" xml:space="preserve">
+    <value>Đơn hàng đã bị thay đổi trạng thái bởi một phiên khác.</value>
+  </data>
+  <data name="Msg_Order_UpdateStatusGeneralError" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.</value>
+  </data>
+  <data name="Msg_Order_RefundPermissionDenied" xml:space="preserve">
+    <value>Bạn không có quyền thực hiện thao tác hoàn tiền.</value>
+  </data>
+  <data name="Msg_Order_RefundNotFoundOrNotPending" xml:space="preserve">
+    <value>Không tìm thấy giao dịch cần hoàn tiền hoặc giao dịch chưa ở trạng thái Chờ hoàn.</value>
+  </data>
+  <data name="Msg_Order_RefundGeneralError" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi xác nhận hoàn tiền.</value>
+  </data>
+  <data name="Msg_Order_SimulateDisabled" xml:space="preserve">
+    <value>Chức năng thanh toán trực tuyến mô phỏng hiện đang bị tắt trên hệ thống.</value>
+  </data>
+  <data name="Msg_Order_SimulateNotFoundOrNotOwned" xml:space="preserve">
+    <value>Không tìm thấy đơn hàng hoặc đơn không thuộc về bạn.</value>
+  </data>
+  <data name="Msg_Order_SimulateOrderCancelled" xml:space="preserve">
+    <value>Đơn hàng này đã bị hủy, không thể thực hiện thanh toán.</value>
+  </data>
+  <data name="Msg_Order_SimulateNotOnline" xml:space="preserve">
+    <value>Đơn hàng này không sử dụng phương thức thanh toán trực tuyến.</value>
+  </data>
+  <data name="Msg_Order_SimulateCancelledOrPaid" xml:space="preserve">
+    <value>Đơn hàng đã bị hủy hoặc đã được thanh toán trước đó.</value>
+  </data>
+
+  <!-- Status_* -->
+  <data name="Status_Order_ChoXacNhan" xml:space="preserve">
+    <value>Chờ xác nhận</value>
+  </data>
+  <data name="Status_Order_DaXacNhan" xml:space="preserve">
+    <value>Đã xác nhận</value>
+  </data>
+  <data name="Status_Order_DangGiao" xml:space="preserve">
+    <value>Đang giao</value>
+  </data>
+  <data name="Status_Order_HoanThanh" xml:space="preserve">
+    <value>Hoàn thành</value>
+  </data>
+  <data name="Status_Order_DaHuy" xml:space="preserve">
+    <value>Đã hủy</value>
+  </data>
+
+  <data name="Status_Payment_ChuaThanhToan" xml:space="preserve">
+    <value>Chưa thanh toán</value>
+  </data>
+  <data name="Status_Payment_DaThanhToan" xml:space="preserve">
+    <value>Đã thanh toán</value>
+  </data>
+  <data name="Status_Payment_ThatBai" xml:space="preserve">
+    <value>Thất bại</value>
+  </data>
+
+  <data name="Status_Refund_KhongCan" xml:space="preserve">
+    <value>Không cần hoàn tiền</value>
+  </data>
+  <data name="Status_Refund_ChoHoan" xml:space="preserve">
+    <value>Chờ hoàn tiền</value>
+  </data>
+  <data name="Status_Refund_DaHoan" xml:space="preserve">
+    <value>Đã hoàn tiền</value>
+  </data>
+
+  <!-- Nav_* -->
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="Nav_Products" xml:space="preserve">
+    <value>Sản phẩm</value>
+  </data>
+  <data name="Nav_Cart" xml:space="preserve">
+    <value>Giỏ hàng</value>
+  </data>
+  <data name="Nav_Orders" xml:space="preserve">
+    <value>Đơn hàng</value>
+  </data>
+  <data name="Nav_Account" xml:space="preserve">
+    <value>Tài khoản</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Nav_Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Nav_Admin" xml:space="preserve">
+    <value>Quản trị</value>
+  </data>
+
+  <!-- Common_* -->
+  <data name="Common_Save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Common_Edit" xml:space="preserve">
+    <value>Sửa</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>Thêm</value>
+  </data>
+  <data name="Common_Search" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="Common_Filter" xml:space="preserve">
+    <value>Lọc</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Common_Confirm" xml:space="preserve">
+    <value>Xác nhận</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="Common_Action" xml:space="preserve">
+    <value>Thao tác</value>
+  </data>
+  <data name="Common_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Common_Detail" xml:space="preserve">
+    <value>Chi tiết</value>
+  </data>
+</root>
+

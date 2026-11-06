@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
@@ -16,15 +17,18 @@ namespace WebsiteBanMyPham.Services
         private readonly WebsiteBanMyPhamContext _context;
         private readonly ILogger<TaiKhoanService> _logger;
         private readonly IWebHostEnvironment _env;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public TaiKhoanService(
             WebsiteBanMyPhamContext context,
             ILogger<TaiKhoanService> logger,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
             _logger = logger;
             _env = env;
+            _localizer = localizer;
         }
 
         public async Task<(bool Success, string? ErrorMessage)> DangKyAsync(DangKyViewModel model)
@@ -34,7 +38,7 @@ namespace WebsiteBanMyPham.Services
             var daTonTai = await _context.TaiKhoan.AnyAsync(t => t.Email == emailChuanHoa);
             if (daTonTai)
             {
-                return (false, "Email này đã được sử dụng. Vui lòng chọn email khác.");
+                return (false, _localizer["Msg_Account_EmailExists"].Value);
             }
 
             var matKhauHash = BCrypt.Net.BCrypt.HashPassword(model.MatKhau, workFactor: 11);
@@ -60,7 +64,7 @@ namespace WebsiteBanMyPham.Services
             catch (DbUpdateException ex)
             {
                 _logger.LogWarning(ex, "Lỗi cập nhật CSDL khi đăng ký tài khoản với email {Email}", emailChuanHoa);
-                return (false, "Email này đã được sử dụng hoặc dữ liệu không hợp lệ. Vui lòng thử lại.");
+                return (false, _localizer["Msg_Account_RegisterFailed"].Value);
             }
         }
 
@@ -71,7 +75,7 @@ namespace WebsiteBanMyPham.Services
             var user = await _context.TaiKhoan.FirstOrDefaultAsync(t => t.Email == emailChuanHoa);
             if (user == null)
             {
-                return (false, "Email hoặc mật khẩu không đúng", null);
+                return (false, _localizer["Msg_Account_InvalidCredentials"].Value, null);
             }
 
             bool matKhauHopLe = false;
@@ -82,17 +86,17 @@ namespace WebsiteBanMyPham.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi giải mã băm mật khẩu cho tài khoản {Email}", emailChuanHoa);
-                return (false, "Email hoặc mật khẩu không đúng", null);
+                return (false, _localizer["Msg_Account_InvalidCredentials"].Value, null);
             }
 
             if (!matKhauHopLe)
             {
-                return (false, "Email hoặc mật khẩu không đúng", null);
+                return (false, _localizer["Msg_Account_InvalidCredentials"].Value, null);
             }
 
             if (!user.TrangThai)
             {
-                return (false, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ ban quản trị để được hỗ trợ.", null);
+                return (false, _localizer["Msg_Account_Locked"].Value, null);
             }
 
             return (true, null, user);
@@ -130,12 +134,12 @@ namespace WebsiteBanMyPham.Services
             var user = await _context.TaiKhoan.FindAsync(maTk);
             if (user == null)
             {
-                return (false, "Không tìm thấy thông tin tài khoản.");
+                return (false, _localizer["Msg_Account_NotFound"].Value);
             }
 
             if (!user.TrangThai)
             {
-                return (false, "Tài khoản của bạn đã bị khóa.");
+                return (false, _localizer["Msg_Account_Locked"].Value);
             }
 
             bool matKhauCuHopLe = false;
@@ -146,17 +150,17 @@ namespace WebsiteBanMyPham.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi khi kiểm tra mật khẩu hiện tại cho MaTK {MaTK}", maTk);
-                return (false, "Mật khẩu hiện tại không đúng.");
+                return (false, _localizer["Msg_Account_WrongCurrentPassword"].Value);
             }
 
             if (!matKhauCuHopLe)
             {
-                return (false, "Mật khẩu hiện tại không đúng.");
+                return (false, _localizer["Msg_Account_WrongCurrentPassword"].Value);
             }
 
             if (BCrypt.Net.BCrypt.Verify(model.MatKhauMoi, user.MatKhauHash))
             {
-                return (false, "Mật khẩu mới không được trùng với mật khẩu hiện tại.");
+                return (false, _localizer["Msg_Account_SameOldPassword"].Value);
             }
 
             user.MatKhauHash = BCrypt.Net.BCrypt.HashPassword(model.MatKhauMoi, workFactor: 11);
@@ -168,7 +172,7 @@ namespace WebsiteBanMyPham.Services
         public async Task<(bool Success, string? Message)> TaoOtpQuenMatKhauAsync(string email)
         {
             var emailChuanHoa = email.Trim().ToLowerInvariant();
-            const string thongBaoChung = "Nếu email của bạn tồn tại trên hệ thống, mã OTP đặt lại mật khẩu đã được tạo và gửi.";
+            var thongBaoChung = _localizer["Msg_Account_OtpSentGeneral"].Value;
 
             var user = await _context.TaiKhoan.FirstOrDefaultAsync(t => t.Email == emailChuanHoa);
             if (user == null || !user.TrangThai)
@@ -283,12 +287,12 @@ namespace WebsiteBanMyPham.Services
             var user = await _context.TaiKhoan.FindAsync(maTk);
             if (user == null)
             {
-                return (false, "Không tìm thấy thông tin tài khoản.");
+                return (false, _localizer["Msg_Account_NotFound"].Value);
             }
 
             if (!user.TrangThai)
             {
-                return (false, "Tài khoản của bạn đã bị khóa.");
+                return (false, _localizer["Msg_Account_Locked"].Value);
             }
 
             // Chỉ cho phép cập nhật HoTen, SoDienThoai, DiaChi. Không cho đổi Email và VaiTro.
@@ -311,7 +315,7 @@ namespace WebsiteBanMyPham.Services
             if (user == null || !user.TrangThai)
             {
                 // Khi tài khoản không tồn tại hoặc bị khóa, trả cùng thông báo chung để bảo mật
-                return (false, "Mã OTP không hợp lệ hoặc đã hết hạn.", null, null);
+                return (false, _localizer["Msg_Account_OtpInvalidOrExpired"].Value, null, null);
             }
 
             // Tìm bản ghi OTP mới nhất chưa dùng của tài khoản
@@ -322,12 +326,12 @@ namespace WebsiteBanMyPham.Services
 
             if (datLai == null)
             {
-                return (false, "Mã OTP không hợp lệ hoặc đã hết hạn.", null, null);
+                return (false, _localizer["Msg_Account_OtpInvalidOrExpired"].Value, null, null);
             }
 
             if (datLai.HetHan < DateTime.Now)
             {
-                return (false, "Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới.", null, null);
+                return (false, _localizer["Msg_Account_OtpExpiredNeedNew"].Value, null, null);
             }
 
             // Tăng SoLanSai bằng câu UPDATE nguyên tử để chống vượt giới hạn khi gửi nhiều request song song
@@ -337,7 +341,7 @@ namespace WebsiteBanMyPham.Services
 
             if (affected == 0)
             {
-                return (false, "Mã OTP đã bị vô hiệu hóa do nhập sai quá 5 lần. Vui lòng yêu cầu mã mới.", null, null);
+                return (false, _localizer["Msg_Account_OtpLocked5Times"].Value, null, null);
             }
 
             datLai.SoLanSai += 1;
@@ -350,7 +354,7 @@ namespace WebsiteBanMyPham.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Lỗi kiểm tra băm OTP cho tài khoản {Email}", emailChuanHoa);
-                return (false, "Mã OTP không đúng.", null, null);
+                return (false, _localizer["Msg_Account_OtpInvalidOrExpired"].Value, null, null);
             }
 
             if (otpDung)
@@ -367,11 +371,11 @@ namespace WebsiteBanMyPham.Services
             // Nếu mã sai: số lần còn lại tính theo giá trị sau khi tăng
             if (datLai.SoLanSai >= 5)
             {
-                return (false, "Mã OTP đã bị vô hiệu hóa do bạn nhập sai quá 5 lần. Vui lòng yêu cầu mã mới.", null, null);
+                return (false, _localizer["Msg_Account_OtpLocked5Times"].Value, null, null);
             }
 
             int soLanConLai = 5 - datLai.SoLanSai;
-            return (false, $"Mã OTP không đúng. Bạn còn {soLanConLai} lần thử.", null, null);
+            return (false, _localizer["Msg_Account_OtpIncorrectAttemptsLeft", soLanConLai].Value, null, null);
         }
     }
 }

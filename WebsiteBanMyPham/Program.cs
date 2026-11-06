@@ -1,5 +1,8 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.Services;
 
@@ -11,8 +14,16 @@ namespace WebsiteBanMyPham
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            // Cấu hình Đa ngôn ngữ (Localization)
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            builder.Services.AddControllersWithViews()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization(options =>
+                {
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                        factory.Create(typeof(SharedResource));
+                });
 
             builder.Services.AddDbContext<WebsiteBanMyPhamContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -29,6 +40,9 @@ namespace WebsiteBanMyPham
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
                     options.SlidingExpiration = true;
                 });
+
+            // Đăng ký Helper đa ngôn ngữ
+            builder.Services.AddScoped<ILocalizationHelper, LocalizationHelper>();
 
             // Đăng ký Services nghiệp vụ
             builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
@@ -48,6 +62,26 @@ namespace WebsiteBanMyPham
 
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            // Cấu hình Request Localization trong pipeline (ngay sau UseRouting và trước UseAuthentication)
+            var supportedCultures = new[]
+            {
+                new CultureInfo("vi-VN"),
+                new CultureInfo("en-US")
+            };
+
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("vi-VN"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            };
+
+            // Chỉ dùng CookieRequestCultureProvider (không dùng Accept-Language để tự đổi ngôn ngữ)
+            localizationOptions.RequestCultureProviders.Clear();
+            localizationOptions.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+
+            app.UseRequestLocalization(localizationOptions);
 
             // Authentication phải đặt trước Authorization
             app.UseAuthentication();

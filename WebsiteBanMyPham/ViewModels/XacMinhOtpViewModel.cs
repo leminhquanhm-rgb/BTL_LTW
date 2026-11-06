@@ -4,16 +4,15 @@ namespace WebsiteBanMyPham.ViewModels
 {
     public class XacMinhOtpViewModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập địa chỉ email")]
-        [EmailAddress(ErrorMessage = "Địa chỉ email không đúng định dạng")]
-        [StringLength(150, ErrorMessage = "Email không được vượt quá 150 ký tự")]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [EmailAddress(ErrorMessage = "Validation_Email")]
+        [StringLength(150, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_Email")]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập mã OTP")]
-        [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "Mã OTP phải gồm 6 chữ số")]
-        [Display(Name = "Mã OTP")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "Validation_OtpLength")]
+        [Display(Name = "Label_MaOtp")]
         public string Otp { get; set; } = null!;
     }
 }
-

@@ -4,20 +4,19 @@ namespace WebsiteBanMyPham.ViewModels
 {
     public class DangNhapViewModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập địa chỉ email")]
-        [EmailAddress(ErrorMessage = "Địa chỉ email không đúng định dạng")]
-        [StringLength(150, ErrorMessage = "Email không được vượt quá 150 ký tự")]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [EmailAddress(ErrorMessage = "Validation_Email")]
+        [StringLength(150, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_Email")]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
-        [StringLength(72, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6 đến 72 ký tự")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [StringLength(72, MinimumLength = 6, ErrorMessage = "Validation_StringLength")]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu")]
+        [Display(Name = "Label_MatKhau")]
         public string MatKhau { get; set; } = null!;
 
-        [Display(Name = "Ghi nhớ đăng nhập")]
+        [Display(Name = "Label_GhiNhoDangNhap")]
         public bool RememberMe { get; set; }
     }
 }
-

@@ -6,28 +6,27 @@ namespace WebsiteBanMyPham.ViewModels
     {
         public int MaTK { get; set; }
 
-        [Display(Name = "Email")]
+        [Display(Name = "Label_Email")]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập họ và tên")]
-        [StringLength(100, ErrorMessage = "Họ và tên không được vượt quá 100 ký tự")]
-        [Display(Name = "Họ và tên")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [StringLength(100, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_HoTen")]
         public string HoTen { get; set; } = null!;
 
-        [RegularExpression(@"^0[0-9]{9,14}$", ErrorMessage = "Số điện thoại không đúng định dạng (bắt đầu bằng 0, độ dài 10-15 chữ số)")]
-        [StringLength(15, ErrorMessage = "Số điện thoại không được vượt quá 15 ký tự")]
-        [Display(Name = "Số điện thoại")]
+        [RegularExpression(@"^0[0-9]{9,14}$", ErrorMessage = "Validation_Phone")]
+        [StringLength(15, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_SoDienThoai")]
         public string? SoDienThoai { get; set; }
 
-        [StringLength(255, ErrorMessage = "Địa chỉ không được vượt quá 255 ký tự")]
-        [Display(Name = "Địa chỉ")]
+        [StringLength(255, ErrorMessage = "Validation_MaxLength")]
+        [Display(Name = "Label_DiaChi")]
         public string? DiaChi { get; set; }
 
-        [Display(Name = "Vai trò")]
+        [Display(Name = "Label_VaiTro")]
         public string VaiTro { get; set; } = null!;
 
-        [Display(Name = "Ngày tạo")]
+        [Display(Name = "Label_NgayTao")]
         public DateTime NgayTao { get; set; }
     }
 }
-

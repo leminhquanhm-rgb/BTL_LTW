@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
@@ -12,17 +13,20 @@ namespace WebsiteBanMyPham.Services
         private readonly IKhuyenMaiService _khuyenMaiService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<DonHangService> _logger;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         public DonHangService(
             WebsiteBanMyPhamContext context,
             IKhuyenMaiService khuyenMaiService,
             IConfiguration configuration,
-            ILogger<DonHangService> logger)
+            ILogger<DonHangService> logger,
+            IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
             _khuyenMaiService = khuyenMaiService;
             _configuration = configuration;
             _logger = logger;
+            _localizer = localizer;
         }
 
         private class ItemDatHang
@@ -43,7 +47,7 @@ namespace WebsiteBanMyPham.Services
                 if (user == null || !user.TrangThai || user.VaiTro != VaiTroConstant.KhachHang)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Tài khoản không hợp lệ hoặc đã bị khóa.", null);
+                    return (false, _localizer["Msg_Order_UserInvalidOrLocked"].Value, null);
                 }
 
                 // Kiểm tra phương thức thanh toán
@@ -51,7 +55,7 @@ namespace WebsiteBanMyPham.Services
                 if (pt == null || !pt.TrangThai)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Phương thức thanh toán đã chọn không khả dụng.", null);
+                    return (false, _localizer["Msg_Order_PaymentMethodUnavailable"].Value, null);
                 }
 
                 // 2. Thu thập danh sách sản phẩm và số lượng đặt theo nguồn
@@ -62,7 +66,7 @@ namespace WebsiteBanMyPham.Services
                     if (request.DanhSachMaGH == null || !request.DanhSachMaGH.Any())
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Vui lòng chọn ít nhất một sản phẩm từ giỏ hàng để đặt.", null);
+                        return (false, _localizer["Msg_Order_SelectAtLeastOneCartItem"].Value, null);
                     }
 
                     var distinctMaGH = request.DanhSachMaGH.Distinct().ToList();
@@ -76,7 +80,7 @@ namespace WebsiteBanMyPham.Services
                     if (dongGios.Count != distinctMaGH.Count)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Danh sách giỏ hàng không hợp lệ hoặc có sản phẩm không thuộc quyền sở hữu của bạn.", null);
+                        return (false, _localizer["Msg_Order_CartItemsNotOwned"].Value, null);
                     }
 
                     danhSachDat = dongGios.Select(g => new ItemDatHang
@@ -90,7 +94,7 @@ namespace WebsiteBanMyPham.Services
                     if (!request.MaSPMuaNgay.HasValue || request.SoLuongMuaNgay <= 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Thông tin sản phẩm hoặc số lượng mua ngay không hợp lệ.", null);
+                        return (false, _localizer["Msg_Order_BuyNowInvalid"].Value, null);
                     }
 
                     danhSachDat.Add(new ItemDatHang
@@ -102,7 +106,7 @@ namespace WebsiteBanMyPham.Services
                 else
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Nguồn đặt hàng không hợp lệ.", null);
+                    return (false, _localizer["Msg_Order_SourceInvalid"].Value, null);
                 }
 
                 // Gom các dòng trùng MaSP nếu có
@@ -128,7 +132,7 @@ namespace WebsiteBanMyPham.Services
                 if (spDbList.Count != listMaSP.Count)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Một số sản phẩm không tồn tại trong hệ thống.", null);
+                    return (false, _localizer["Msg_Order_ProductNotExist"].Value, null);
                 }
 
                 decimal tongTienHang = 0;
@@ -141,19 +145,19 @@ namespace WebsiteBanMyPham.Services
                     if (!sp.TrangThai)
                     {
                         await transaction.RollbackAsync();
-                        return (false, $"Sản phẩm '{sp.TenSP}' hiện đã ngừng kinh doanh.", null);
+                        return (false, _localizer["Msg_Order_ProductStopped", sp.TenSP].Value, null);
                     }
 
                     if (sp.SoLuongTon <= 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, $"Sản phẩm '{sp.TenSP}' hiện đã hết hàng.", null);
+                        return (false, _localizer["Msg_Order_ProductOutOfStock", sp.TenSP].Value, null);
                     }
 
                     if (sp.SoLuongTon < item.SoLuong)
                     {
                         await transaction.RollbackAsync();
-                        return (false, $"Sản phẩm '{sp.TenSP}' không đủ số lượng trong kho (chỉ còn {sp.SoLuongTon}).", null);
+                        return (false, _localizer["Msg_Order_ProductStockInsufficient", sp.TenSP, sp.SoLuongTon].Value, null);
                     }
 
                     tongTienHang += sp.Gia * item.SoLuong;
@@ -170,7 +174,7 @@ namespace WebsiteBanMyPham.Services
                     if (!kmKetQua.HopLe)
                     {
                         await transaction.RollbackAsync();
-                        return (false, kmKetQua.ThongBao ?? "Mã khuyến mãi không hợp lệ.", null);
+                        return (false, kmKetQua.ThongBao ?? _localizer["Msg_Order_PromoInvalid"].Value, null);
                     }
 
                     tienGiam = kmKetQua.TienGiam;
@@ -187,7 +191,7 @@ namespace WebsiteBanMyPham.Services
                     if (affectedKM == 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Mã khuyến mãi đã hết lượt sử dụng hoặc vừa hết hạn. Vui lòng thử lại.", null);
+                        return (false, _localizer["Msg_Order_PromoExpiredOrOutOfUsage"].Value, null);
                     }
                 }
 
@@ -203,7 +207,7 @@ namespace WebsiteBanMyPham.Services
                     if (affectedSP == 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, $"Sản phẩm '{sp.TenSP}' không đủ số lượng tồn kho hoặc đã ngừng kinh doanh khi xử lý.", null);
+                        return (false, _localizer["Msg_Order_StockDeductionFailed", sp.TenSP].Value, null);
                     }
                 }
 
@@ -290,7 +294,7 @@ namespace WebsiteBanMyPham.Services
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Lỗi xảy ra trong quá trình tạo đơn hàng cho MaTK {MaTK}", maTK);
-                return (false, "Đã xảy ra lỗi trong quá trình đặt hàng. Dữ liệu của bạn chưa bị thay đổi, vui lòng thử lại.", null);
+                return (false, _localizer["Msg_Order_CreateGeneralError"].Value, null);
             }
         }
 
@@ -308,7 +312,7 @@ namespace WebsiteBanMyPham.Services
                 if (affected == 0)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Không thể hủy đơn hàng (đơn không thuộc về bạn, không ở trạng thái Chờ xác nhận hoặc đã được hủy trước đó).");
+                    return (false, _localizer["Msg_Order_CannotCancel"].Value);
                 }
 
                 // Thứ tự cập nhật tài nguyên: KhuyenMai trước, SanPham sau để thống nhất thứ tự khóa với TaoDonAsync, tránh deadlock
@@ -362,7 +366,7 @@ namespace WebsiteBanMyPham.Services
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Lỗi xảy ra khi hủy đơn hàng MaDH {MaDH} bởi MaTK {MaTK}", maDH, maTK);
-                return (false, "Đã xảy ra lỗi khi hủy đơn hàng. Vui lòng thử lại.");
+                return (false, _localizer["Msg_Order_CancelGeneralError"].Value);
             }
         }
 
@@ -375,7 +379,7 @@ namespace WebsiteBanMyPham.Services
             maVanDon = string.IsNullOrWhiteSpace(maVanDon) ? null : maVanDon.Trim();
             if (maVanDon != null && maVanDon.Length > 50)
             {
-                return (false, "Mã vận đơn tối đa 50 ký tự.");
+                return (false, _localizer["Msg_Order_TrackingNumberMaxLength"].Value);
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -387,14 +391,14 @@ namespace WebsiteBanMyPham.Services
                 if (admin == null || !admin.TrangThai || admin.VaiTro != VaiTroConstant.QuanTriVien)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Bạn không có quyền thực hiện thao tác quản trị này.");
+                    return (false, _localizer["Msg_Order_AdminPermissionDenied"].Value);
                 }
 
                 // Admin tuyệt đối không được chuyển đơn sang DaHuy
                 if (trangThaiMoi == TrangThaiDonHangConstant.DaHuy)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Admin không thể chuyển trạng thái đơn hàng sang Đã hủy.");
+                    return (false, _localizer["Msg_Order_AdminCannotCancel"].Value);
                 }
 
                 var donHang = await _context.DonHang
@@ -405,7 +409,7 @@ namespace WebsiteBanMyPham.Services
                 if (donHang == null)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Không tìm thấy đơn hàng.");
+                    return (false, _localizer["Msg_Order_NotFound"].Value);
                 }
 
                 var trangThaiHienTai = donHang.TrangThai;
@@ -419,7 +423,7 @@ namespace WebsiteBanMyPham.Services
                     if (tenPT == PhuongThucThanhToanConstant.Online && donHang.ThanhToan?.TrangThai != TrangThaiThanhToanConstant.DaThanhToan)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Đơn hàng thanh toán trực tuyến chưa hoàn tất thanh toán, không thể xác nhận đơn.");
+                        return (false, _localizer["Msg_Order_OnlineNotPaidYet"].Value);
                     }
                     hopLe = true;
                 }
@@ -435,7 +439,7 @@ namespace WebsiteBanMyPham.Services
                 if (!hopLe)
                 {
                     await transaction.RollbackAsync();
-                    return (false, $"Không thể chuyển từ trạng thái '{trangThaiHienTai}' sang '{trangThaiMoi}'. Chỉ cho phép chuyển sang bước kế tiếp hợp lệ.");
+                    return (false, _localizer["Msg_Order_InvalidStatusTransition", trangThaiHienTai, trangThaiMoi].Value);
                 }
 
                 var now = DateTime.Now;
@@ -450,7 +454,7 @@ namespace WebsiteBanMyPham.Services
                     if (affected == 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Đơn hàng đã bị thay đổi trạng thái bởi một phiên khác.");
+                        return (false, _localizer["Msg_Order_StatusChangedConcurrency"].Value);
                     }
                 }
                 else if (trangThaiMoi == TrangThaiDonHangConstant.DangGiao)
@@ -477,7 +481,7 @@ namespace WebsiteBanMyPham.Services
                     if (affected == 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Đơn hàng đã bị thay đổi trạng thái bởi một phiên khác.");
+                        return (false, _localizer["Msg_Order_StatusChangedConcurrency"].Value);
                     }
                 }
                 else if (trangThaiMoi == TrangThaiDonHangConstant.HoanThanh)
@@ -491,7 +495,7 @@ namespace WebsiteBanMyPham.Services
                     if (affected == 0)
                     {
                         await transaction.RollbackAsync();
-                        return (false, "Đơn hàng đã bị thay đổi trạng thái bởi một phiên khác.");
+                        return (false, _localizer["Msg_Order_StatusChangedConcurrency"].Value);
                     }
 
                     // Nếu phương thức thanh toán là COD thì chuyển sang DaThanhToan và ghi NgayThanhToan
@@ -526,7 +530,7 @@ namespace WebsiteBanMyPham.Services
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Lỗi xảy ra khi cập nhật trạng thái đơn hàng MaDH {MaDH} bởi Admin {MaTKAdmin}", maDH, maTKAdmin);
-                return (false, "Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng.");
+                return (false, _localizer["Msg_Order_UpdateStatusGeneralError"].Value);
             }
         }
 
@@ -543,7 +547,7 @@ namespace WebsiteBanMyPham.Services
                 if (admin == null || !admin.TrangThai || admin.VaiTro != VaiTroConstant.QuanTriVien)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Bạn không có quyền thực hiện thao tác hoàn tiền.");
+                    return (false, _localizer["Msg_Order_RefundPermissionDenied"].Value);
                 }
 
                 var now = DateTime.Now;
@@ -560,7 +564,7 @@ namespace WebsiteBanMyPham.Services
                 if (affected == 0)
                 {
                     await transaction.RollbackAsync();
-                    return (false, "Không tìm thấy giao dịch cần hoàn tiền hoặc giao dịch chưa ở trạng thái Chờ hoàn.");
+                    return (false, _localizer["Msg_Order_RefundNotFoundOrNotPending"].Value);
                 }
 
                 await transaction.CommitAsync();
@@ -570,7 +574,7 @@ namespace WebsiteBanMyPham.Services
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Lỗi xảy ra khi xác nhận hoàn tiền cho đơn hàng MaDH {MaDH}", maDH);
-                return (false, "Đã xảy ra lỗi khi xác nhận hoàn tiền.");
+                return (false, _localizer["Msg_Order_RefundGeneralError"].Value);
             }
         }
 
@@ -580,7 +584,7 @@ namespace WebsiteBanMyPham.Services
             bool choPhep = _configuration.GetValue<bool>("ThanhToan:ChoPhepMoPhong");
             if (!choPhep)
             {
-                return (false, "Chức năng thanh toán trực tuyến mô phỏng hiện đang bị tắt trên hệ thống.");
+                return (false, _localizer["Msg_Order_SimulateDisabled"].Value);
             }
 
             var donHang = await _context.DonHang
@@ -590,18 +594,18 @@ namespace WebsiteBanMyPham.Services
 
             if (donHang == null)
             {
-                return (false, "Không tìm thấy đơn hàng hoặc đơn không thuộc về bạn.");
+                return (false, _localizer["Msg_Order_SimulateNotFoundOrNotOwned"].Value);
             }
 
             if (donHang.TrangThai == TrangThaiDonHangConstant.DaHuy)
             {
-                return (false, "Đơn hàng này đã bị hủy, không thể thực hiện thanh toán.");
+                return (false, _localizer["Msg_Order_SimulateOrderCancelled"].Value);
             }
 
             var tenPT = donHang.ThanhToan?.MaPTNavigation?.TenPT;
             if (tenPT != PhuongThucThanhToanConstant.Online)
             {
-                return (false, "Đơn hàng này không sử dụng phương thức thanh toán trực tuyến.");
+                return (false, _localizer["Msg_Order_SimulateNotOnline"].Value);
             }
 
             var now = DateTime.Now;
@@ -622,7 +626,7 @@ namespace WebsiteBanMyPham.Services
 
                 if (affected == 0)
                 {
-                    return (false, "Đơn hàng đã bị hủy hoặc đã được thanh toán trước đó.");
+                    return (false, _localizer["Msg_Order_SimulateCancelledOrPaid"].Value);
                 }
             }
             else
@@ -636,7 +640,7 @@ namespace WebsiteBanMyPham.Services
 
                 if (affected == 0)
                 {
-                    return (false, "Đơn hàng đã bị hủy hoặc đã được thanh toán trước đó.");
+                    return (false, _localizer["Msg_Order_SimulateCancelledOrPaid"].Value);
                 }
             }
 

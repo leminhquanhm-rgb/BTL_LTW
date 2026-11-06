@@ -4,23 +4,22 @@ namespace WebsiteBanMyPham.ViewModels
 {
     public class DoiMatKhauViewModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập mật khẩu hiện tại")]
-        [StringLength(72, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6 đến 72 ký tự")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [StringLength(72, MinimumLength = 6, ErrorMessage = "Validation_StringLength")]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu hiện tại")]
+        [Display(Name = "Label_MatKhauHienTai")]
         public string MatKhauHienTai { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập mật khẩu mới")]
-        [StringLength(72, MinimumLength = 6, ErrorMessage = "Mật khẩu mới phải từ 6 đến 72 ký tự")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [StringLength(72, MinimumLength = 6, ErrorMessage = "Validation_StringLength")]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu mới")]
+        [Display(Name = "Label_MatKhauMoi")]
         public string MatKhauMoi { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu mới")]
+        [Required(ErrorMessage = "Validation_Required")]
         [DataType(DataType.Password)]
-        [Compare("MatKhauMoi", ErrorMessage = "Mật khẩu xác nhận không khớp")]
-        [Display(Name = "Xác nhận mật khẩu mới")]
+        [Compare("MatKhauMoi", ErrorMessage = "Validation_ComparePassword")]
+        [Display(Name = "Label_XacNhanMatKhauMoi")]
         public string XacNhanMatKhauMoi { get; set; } = null!;
     }
 }
-

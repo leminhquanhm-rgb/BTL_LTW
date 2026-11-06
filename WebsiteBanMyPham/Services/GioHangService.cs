@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
@@ -9,11 +10,16 @@ namespace WebsiteBanMyPham.Services
     {
         private readonly WebsiteBanMyPhamContext _context;
         private readonly ILogger<GioHangService> _logger;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public GioHangService(WebsiteBanMyPhamContext context, ILogger<GioHangService> logger)
+        public GioHangService(
+            WebsiteBanMyPhamContext context,
+            ILogger<GioHangService> logger,
+            IStringLocalizer<SharedResource> localizer)
         {
             _context = context;
             _logger = logger;
+            _localizer = localizer;
         }
 
         private async Task<bool> KiemTraKhachHangHopLeAsync(int maTK)
@@ -61,15 +67,15 @@ namespace WebsiteBanMyPham.Services
 
                 if (!item.TrangThaiKinhDoanh)
                 {
-                    item.ThongBaoTrangThai = "Sản phẩm đã ngừng kinh doanh";
+                    item.ThongBaoTrangThai = _localizer["Msg_Cart_StatusStopped"].Value;
                 }
                 else if (item.SoLuongTon <= 0)
                 {
-                    item.ThongBaoTrangThai = "Sản phẩm đã hết hàng";
+                    item.ThongBaoTrangThai = _localizer["Msg_Cart_StatusOutOfStock"].Value;
                 }
                 else if (item.SoLuong > item.SoLuongTon)
                 {
-                    item.ThongBaoTrangThai = $"Số lượng trong giỏ vượt quá tồn kho (còn lại: {item.SoLuongTon})";
+                    item.ThongBaoTrangThai = _localizer["Msg_Cart_StatusExceedStock", item.SoLuongTon].Value;
                 }
 
                 result.Items.Add(item);
@@ -82,24 +88,24 @@ namespace WebsiteBanMyPham.Services
         {
             if (soLuong <= 0)
             {
-                return (false, "Số lượng thêm vào giỏ phải lớn hơn 0.");
+                return (false, _localizer["Msg_Cart_QuantityPositive"].Value);
             }
 
             var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
             if (!hopLe)
             {
-                return (false, "Chỉ tài khoản khách hàng đang hoạt động mới được sử dụng giỏ hàng.");
+                return (false, _localizer["Msg_Cart_OnlyCustomer"].Value);
             }
 
             var sp = await _context.SanPham.AsNoTracking().FirstOrDefaultAsync(s => s.MaSP == maSP);
             if (sp == null || !sp.TrangThai)
             {
-                return (false, "Sản phẩm không tồn tại hoặc đã ngừng kinh doanh.");
+                return (false, _localizer["Msg_Cart_ProductStopped"].Value);
             }
 
             if (sp.SoLuongTon <= 0)
             {
-                return (false, "Sản phẩm hiện đã hết hàng.");
+                return (false, _localizer["Msg_Cart_ProductOutOfStock"].Value);
             }
 
             var dongGioHienTai = await _context.GioHang.FirstOrDefaultAsync(g => g.MaTK == maTK && g.MaSP == maSP);
@@ -109,7 +115,7 @@ namespace WebsiteBanMyPham.Services
                 int soLuongSauKhiCong = dongGioHienTai.SoLuong + soLuong;
                 if (soLuongSauKhiCong > sp.SoLuongTon)
                 {
-                    return (false, $"Số lượng trong giỏ ({dongGioHienTai.SoLuong}) + thêm ({soLuong}) vượt quá tồn kho hiện tại ({sp.SoLuongTon}).");
+                    return (false, _localizer["Msg_Cart_ExceedStockDetailed", dongGioHienTai.SoLuong, soLuong, sp.SoLuongTon].Value);
                 }
 
                 dongGioHienTai.SoLuong = soLuongSauKhiCong;
@@ -120,7 +126,7 @@ namespace WebsiteBanMyPham.Services
 
             if (soLuong > sp.SoLuongTon)
             {
-                return (false, $"Số lượng yêu cầu ({soLuong}) vượt quá số lượng tồn kho ({sp.SoLuongTon}).");
+                return (false, _localizer["Msg_Cart_ExceedStock", soLuong, sp.SoLuongTon].Value);
             }
 
             var dongMoi = new GioHang
@@ -149,7 +155,7 @@ namespace WebsiteBanMyPham.Services
                     int tongMoi = dongDaCo.SoLuong + soLuong;
                     if (tongMoi > sp.SoLuongTon)
                     {
-                        return (false, $"Số lượng sau khi cộng dồn ({tongMoi}) vượt quá tồn kho ({sp.SoLuongTon}).");
+                        return (false, _localizer["Msg_Cart_ExceedStockAccumulated", tongMoi, sp.SoLuongTon].Value);
                     }
                     dongDaCo.SoLuong = tongMoi;
                     dongDaCo.NgayThem = DateTime.Now;
@@ -157,7 +163,7 @@ namespace WebsiteBanMyPham.Services
                     return (true, null);
                 }
 
-                return (false, "Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.");
+                return (false, _localizer["Msg_Cart_AddFailed"].Value);
             }
         }
 
@@ -165,13 +171,13 @@ namespace WebsiteBanMyPham.Services
         {
             if (soLuongMoi <= 0)
             {
-                return (false, "Số lượng phải lớn hơn 0.");
+                return (false, _localizer["Msg_Cart_QuantityMustBePositive"].Value);
             }
 
             var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
             if (!hopLe)
             {
-                return (false, "Thao tác không hợp lệ.");
+                return (false, _localizer["Msg_Cart_InvalidAction"].Value);
             }
 
             var dongGio = await _context.GioHang
@@ -180,18 +186,18 @@ namespace WebsiteBanMyPham.Services
 
             if (dongGio == null)
             {
-                return (false, "Không tìm thấy sản phẩm trong giỏ hàng hoặc bạn không có quyền thao tác.");
+                return (false, _localizer["Msg_Cart_ItemNotFoundOrNotOwned"].Value);
             }
 
             var sp = dongGio.MaSPNavigation;
             if (!sp.TrangThai)
             {
-                return (false, "Sản phẩm này đã ngừng kinh doanh.");
+                return (false, _localizer["Msg_Cart_ItemProductStopped"].Value);
             }
 
             if (soLuongMoi > sp.SoLuongTon)
             {
-                return (false, $"Số lượng yêu cầu ({soLuongMoi}) vượt quá tồn kho hiện tại ({sp.SoLuongTon}).");
+                return (false, _localizer["Msg_Cart_ExceedStock", soLuongMoi, sp.SoLuongTon].Value);
             }
 
             dongGio.SoLuong = soLuongMoi;
@@ -206,13 +212,13 @@ namespace WebsiteBanMyPham.Services
             var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
             if (!hopLe)
             {
-                return (false, "Thao tác không hợp lệ.");
+                return (false, _localizer["Msg_Cart_InvalidAction"].Value);
             }
 
             var dongGio = await _context.GioHang.FirstOrDefaultAsync(g => g.MaGH == maGH && g.MaTK == maTK);
             if (dongGio == null)
             {
-                return (false, "Không tìm thấy dòng giỏ hàng hoặc bạn không có quyền xóa.");
+                return (false, _localizer["Msg_Cart_ItemDeleteNotFound"].Value);
             }
 
             _context.GioHang.Remove(dongGio);
@@ -230,4 +236,3 @@ namespace WebsiteBanMyPham.Services
         }
     }
 }
-
