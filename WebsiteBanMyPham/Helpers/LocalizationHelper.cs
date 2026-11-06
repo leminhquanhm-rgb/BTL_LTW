@@ -39,13 +39,15 @@ namespace WebsiteBanMyPham.Helpers
             }
 
             var currentCulture = CultureInfo.CurrentUICulture.Name;
-            if (currentCulture.StartsWith("en", StringComparison.OrdinalIgnoreCase))
+            if (currentCulture.StartsWith("en", StringIgnoreCase))
             {
                 return dateTime.Value.ToString("MM/dd/yyyy h:mm tt", EnCulture);
             }
 
             return dateTime.Value.ToString("dd/MM/yyyy HH:mm", ViCulture);
         }
+
+        private static readonly StringComparison StringIgnoreCase = StringComparison.OrdinalIgnoreCase;
 
         public string GetOrderStatusLabel(string status)
         {
@@ -79,6 +81,15 @@ namespace WebsiteBanMyPham.Helpers
             var localized = _localizer[$"Status_Refund_{status}"];
             return localized.ResourceNotFound ? status : localized.Value;
         }
+
+        public string TenDanhMuc(int maDM, string tenGoc)
+        {
+            var localized = _localizer[$"DanhMuc_{maDM}"];
+            if (localized.ResourceNotFound || string.IsNullOrWhiteSpace(localized.Value))
+            {
+                return tenGoc;
+            }
+            return localized.Value;
+        }
     }
 }
-

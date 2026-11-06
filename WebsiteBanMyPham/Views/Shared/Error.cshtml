@@ -1,25 +1,28 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = L["Error_Title"].Value;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
+    <div class="w-16 h-16 mx-auto rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center text-3xl">
+        <i class="ph-fill ph-warning-octagon"></i>
+    </div>
+    
+    <div class="space-y-2">
+        <h1 class="text-2xl sm:text-3xl font-bold font-serif text-charcoal">@L["Error_Title"]</h1>
+        <p class="text-sm text-muted">@L["Error_Message"]</p>
+    </div>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+    @if (Model?.ShowRequestId == true)
+    {
+        <div class="inline-block p-3 bg-surface border border-borderLight rounded-btn text-xs font-mono text-muted">
+            <span>@L["Error_RequestId"]:</span> <strong class="text-charcoal">@Model.RequestId</strong>
+        </div>
+    }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    <div class="pt-4">
+        <a asp-controller="TrangChu" asp-action="Index" class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-semibold rounded-btn transition shadow-sm">
+            <i class="ph ph-house"></i> @L["Error_BackHome"]
+        </a>
+    </div>
+</div>

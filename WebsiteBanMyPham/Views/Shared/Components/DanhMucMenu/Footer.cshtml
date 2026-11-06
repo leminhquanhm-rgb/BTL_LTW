@@ -1,0 +1,15 @@
+@model List<WebsiteBanMyPham.Models.DanhMuc>
+
+<ul class="space-y-1.5 text-xs text-muted">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var dm in Model)
+        {
+            <li>
+                <a asp-controller="SanPham" asp-action="Index" asp-route-danhMuc="@dm.MaDM" class="hover:text-primary transition">
+                    @LocalizationHelper.TenDanhMuc(dm.MaDM, dm.TenDM)
+                </a>
+            </li>
+        }
+    }
+</ul>

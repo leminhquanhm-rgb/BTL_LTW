@@ -59,6 +59,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 
+  <!-- Brand Name -->
+  <data name="Brand_Name" xml:space="preserve">
+    <value>Serene Cosmetics</value>
+  </data>
+
   <!-- Validation_* -->
   <data name="Validation_Required" xml:space="preserve">
     <value>{0} is required.</value>
@@ -424,6 +429,9 @@
   <data name="Nav_Products" xml:space="preserve">
     <value>Products</value>
   </data>
+  <data name="Nav_Promotions" xml:space="preserve">
+    <value>Promotions</value>
+  </data>
   <data name="Nav_Cart" xml:space="preserve">
     <value>Cart</value>
   </data>
@@ -444,6 +452,214 @@
   </data>
   <data name="Nav_Admin" xml:space="preserve">
     <value>Administration</value>
+  </data>
+  <data name="Nav_AdminArea" xml:space="preserve">
+    <value>Administration Area</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+  <data name="Nav_MyOrders" xml:space="preserve">
+    <value>My Orders</value>
+  </data>
+  <data name="Nav_Complaints" xml:space="preserve">
+    <value>My Complaints</value>
+  </data>
+
+  <!-- Header & Footer -->
+  <data name="Header_SearchPlaceholder" xml:space="preserve">
+    <value>Search Serum, Cream, Lipstick...</value>
+  </data>
+  <data name="Header_Categories" xml:space="preserve">
+    <value>Cosmetic Categories</value>
+  </data>
+  <data name="Footer_Desc" xml:space="preserve">
+    <value>Authentic cosmetics store offering gentle, vegan and safe skincare products for your natural beauty.</value>
+  </data>
+  <data name="Footer_MainCategories" xml:space="preserve">
+    <value>Main Categories</value>
+  </data>
+  <data name="Footer_Policies" xml:space="preserve">
+    <value>Policies &amp; Support</value>
+  </data>
+  <data name="Footer_OrderGuide" xml:space="preserve">
+    <value>Ordering Guide &amp; Coupons</value>
+  </data>
+  <data name="Footer_CancelPolicy" xml:space="preserve">
+    <value>Order Cancellation Policy</value>
+  </data>
+  <data name="Footer_ComplaintPolicy" xml:space="preserve">
+    <value>Review &amp; Complaint Policy</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>© 2026 Serene Cosmetics</value>
+  </data>
+  <data name="Footer_ContactAddress" xml:space="preserve">
+    <value>123 Rose Street, Ben Nghe Ward, District 1, Ho Chi Minh City</value>
+  </data>
+  <data name="Footer_ContactEmail" xml:space="preserve">
+    <value>support@serenecosmetics.vn</value>
+  </data>
+  <data name="Footer_ContactPhone" xml:space="preserve">
+    <value>+84 1900 6868 (8:00 AM - 9:00 PM)</value>
+  </data>
+
+  <!-- Admin Sidebar & Topbar (Điều chỉnh 4 & 5) -->
+  <data name="Admin_Brand" xml:space="preserve">
+    <value>SERENE ADMIN</value>
+  </data>
+  <data name="Admin_AreaTitle" xml:space="preserve">
+    <value>Administration Area</value>
+  </data>
+  <data name="Admin_Group_Dashboard" xml:space="preserve">
+    <value>Dashboard &amp; Reports</value>
+  </data>
+  <data name="Admin_Group_Data" xml:space="preserve">
+    <value>Data &amp; Inventory</value>
+  </data>
+  <data name="Admin_Group_Interaction" xml:space="preserve">
+    <value>Interactions</value>
+  </data>
+  <data name="Admin_Nav_Dashboard" xml:space="preserve">
+    <value>Dashboard &amp; Statistics</value>
+  </data>
+  <data name="Admin_Nav_Products" xml:space="preserve">
+    <value>Products &amp; Images</value>
+  </data>
+  <data name="Admin_Nav_Categories" xml:space="preserve">
+    <value>Categories &amp; Brands</value>
+  </data>
+  <data name="Admin_Nav_Inventory" xml:space="preserve">
+    <value>Inventory &amp; Alerts</value>
+  </data>
+  <data name="Admin_Nav_Orders" xml:space="preserve">
+    <value>Order Management</value>
+  </data>
+  <data name="Admin_Nav_Payments" xml:space="preserve">
+    <value>Payments &amp; Refunds</value>
+  </data>
+  <data name="Admin_Nav_Promotions" xml:space="preserve">
+    <value>Promotions &amp; Banners</value>
+  </data>
+  <data name="Admin_Nav_Accounts" xml:space="preserve">
+    <value>Accounts (Customers &amp; Admins)</value>
+  </data>
+  <data name="Admin_Nav_Reviews" xml:space="preserve">
+    <value>Reviews &amp; Complaints</value>
+  </data>
+  <data name="Admin_ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Admin_BackToStore" xml:space="preserve">
+    <value>Back to Customer Store</value>
+  </data>
+
+  <!-- Common UI & Pagination -->
+  <data name="Pagination_Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Pagination_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Pagination_Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Toast_SuccessTitle" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Toast_ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Toast_DemoSuccess" xml:space="preserve">
+    <value>This is a test success notification!</value>
+  </data>
+  <data name="Toast_DemoError" xml:space="preserve">
+    <value>This is a test error notification!</value>
+  </data>
+  <data name="Error_Title" xml:space="preserve">
+    <value>An error occurred</value>
+  </data>
+  <data name="Error_Message" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="Error_RequestId" xml:space="preserve">
+    <value>Request ID</value>
+  </data>
+  <data name="Error_BackHome" xml:space="preserve">
+    <value>Back to Home</value>
+  </data>
+  <data name="Privacy_Title" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="Privacy_Content" xml:space="preserve">
+    <value>We are committed to protecting your personal information and privacy in accordance with applicable laws.</value>
+  </data>
+  <data name="Privacy_SubContent" xml:space="preserve">
+    <value>All account data, shopping cart items and order transactions are encrypted and securely stored.</value>
+  </data>
+
+  <!-- Trang chủ tạm (Index) -->
+  <data name="Home_HeroTag" xml:space="preserve">
+    <value>Rose Glow Collection</value>
+  </data>
+  <data name="Home_HeroTitle" xml:space="preserve">
+    <value>Natural glowing skin with Serene Rose</value>
+  </data>
+  <data name="Home_HeroDesc" xml:space="preserve">
+    <value>Gentle vegan skincare with fresh rose extracts, bringing natural radiance and purity to your skin.</value>
+  </data>
+  <data name="Home_ShopNow" xml:space="preserve">
+    <value>Shop Now</value>
+  </data>
+  <data name="Home_GetVoucher" xml:space="preserve">
+    <value>Get Coupons</value>
+  </data>
+  <data name="Home_TestComponentsTitle" xml:space="preserve">
+    <value>UI Components &amp; Status Badges Testing</value>
+  </data>
+  <data name="Home_TestComponentsDesc" xml:space="preserve">
+    <value>Temporary page for testing layout, color palette, status badges and Toast notifications in Step 4.</value>
+  </data>
+  <data name="Home_DemoOrderBadges" xml:space="preserve">
+    <value>Order Statuses</value>
+  </data>
+  <data name="Home_DemoPaymentBadges" xml:space="preserve">
+    <value>Payment &amp; Refund Statuses</value>
+  </data>
+  <data name="Home_DemoButtons" xml:space="preserve">
+    <value>Buttons &amp; Toast Notifications</value>
+  </data>
+  <data name="Home_TriggerSuccessToast" xml:space="preserve">
+    <value>Test Success Toast</value>
+  </data>
+  <data name="Home_TriggerErrorToast" xml:space="preserve">
+    <value>Test Error Toast</value>
+  </data>
+  <data name="Home_DemoPagination" xml:space="preserve">
+    <value>Pagination Component</value>
+  </data>
+  <data name="Home_PromoSectionTitle" xml:space="preserve">
+    <value>Promotions &amp; Coupon Wallet</value>
+  </data>
+  <data name="Home_PromoSectionDesc" xml:space="preserve">
+    <value>Official promotional campaigns and vouchers will be fully displayed here in Step 5.</value>
+  </data>
+
+  <!-- DanhMuc_* (Dịch tên danh mục theo Mục 2.7) -->
+  <data name="DanhMuc_1" xml:space="preserve">
+    <value>Facial skincare</value>
+  </data>
+  <data name="DanhMuc_2" xml:space="preserve">
+    <value>Makeup</value>
+  </data>
+  <data name="DanhMuc_3" xml:space="preserve">
+    <value>Hair care</value>
+  </data>
+  <data name="DanhMuc_4" xml:space="preserve">
+    <value>Body care</value>
+  </data>
+  <data name="DanhMuc_5" xml:space="preserve">
+    <value>Fragrance</value>
   </data>
 
   <!-- Common_* -->
@@ -487,4 +703,3 @@
     <value>Details</value>
   </data>
 </root>
-

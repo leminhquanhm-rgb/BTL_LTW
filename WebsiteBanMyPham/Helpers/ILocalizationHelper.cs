@@ -10,6 +10,6 @@ namespace WebsiteBanMyPham.Helpers
         string GetOrderStatusLabel(string status);
         string GetPaymentStatusLabel(string status);
         string GetRefundStatusLabel(string status);
+        string TenDanhMuc(int maDM, string tenGoc);
     }
 }
-

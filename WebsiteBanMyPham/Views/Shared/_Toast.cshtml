@@ -1,0 +1,35 @@
+@{
+    var thongBaoThanhCong = TempData[ThongBaoConstant.ThanhCong] as string;
+    var thongBaoLoi = TempData[ThongBaoConstant.Loi] as string;
+    var coThongBao = !string.IsNullOrEmpty(thongBaoThanhCong) || !string.IsNullOrEmpty(thongBaoLoi);
+    var laThanhCong = !string.IsNullOrEmpty(thongBaoThanhCong);
+    var noiDung = laThanhCong ? thongBaoThanhCong : thongBaoLoi;
+}
+
+<div id="toast" class="fixed bottom-5 right-5 z-50 @(coThongBao ? "" : "hidden") bg-charcoal text-white px-4 py-3.5 rounded-card shadow-xl flex items-center gap-3 text-xs sm:text-sm border border-nude/50 max-w-md transition-all duration-300">
+    <i id="toast-icon" class="ph-fill @(laThanhCong ? "ph-check-circle text-statusSuccess" : "ph-x-circle text-statusDanger") text-xl shrink-0"></i>
+    <div class="flex-1">
+        <span id="toast-title" class="font-bold block text-[11px] uppercase tracking-wider text-pastel">
+            @(laThanhCong ? L["Toast_SuccessTitle"] : L["Toast_ErrorTitle"])
+        </span>
+        <span id="toast-msg" class="leading-snug text-white/90">@noiDung</span>
+    </div>
+    <button type="button" onclick="hideToast()" class="text-white/60 hover:text-white text-base shrink-0 p-1" title="@L["Common_Close"]">
+        <i class="ph ph-x"></i>
+    </button>
+</div>
+
+@if (coThongBao)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                var toast = document.getElementById("toast");
+                if (toast) {
+                    toast.classList.add("hidden");
+                }
+            }, 4000);
+        });
+    </script>
+}
+

@@ -1,8 +1,109 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = L["Nav_Home"].Value;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="space-y-12 pb-16">
+    
+    <!-- Hero Banner Mỹ Phẩm -->
+    <section class="bg-gradient-to-r from-pastel/55 via-cream to-pastel/30 border-b border-borderLight py-10 lg:py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-6 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-nude text-primary text-xs font-semibold shadow-sm">
+                    <i class="ph-fill ph-sparkle"></i>
+                    <span>@L["Home_HeroTag"]</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-bold text-charcoal leading-tight font-serif">
+                    @L["Home_HeroTitle"]
+                </h1>
+                <p class="text-sm sm:text-base text-muted leading-relaxed">
+                    @L["Home_HeroDesc"]
+                </p>
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <a asp-controller="SanPham" asp-action="Index" class="px-6 py-3 bg-primary hover:bg-primaryHover text-white text-sm font-semibold rounded-btn transition shadow-soft flex items-center gap-2">
+                        @L["Home_ShopNow"] <i class="ph ph-arrow-right"></i>
+                    </a>
+                    <a href="#promo-section" class="px-5 py-3 bg-surface hover:bg-pastel/50 text-charcoal border border-nude text-sm font-semibold rounded-btn transition flex items-center gap-1.5">
+                        <i class="ph-fill ph-ticket text-primary"></i> @L["Home_GetVoucher"]
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6">
+                <div class="relative rounded-card overflow-hidden border border-borderLight shadow-soft bg-surface aspect-[16/10]">
+                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=80" alt="@L["Brand_Name"]" class="w-full h-full object-cover" />
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Khối thử nghiệm giao diện & thành phần dùng chung (Trang tạm Bước 4) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-primary">@L["Common_Status"]</span>
+                <h2 class="text-xl font-bold text-charcoal mt-0.5">@L["Home_TestComponentsTitle"]</h2>
+                <p class="text-xs text-muted">@L["Home_TestComponentsDesc"]</p>
+            </div>
+
+            <!-- Demo Status Badges Đơn Hàng -->
+            <div class="space-y-2">
+                <p class="text-xs font-bold text-charcoal">@L["Home_DemoOrderBadges"]:</p>
+                <div class="flex flex-wrap gap-2">
+                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.ChoXacNhan)' />
+                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.DaXacNhan)' />
+                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.DangGiao)' />
+                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.HoanThanh)' />
+                    <partial name="_StatusBadge" model='("DonHang", TrangThaiDonHangConstant.DaHuy)' />
+                </div>
+            </div>
+
+            <!-- Demo Status Badges Thanh Toán & Hoàn Tiền -->
+            <div class="space-y-2">
+                <p class="text-xs font-bold text-charcoal">@L["Home_DemoPaymentBadges"]:</p>
+                <div class="flex flex-wrap gap-2">
+                    <partial name="_StatusBadge" model='("ThanhToan", TrangThaiThanhToanConstant.ChuaThanhToan)' />
+                    <partial name="_StatusBadge" model='("ThanhToan", TrangThaiThanhToanConstant.DaThanhToan)' />
+                    <partial name="_StatusBadge" model='("ThanhToan", TrangThaiThanhToanConstant.ThatBai)' />
+                    <partial name="_StatusBadge" model='("HoanTiển", TrangThaiHoanTienConstant.KhongCan)' />
+                    <partial name="_StatusBadge" model='("HoanTien", TrangThaiHoanTienConstant.ChoHoan)' />
+                    <partial name="_StatusBadge" model='("HoanTien", TrangThaiHoanTienConstant.DaHoan)' />
+                </div>
+            </div>
+
+            <!-- Demo Nút bấm & Toast Trigger -->
+            <div class="space-y-2 pt-2 border-t border-borderLight">
+                <p class="text-xs font-bold text-charcoal">@L["Home_DemoButtons"]:</p>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="showToast('@L["Toast_DemoSuccess"]', true)" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-semibold rounded-btn transition shadow-sm">
+                        @L["Home_TriggerSuccessToast"]
+                    </button>
+                    <button type="button" onclick="showToast('@L["Toast_DemoError"]', false)" class="px-4 py-2 bg-surface hover:bg-cream border border-borderLight text-charcoal text-xs font-semibold rounded-btn transition">
+                        @L["Home_TriggerErrorToast"]
+                    </button>
+                </div>
+            </div>
+
+            <!-- Demo Phân trang -->
+            <div class="pt-2 border-t border-borderLight">
+                <p class="text-xs font-bold text-charcoal mb-2">@L["Home_DemoPagination"]:</p>
+                @{
+                    ViewData["PageIndex"] = 2;
+                    ViewData["TotalPages"] = 5;
+                }
+                <partial name="_Pagination" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Khu vực neo Khuyến Mãi (id="promo-section") -->
+    <section id="promo-section" class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-pastel/40 p-6 rounded-card border border-borderLight text-center space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-primary">@L["Nav_Promotions"]</span>
+            <h3 class="text-lg font-bold text-charcoal">@L["Home_PromoSectionTitle"]</h3>
+            <p class="text-xs text-muted">@L["Home_PromoSectionDesc"]</p>
+        </div>
+    </section>
+
 </div>

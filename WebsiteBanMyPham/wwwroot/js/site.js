@@ -1,4 +1,73 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+// Serene Cosmetics - Site JS Scripts
 
-// Write your JavaScript code.
+// 1. Mobile Menu Toggle
+function toggleMobileMenu() {
+    var menu = document.getElementById("mobile-menu");
+    if (menu) {
+        menu.classList.toggle("hidden");
+    }
+}
+
+// 2. Admin Sidebar Toggle
+function toggleAdminSidebar() {
+    var sidebar = document.getElementById("admin-sidebar");
+    if (sidebar) {
+        sidebar.classList.toggle("hidden");
+    }
+}
+
+// 3. Toast Notifications
+function showToast(message, isSuccess = true) {
+    var toast = document.getElementById("toast");
+    var toastMsg = document.getElementById("toast-msg");
+    var toastIcon = document.getElementById("toast-icon");
+    var toastTitle = document.getElementById("toast-title");
+
+    if (!toast || !toastMsg) return;
+
+    toastMsg.innerText = message;
+
+    if (toastIcon) {
+        toastIcon.className = isSuccess 
+            ? "ph-fill ph-check-circle text-statusSuccess text-xl shrink-0" 
+            : "ph-fill ph-x-circle text-statusDanger text-xl shrink-0";
+    }
+
+    toast.classList.remove("hidden");
+
+    // Auto hide after 4 seconds
+    setTimeout(function () {
+        hideToast();
+    }, 4000);
+}
+
+function hideToast() {
+    var toast = document.getElementById("toast");
+    if (toast) {
+        toast.classList.add("hidden");
+    }
+}
+
+// 4. Chống bấm đúp (Double-click submit prevention)
+document.addEventListener("DOMContentLoaded", function () {
+    var forms = document.querySelectorAll("form");
+    forms.forEach(function (form) {
+        form.addEventListener("submit", function (e) {
+            // Nếu dùng jQuery unobtrusive validation và form không hợp lệ thì không disable nút
+            if (window.jQuery && typeof jQuery(form).valid === "function") {
+                if (!jQuery(form).valid()) {
+                    return;
+                }
+            }
+
+            var submitBtns = form.querySelectorAll("button[type='submit'], input[type='submit']");
+            submitBtns.forEach(function (btn) {
+                // Đặt timeout nhẹ để form kịp gửi request
+                setTimeout(function () {
+                    btn.disabled = true;
+                    btn.classList.add("opacity-60", "cursor-not-allowed");
+                }, 50);
+            });
+        });
+    });
+});

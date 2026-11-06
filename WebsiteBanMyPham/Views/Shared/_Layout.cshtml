@@ -1,50 +1,269 @@
+@using System.Globalization
+@using WebsiteBanMyPham.Constants
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebsiteBanMyPham</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} - {L["Brand_Name"]}" : L["Brand_Name"].Value)</title>
+
+    <!-- Tailwind CSS (Ghim phiên bản 3.4.17) -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+    <!-- Google Fonts: Playfair Display (Headings) & Plus Jakarta Sans (Body/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons (Ghim phiên bản 2.1.1) -->
+    <script src="https://unpkg.com/@@phosphor-icons/web@@2.1.1"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFF9F5',        /* Trắng kem - Nền chính */
+                        pastel: '#F8DDE5',       /* Hồng pastel - Màu nhấn nhẹ */
+                        nude: '#E9B8C5',         /* Hồng nude - Nút phụ & Sidebar Admin */
+                        primary: '#C87991',      /* Hồng đậm - Nút chính */
+                        primaryHover: '#B3627A', /* Hover nút chính */
+                        charcoal: '#65545A',     /* Nâu xám - Chữ chính */
+                        muted: '#9A8B90',        /* Chữ phụ */
+                        borderLight: '#F0E4E8',  /* Viền mảnh */
+                        surface: '#FFFFFF',      /* Trắng - Thẻ sản phẩm / Bảng */
+                        statusSuccess: '#4A9D7C',
+                        statusWarning: '#D99B52',
+                        statusDanger: '#D96B6B',
+                        statusInfo: '#5B8FB9',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(101, 84, 90, 0.06)',
+                        'hover': '0 8px 28px rgba(200, 121, 145, 0.15)',
+                    },
+                    borderRadius: {
+                        'btn': '6px',
+                        'card': '10px',
+                    }
+                }
+            }
+        }
+    </script>
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebsiteBanMyPham.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="TrangChu" asp-action="Index">WebsiteBanMyPham</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+<body class="min-h-screen flex flex-col bg-cream text-charcoal font-sans selection:bg-pastel selection:text-charcoal">
+
+    <!-- HEADER CHÍNH -->
+    <header class="bg-surface border-b border-borderLight sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-3 sm:gap-4">
+            
+            <!-- Logo -->
+            <a asp-area="" asp-controller="TrangChu" asp-action="Index" class="flex items-center gap-2.5 shrink-0">
+                <div class="w-10 h-10 rounded-full bg-pastel flex items-center justify-center text-primary font-serif font-bold text-xl border border-nude shadow-sm">
+                    S
+                </div>
+                <div>
+                    <span class="font-serif text-2xl font-bold tracking-tight text-charcoal block leading-none">SERENE</span>
+                    <span class="block text-[10px] uppercase tracking-[0.22em] text-muted mt-0.5">COSMETICS</span>
+                </div>
+            </a>
+
+            <!-- Menu chính (Desktop) -->
+            <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-charcoal">
+                <a asp-area="" asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">
+                    @L["Nav_Home"]
+                </a>
+                <a asp-area="" asp-controller="SanPham" asp-action="Index" class="hover:text-primary transition">
+                    @L["Nav_Products"]
+                </a>
+                <a asp-area="" asp-controller="TrangChu" asp-action="Index" asp-fragment="promo-section" class="hover:text-primary transition flex items-center gap-1 text-primary">
+                    <i class="ph-fill ph-ticket"></i> @L["Nav_Promotions"]
+                </a>
+            </nav>
+
+            <!-- Ô tìm kiếm sản phẩm -->
+            <div class="hidden md:block flex-1 max-w-xs relative">
+                <form asp-area="" asp-controller="SanPham" asp-action="Index" method="get" class="relative">
+                    <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"></i>
+                    <input type="text" name="tuKhoa" placeholder="@L["Header_SearchPlaceholder"]" class="w-full pl-9 pr-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                </form>
+            </div>
+
+            <!-- Cụm Tài khoản, Giỏ hàng & Nút đổi ngôn ngữ -->
+            <div class="flex items-center gap-2">
+                
+                <!-- Nút đổi ngôn ngữ VI | EN -->
+                <partial name="_LanguageSwitcher" />
+
+                <!-- Giỏ hàng (Gọi ViewComponent) -->
+                @await Component.InvokeAsync("GioHangBadge")
+
+                <!-- Khu vực tài khoản theo 3 trạng thái -->
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole(VaiTroConstant.QuanTriVien))
+                    {
+                        <!-- Trạng thái 1: QuanTriVien đã đăng nhập -->
+                        <div class="flex items-center gap-1.5">
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="px-3 py-2 rounded-btn bg-charcoal hover:bg-primary text-white flex items-center gap-1.5 text-xs font-bold transition shadow-sm" title="@L["Nav_AdminArea"]">
+                                <i class="ph-fill ph-gauge text-nude text-base"></i>
+                                <span class="hidden xl:inline">@L["Nav_AdminArea"]</span>
+                            </a>
+                            <form asp-area="" asp-controller="TaiKhoan" asp-action="DangXuat" method="post" class="inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="px-2.5 py-2 rounded-btn border border-borderLight hover:bg-cream text-charcoal text-xs font-semibold transition" title="@L["Nav_Logout"]">
+                                    <i class="ph ph-sign-out text-base"></i>
+                                    <span class="hidden md:inline">@L["Nav_Logout"]</span>
+                                </button>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Trạng thái 2: KhachHang đã đăng nhập -->
+                        <div class="relative group">
+                            <button type="button" class="px-3 py-2 rounded-btn hover:bg-cream text-charcoal flex items-center gap-1.5 text-xs font-semibold border border-borderLight transition">
+                                <i class="ph-fill ph-user-circle text-lg text-primary"></i>
+                                <span class="hidden md:inline max-w-[120px] truncate">@User.Identity?.Name</span>
+                                <i class="ph ph-caret-down text-xs text-muted"></i>
+                            </button>
+                            <div class="absolute right-0 mt-1 w-48 bg-surface rounded-card border border-borderLight shadow-hover py-1.5 hidden group-hover:block z-50 text-xs">
+                                <a asp-area="" asp-controller="TaiKhoan" asp-action="HoSo" class="block px-4 py-2 hover:bg-cream text-charcoal flex items-center gap-2">
+                                    <i class="ph ph-user text-primary"></i> @L["Nav_Profile"]
+                                </a>
+                                <a asp-area="" asp-controller="DonHang" asp-action="Index" class="block px-4 py-2 hover:bg-cream text-charcoal flex items-center gap-2">
+                                    <i class="ph ph-package text-primary"></i> @L["Nav_MyOrders"]
+                                </a>
+                                <a asp-area="" asp-controller="KhieuNai" asp-action="Index" class="block px-4 py-2 hover:bg-cream text-charcoal flex items-center gap-2">
+                                    <i class="ph ph-chat-circle-dots text-primary"></i> @L["Nav_Complaints"]
+                                </a>
+                                <div class="border-t border-borderLight my-1"></div>
+                                <form asp-area="" asp-controller="TaiKhoan" asp-action="DangXuat" method="post" class="block">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="w-full text-left px-4 py-2 hover:bg-cream text-statusDanger flex items-center gap-2">
+                                        <i class="ph ph-sign-out"></i> @L["Nav_Logout"]
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <!-- Trạng thái 3: Chưa đăng nhập (Guest) -->
+                    <div class="flex items-center gap-1.5">
+                        <a asp-area="" asp-controller="TaiKhoan" asp-action="DangNhap" class="px-3 py-2 rounded-btn hover:bg-cream text-charcoal text-xs font-semibold border border-borderLight transition">
+                            @L["Nav_Login"]
+                        </a>
+                        <a asp-area="" asp-controller="TaiKhoan" asp-action="DangKy" class="px-3 py-2 rounded-btn bg-primary hover:bg-primaryHover text-white text-xs font-semibold transition shadow-sm">
+                            @L["Nav_Register"]
+                        </a>
+                    </div>
+                }
+
+                <!-- Hamburger Mobile Toggle -->
+                <button type="button" onclick="toggleMobileMenu()" class="lg:hidden p-2 text-charcoal hover:text-primary text-xl" title="@L["Common_Action"]">
+                    <i class="ph ph-list"></i>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="TrangChu" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="TrangChu" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+            </div>
+        </div>
+
+        <!-- Menu Mobile (Thu gọn) -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-borderLight bg-surface px-4 py-3 space-y-2.5 text-xs font-semibold">
+            <form asp-area="" asp-controller="SanPham" asp-action="Index" method="get" class="relative pb-2">
+                <i class="ph ph-magnifying-glass absolute left-3 top-2.5 text-muted"></i>
+                <input type="text" name="tuKhoa" placeholder="@L["Header_SearchPlaceholder"]" class="w-full pl-9 pr-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal" />
+            </form>
+            <a asp-area="" asp-controller="TrangChu" asp-action="Index" class="block py-1.5 text-charcoal hover:text-primary">
+                @L["Nav_Home"]
+            </a>
+            <a asp-area="" asp-controller="SanPham" asp-action="Index" class="block py-1.5 text-charcoal hover:text-primary">
+                @L["Nav_Products"]
+            </a>
+            <a asp-area="" asp-controller="TrangChu" asp-action="Index" asp-fragment="promo-section" class="block py-1.5 text-primary font-bold">
+                @L["Nav_Promotions"]
+            </a>
+        </div>
+    </header>
+
+    <!-- THANH DANH MỤC TỪ DATABASE (ViewComponent) -->
+    @await Component.InvokeAsync("DanhMucMenu", new { viewMode = "Default" })
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main role="main" class="flex-1">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER CHUẨN 3 CỘT (Theo Điều chỉnh 2) -->
+    <footer class="bg-surface border-t border-borderLight mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-xs text-muted">
+            
+            <!-- Cột 1: Thông tin cửa hàng -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-pastel flex items-center justify-center text-primary font-serif font-bold text-lg border border-nude">
+                        S
+                    </div>
+                    <span class="font-serif text-xl font-bold text-charcoal">@L["Brand_Name"]</span>
+                </div>
+                <p class="leading-relaxed">
+                    @L["Footer_Desc"]
+                </p>
+                <p class="text-[11px] text-muted/80 pt-2">
+                    @L["Footer_Copyright"]
+                </p>
+            </div>
+
+            <!-- Cột 2: Danh mục chính (từ database qua ViewComponent DanhMucMenu) -->
+            <div class="space-y-3">
+                <p class="font-bold text-charcoal uppercase tracking-wider text-[11px]">
+                    @L["Footer_MainCategories"]
+                </p>
+                @await Component.InvokeAsync("DanhMucMenu", new { viewMode = "Footer" })
+            </div>
+
+            <!-- Cột 3: Chính sách & Hỗ trợ (Chỉ là text, không gắn link tới trang chưa có trừ Privacy) -->
+            <div class="space-y-3">
+                <p class="font-bold text-charcoal uppercase tracking-wider text-[11px]">
+                    @L["Footer_Policies"]
+                </p>
+                <ul class="space-y-1.5 text-xs text-muted">
+                    <li>@L["Footer_OrderGuide"]</li>
+                    <li>@L["Footer_CancelPolicy"]</li>
+                    <li>@L["Footer_ComplaintPolicy"]</li>
+                    <li>
+                        <a asp-area="" asp-controller="TrangChu" asp-action="Privacy" class="hover:text-primary transition underline">
+                            @L["Privacy_Title"]
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Thông tin liên hệ mẫu -->
+                <div class="pt-2 border-t border-borderLight space-y-1 text-[11px]">
+                    <p><i class="ph-fill ph-map-pin text-primary"></i> @L["Footer_ContactAddress"]</p>
+                    <p><i class="ph-fill ph-envelope text-primary"></i> @L["Footer_ContactEmail"]</p>
+                    <p><i class="ph-fill ph-phone text-primary"></i> @L["Footer_ContactPhone"]</p>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - WebsiteBanMyPham - <a asp-area="" asp-controller="TrangChu" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- Toast Notification Partial -->
+    <partial name="_Toast" />
+
+    <!-- Scripts chuẩn: jQuery, Validation, site.js -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

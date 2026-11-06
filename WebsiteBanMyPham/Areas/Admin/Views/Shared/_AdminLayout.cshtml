@@ -1,0 +1,203 @@
+@using System.Globalization
+
+@{
+    var currentCtrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    
+    // Kiểm tra active theo nhóm controller theo Điều chỉnh 5
+    bool isDashboardActive = currentCtrl.Equals("Dashboard", StringComparison.OrdinalIgnoreCase);
+    bool isSanPhamActive = currentCtrl.Equals("SanPham", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("AnhSanPham", StringComparison.OrdinalIgnoreCase);
+    bool isDanhMucActive = currentCtrl.Equals("DanhMuc", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("ThuongHieu", StringComparison.OrdinalIgnoreCase);
+    bool isTonKhoActive = currentCtrl.Equals("TonKho", StringComparison.OrdinalIgnoreCase);
+    bool isDonHangActive = currentCtrl.Equals("DonHang", StringComparison.OrdinalIgnoreCase);
+    bool isThanhToanActive = currentCtrl.Equals("ThanhToan", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("PhuongThucThanhToan", StringComparison.OrdinalIgnoreCase);
+    bool isKhuyenMaiActive = currentCtrl.Equals("KhuyenMai", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("Banner", StringComparison.OrdinalIgnoreCase);
+    bool isTaiKhoanActive = currentCtrl.Equals("TaiKhoan", StringComparison.OrdinalIgnoreCase);
+    bool isDanhGiaActive = currentCtrl.Equals("DanhGia", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("KhieuNai", StringComparison.OrdinalIgnoreCase);
+}
+
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} - {L["Admin_Brand"]}" : L["Admin_Brand"].Value)</title>
+
+    <!-- Tailwind CSS (Ghim phiên bản 3.4.17) -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+    <!-- Google Fonts: Playfair Display (Headings) & Plus Jakarta Sans (Body/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons (Ghim phiên bản 2.1.1) -->
+    <script src="https://unpkg.com/@@phosphor-icons/web@@2.1.1"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFF9F5',        /* Trắng kem - Nền chính */
+                        pastel: '#F8DDE5',       /* Hồng pastel - Màu nhấn nhẹ */
+                        nude: '#E9B8C5',         /* Hồng nude - Nút phụ & Sidebar Admin */
+                        primary: '#C87991',      /* Hồng đậm - Nút chính */
+                        primaryHover: '#B3627A', /* Hover nút chính */
+                        charcoal: '#65545A',     /* Nâu xám - Chữ chính */
+                        muted: '#9A8B90',        /* Chữ phụ */
+                        borderLight: '#F0E4E8',  /* Viền mảnh */
+                        surface: '#FFFFFF',      /* Trắng - Thẻ sản phẩm / Bảng */
+                        statusSuccess: '#4A9D7C',
+                        statusWarning: '#D99B52',
+                        statusDanger: '#D96B6B',
+                        statusInfo: '#5B8FB9',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(101, 84, 90, 0.06)',
+                        'hover': '0 8px 28px rgba(200, 121, 145, 0.15)',
+                    },
+                    borderRadius: {
+                        'btn': '6px',
+                        'card': '10px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row bg-cream text-charcoal font-sans selection:bg-pastel selection:text-charcoal">
+
+    <!-- SIDEBAR HỒNG NUDE (#E9B8C5) -->
+    <aside id="admin-sidebar" class="w-full lg:w-72 bg-nude text-charcoal p-5 flex flex-col justify-between shrink-0 border-r border-borderLight shadow-sm lg:min-h-screen hidden lg:flex">
+        <div class="space-y-5">
+            
+            <!-- Admin Brand Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-charcoal/15">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-btn bg-surface text-primary font-serif font-bold text-lg flex items-center justify-center shadow-sm">
+                        S
+                    </div>
+                    <div>
+                        <p class="font-serif font-bold text-base text-charcoal leading-none">@L["Admin_Brand"]</p>
+                        <span class="text-[11px] font-semibold text-charcoal/75">@L["Admin_AreaTitle"]</span>
+                    </div>
+                </div>
+                <button type="button" onclick="toggleAdminSidebar()" class="lg:hidden p-1 text-charcoal hover:text-primary">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+
+            <!-- 9 Mục Phân hệ Quản trị theo nhóm controller (Bỏ số thứ tự theo Điều chỉnh 4) -->
+            <div class="space-y-1 text-xs font-semibold">
+                
+                <!-- Nhóm 1: Bảng điều khiển & Báo cáo -->
+                <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-1 font-bold">
+                    @L["Admin_Group_Dashboard"]
+                </p>
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDashboardActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-squares-four text-base text-primary"></i> @L["Admin_Nav_Dashboard"]
+                </a>
+
+                <!-- Nhóm 2: Quản lý Dữ liệu & Kho -->
+                <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-2.5 font-bold">
+                    @L["Admin_Group_Data"]
+                </p>
+                <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isSanPhamActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-package text-base"></i> @L["Admin_Nav_Products"]
+                </a>
+                <a asp-area="Admin" asp-controller="DanhMuc" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDanhMucActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-folders text-base"></i> @L["Admin_Nav_Categories"]
+                </a>
+                <a asp-area="Admin" asp-controller="TonKho" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isTonKhoActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-warning-octagon text-base"></i> @L["Admin_Nav_Inventory"]
+                </a>
+                <a asp-area="Admin" asp-controller="DonHang" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDonHangActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-truck text-base"></i> @L["Admin_Nav_Orders"]
+                </a>
+                <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isThanhToanActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-credit-card text-base"></i> @L["Admin_Nav_Payments"]
+                </a>
+                <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isKhuyenMaiActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-ticket text-base"></i> @L["Admin_Nav_Promotions"]
+                </a>
+                <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isTaiKhoanActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-users-three text-base"></i> @L["Admin_Nav_Accounts"]
+                </a>
+
+                <!-- Nhóm 3: Quản lý Tương tác -->
+                <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-2.5 font-bold">
+                    @L["Admin_Group_Interaction"]
+                </p>
+                <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDanhGiaActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-chat-centered-text text-base"></i> @L["Admin_Nav_Reviews"]
+                </a>
+            </div>
+        </div>
+
+        <!-- Admin Footer Controls -->
+        <div class="pt-4 border-t border-charcoal/15 text-xs space-y-2 mt-4">
+            <div class="flex items-center justify-between">
+                <span class="font-bold truncate max-w-[150px]">@User.Identity?.Name</span>
+                <a asp-area="" asp-controller="TaiKhoan" asp-action="DoiMatKhau" class="underline hover:text-primary font-semibold">
+                    @L["Admin_ChangePassword"]
+                </a>
+            </div>
+            <a asp-area="" asp-controller="TrangChu" asp-action="Index" class="block w-full py-2 bg-surface hover:bg-charcoal hover:text-white text-charcoal rounded-btn font-bold text-center transition shadow-sm">
+                @L["Admin_BackToStore"]
+            </a>
+        </div>
+    </aside>
+
+    <!-- KHU VỰC NỘI DUNG CHÍNH ADMIN -->
+    <div class="flex-1 flex flex-col min-w-0">
+        
+        <!-- Admin Topbar -->
+        <header class="bg-surface border-b border-borderLight px-4 sm:px-6 py-3 flex items-center justify-between gap-3 shrink-0 shadow-sm">
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="toggleAdminSidebar()" class="lg:hidden p-1.5 rounded-btn border border-borderLight text-charcoal hover:bg-cream text-lg">
+                    <i class="ph ph-list"></i>
+                </button>
+                <h1 class="font-bold text-charcoal text-base sm:text-lg">
+                    @(ViewData["Title"] ?? L["Admin_Brand"].Value)
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Nút đổi ngôn ngữ -->
+                <partial name="_LanguageSwitcher" />
+
+                <!-- Đăng xuất -->
+                <form asp-area="" asp-controller="TaiKhoan" asp-action="DangXuat" method="post" class="inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="px-3 py-1.5 bg-cream border border-borderLight hover:border-primary text-charcoal text-xs font-bold rounded-btn transition flex items-center gap-1.5" title="@L["Nav_Logout"]">
+                        <i class="ph ph-sign-out"></i>
+                        <span class="hidden sm:inline">@L["Nav_Logout"]</span>
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <!-- Body Admin -->
+        <main role="main" class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 overflow-y-auto">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Toast Component -->
+    <partial name="_Toast" />
+
+    <!-- Scripts chuẩn: jQuery, Validation, site.js -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

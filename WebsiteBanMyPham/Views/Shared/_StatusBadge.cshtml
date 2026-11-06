@@ -1,0 +1,66 @@
+@inject ILocalizationHelper LocalizationHelper
+@{
+    string loai = "DonHang";
+    string? trangThai = null;
+
+    if (Model is ValueTuple<string, string?> tuple)
+    {
+        loai = tuple.Item1;
+        trangThai = tuple.Item2;
+    }
+    else if (Model is string str)
+    {
+        trangThai = str;
+        loai = ViewData["StatusType"]?.ToString() ?? "DonHang";
+    }
+
+    string label = "";
+    string cssClass = "bg-cream text-charcoal";
+
+    if (!string.IsNullOrWhiteSpace(trangThai))
+    {
+        if (string.Equals(loai, "DonHang", StringComparison.OrdinalIgnoreCase))
+        {
+            label = LocalizationHelper.GetOrderStatusLabel(trangThai);
+            cssClass = trangThai switch
+            {
+                TrangThaiDonHangConstant.ChoXacNhan => "bg-[#FDF3E7] text-statusWarning",
+                TrangThaiDonHangConstant.DaXacNhan => "bg-[#EBF3F9] text-statusInfo",
+                TrangThaiDonHangConstant.DangGiao => "bg-pastel text-primary font-bold",
+                TrangThaiDonHangConstant.HoanThanh => "bg-[#E6F4EE] text-statusSuccess",
+                TrangThaiDonHangConstant.DaHuy => "bg-[#FCEAEA] text-statusDanger",
+                _ => "bg-cream text-charcoal"
+            };
+        }
+        else if (string.Equals(loai, "ThanhToan", StringComparison.OrdinalIgnoreCase))
+        {
+            label = LocalizationHelper.GetPaymentStatusLabel(trangThai);
+            cssClass = trangThai switch
+            {
+                TrangThaiThanhToanConstant.ChuaThanhToan => "bg-[#FDF3E7] text-statusWarning",
+                TrangThaiThanhToanConstant.DaThanhToan => "bg-[#E6F4EE] text-statusSuccess",
+                TrangThaiThanhToanConstant.ThatBai => "bg-[#FCEAEA] text-statusDanger",
+                _ => "bg-cream text-charcoal"
+            };
+        }
+        else if (string.Equals(loai, "HoanTien", StringComparison.OrdinalIgnoreCase))
+        {
+            label = LocalizationHelper.GetRefundStatusLabel(trangThai);
+            cssClass = trangThai switch
+            {
+                TrangThaiHoanTienConstant.KhongCan => "bg-[#F0E4E8] text-muted",
+                TrangThaiHoanTienConstant.ChoHoan => "bg-[#FCEAEA] text-statusDanger",
+                TrangThaiHoanTienConstant.DaHoan => "bg-[#E6F4EE] text-statusSuccess",
+                _ => "bg-cream text-charcoal"
+            };
+        }
+    }
+}
+
+@if (!string.IsNullOrEmpty(label))
+{
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold @cssClass">
+        @label
+    </span>
+}
+

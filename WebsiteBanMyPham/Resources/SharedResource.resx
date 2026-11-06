@@ -59,6 +59,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 
+  <!-- Brand Name -->
+  <data name="Brand_Name" xml:space="preserve">
+    <value>Serene Cosmetics</value>
+  </data>
+
   <!-- Validation_* -->
   <data name="Validation_Required" xml:space="preserve">
     <value>{0} không được để trống.</value>
@@ -424,6 +429,9 @@
   <data name="Nav_Products" xml:space="preserve">
     <value>Sản phẩm</value>
   </data>
+  <data name="Nav_Promotions" xml:space="preserve">
+    <value>Mã khuyến mãi</value>
+  </data>
   <data name="Nav_Cart" xml:space="preserve">
     <value>Giỏ hàng</value>
   </data>
@@ -444,6 +452,214 @@
   </data>
   <data name="Nav_Admin" xml:space="preserve">
     <value>Quản trị</value>
+  </data>
+  <data name="Nav_AdminArea" xml:space="preserve">
+    <value>Khu vực quản trị</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>Hồ sơ cá nhân</value>
+  </data>
+  <data name="Nav_MyOrders" xml:space="preserve">
+    <value>Đơn hàng của tôi</value>
+  </data>
+  <data name="Nav_Complaints" xml:space="preserve">
+    <value>Khiếu nại của tôi</value>
+  </data>
+
+  <!-- Header & Footer -->
+  <data name="Header_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm Serum, Kem dưỡng, Son...</value>
+  </data>
+  <data name="Header_Categories" xml:space="preserve">
+    <value>Danh mục mỹ phẩm</value>
+  </data>
+  <data name="Footer_Desc" xml:space="preserve">
+    <value>Website mỹ phẩm chính hãng với các dòng sản phẩm thuần chay lành tính, an toàn và tinh tế cho làn da của bạn.</value>
+  </data>
+  <data name="Footer_MainCategories" xml:space="preserve">
+    <value>Danh mục chính</value>
+  </data>
+  <data name="Footer_Policies" xml:space="preserve">
+    <value>Chính sách &amp; Hỗ trợ</value>
+  </data>
+  <data name="Footer_OrderGuide" xml:space="preserve">
+    <value>Hướng dẫn đặt hàng &amp; Mã giảm giá</value>
+  </data>
+  <data name="Footer_CancelPolicy" xml:space="preserve">
+    <value>Quy định hủy đơn hàng</value>
+  </data>
+  <data name="Footer_ComplaintPolicy" xml:space="preserve">
+    <value>Chính sách đánh giá &amp; Khiếu nại</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>© 2026 Serene Cosmetics</value>
+  </data>
+  <data name="Footer_ContactAddress" xml:space="preserve">
+    <value>123 Đường Hoa Hồng, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</value>
+  </data>
+  <data name="Footer_ContactEmail" xml:space="preserve">
+    <value>support@serenecosmetics.vn</value>
+  </data>
+  <data name="Footer_ContactPhone" xml:space="preserve">
+    <value>1900 6868 (8:00 - 21:00)</value>
+  </data>
+
+  <!-- Admin Sidebar & Topbar (Điều chỉnh 4 & 5) -->
+  <data name="Admin_Brand" xml:space="preserve">
+    <value>SERENE ADMIN</value>
+  </data>
+  <data name="Admin_AreaTitle" xml:space="preserve">
+    <value>Khu vực quản trị</value>
+  </data>
+  <data name="Admin_Group_Dashboard" xml:space="preserve">
+    <value>Bảng điều khiển &amp; Báo cáo</value>
+  </data>
+  <data name="Admin_Group_Data" xml:space="preserve">
+    <value>Quản lý Dữ liệu &amp; Kho</value>
+  </data>
+  <data name="Admin_Group_Interaction" xml:space="preserve">
+    <value>Quản lý Tương tác</value>
+  </data>
+  <data name="Admin_Nav_Dashboard" xml:space="preserve">
+    <value>Dashboard &amp; Thống kê</value>
+  </data>
+  <data name="Admin_Nav_Products" xml:space="preserve">
+    <value>Sản phẩm &amp; Hình ảnh</value>
+  </data>
+  <data name="Admin_Nav_Categories" xml:space="preserve">
+    <value>Danh mục &amp; Thương hiệu</value>
+  </data>
+  <data name="Admin_Nav_Inventory" xml:space="preserve">
+    <value>Tồn kho &amp; Cảnh báo</value>
+  </data>
+  <data name="Admin_Nav_Orders" xml:space="preserve">
+    <value>Quản lý Đơn hàng</value>
+  </data>
+  <data name="Admin_Nav_Payments" xml:space="preserve">
+    <value>Thanh toán &amp; Hoàn tiền</value>
+  </data>
+  <data name="Admin_Nav_Promotions" xml:space="preserve">
+    <value>Khuyến mãi &amp; Banner</value>
+  </data>
+  <data name="Admin_Nav_Accounts" xml:space="preserve">
+    <value>TK Khách &amp; TK Admin</value>
+  </data>
+  <data name="Admin_Nav_Reviews" xml:space="preserve">
+    <value>Đánh giá &amp; Khiếu nại</value>
+  </data>
+  <data name="Admin_ChangePassword" xml:space="preserve">
+    <value>Đổi mật khẩu</value>
+  </data>
+  <data name="Admin_BackToStore" xml:space="preserve">
+    <value>Quay về Trang Khách Hàng</value>
+  </data>
+
+  <!-- Common UI & Pagination -->
+  <data name="Pagination_Previous" xml:space="preserve">
+    <value>Trước</value>
+  </data>
+  <data name="Pagination_Next" xml:space="preserve">
+    <value>Sau</value>
+  </data>
+  <data name="Pagination_Page" xml:space="preserve">
+    <value>Trang</value>
+  </data>
+  <data name="Toast_SuccessTitle" xml:space="preserve">
+    <value>Thành công</value>
+  </data>
+  <data name="Toast_ErrorTitle" xml:space="preserve">
+    <value>Thông báo lỗi</value>
+  </data>
+  <data name="Toast_DemoSuccess" xml:space="preserve">
+    <value>Đây là thông báo thành công thử nghiệm!</value>
+  </data>
+  <data name="Toast_DemoError" xml:space="preserve">
+    <value>Đây là thông báo lỗi thử nghiệm!</value>
+  </data>
+  <data name="Error_Title" xml:space="preserve">
+    <value>Đã xảy ra lỗi</value>
+  </data>
+  <data name="Error_Message" xml:space="preserve">
+    <value>Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.</value>
+  </data>
+  <data name="Error_RequestId" xml:space="preserve">
+    <value>Mã yêu cầu (Request ID)</value>
+  </data>
+  <data name="Error_BackHome" xml:space="preserve">
+    <value>Về trang chủ</value>
+  </data>
+  <data name="Privacy_Title" xml:space="preserve">
+    <value>Chính sách bảo mật</value>
+  </data>
+  <data name="Privacy_Content" xml:space="preserve">
+    <value>Chúng tôi cam kết bảo vệ thông tin cá nhân và quyền riêng tư của khách hàng theo đúng quy định pháp luật.</value>
+  </data>
+  <data name="Privacy_SubContent" xml:space="preserve">
+    <value>Mọi dữ liệu tài khoản, giỏ hàng và giao dịch đặt hàng đều được mã hóa và bảo mật an toàn tuyệt đối.</value>
+  </data>
+
+  <!-- Trang chủ tạm (Index) -->
+  <data name="Home_HeroTag" xml:space="preserve">
+    <value>Bộ sưu tập Dưỡng Sáng Cánh Hoa Hồng</value>
+  </data>
+  <data name="Home_HeroTitle" xml:space="preserve">
+    <value>Làn da căng bóng tự nhiên cùng Serene Rose</value>
+  </data>
+  <data name="Home_HeroDesc" xml:space="preserve">
+    <value>Dòng sản phẩm thuần chay lành tính chiết xuất từ cánh hoa hồng tươi, mang lại nét rạng rỡ và thuần khiết cho làn da bạn.</value>
+  </data>
+  <data name="Home_ShopNow" xml:space="preserve">
+    <value>Mua sắm ngay</value>
+  </data>
+  <data name="Home_GetVoucher" xml:space="preserve">
+    <value>Lấy mã giảm giá</value>
+  </data>
+  <data name="Home_TestComponentsTitle" xml:space="preserve">
+    <value>Thử nghiệm các thành phần giao diện &amp; Trạng thái</value>
+  </data>
+  <data name="Home_TestComponentsDesc" xml:space="preserve">
+    <value>Trang tạm phục vụ kiểm tra bố cục layout, bảng màu, huy hiệu trạng thái và thông báo Toast của Bước 4.</value>
+  </data>
+  <data name="Home_DemoOrderBadges" xml:space="preserve">
+    <value>Trạng thái đơn hàng</value>
+  </data>
+  <data name="Home_DemoPaymentBadges" xml:space="preserve">
+    <value>Trạng thái thanh toán &amp; hoàn tiền</value>
+  </data>
+  <data name="Home_DemoButtons" xml:space="preserve">
+    <value>Nút bấm &amp; Thông báo Toast</value>
+  </data>
+  <data name="Home_TriggerSuccessToast" xml:space="preserve">
+    <value>Thử Toast thành công</value>
+  </data>
+  <data name="Home_TriggerErrorToast" xml:space="preserve">
+    <value>Thử Toast lỗi</value>
+  </data>
+  <data name="Home_DemoPagination" xml:space="preserve">
+    <value>Thành phần phân trang</value>
+  </data>
+  <data name="Home_PromoSectionTitle" xml:space="preserve">
+    <value>Khu vực ưu đãi &amp; Mã khuyến mãi</value>
+  </data>
+  <data name="Home_PromoSectionDesc" xml:space="preserve">
+    <value>Các chương trình khuyến mãi và ví voucher chính thức sẽ được hiển thị đầy đủ tại đây ở Bước 5.</value>
+  </data>
+
+  <!-- DanhMuc_* (Dịch tên danh mục theo Mục 2.7) -->
+  <data name="DanhMuc_1" xml:space="preserve">
+    <value>Chăm sóc da mặt</value>
+  </data>
+  <data name="DanhMuc_2" xml:space="preserve">
+    <value>Trang điểm</value>
+  </data>
+  <data name="DanhMuc_3" xml:space="preserve">
+    <value>Chăm sóc tóc</value>
+  </data>
+  <data name="DanhMuc_4" xml:space="preserve">
+    <value>Chăm sóc cơ thể</value>
+  </data>
+  <data name="DanhMuc_5" xml:space="preserve">
+    <value>Nước hoa</value>
   </data>
 
   <!-- Common_* -->
@@ -487,4 +703,3 @@
     <value>Chi tiết</value>
   </data>
 </root>
-

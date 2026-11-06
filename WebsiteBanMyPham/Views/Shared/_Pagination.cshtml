@@ -1,0 +1,70 @@
+@{
+    int pageIndex = ViewData["PageIndex"] as int? ?? 1;
+    int totalPages = ViewData["TotalPages"] as int? ?? 1;
+    
+    // Giữ nguyên các query parameters hiện có, chỉ thay thế tham số pageIndex
+    var queryParams = Context.Request.Query.ToDictionary(q => q.Key, q => q.Value.ToString());
+    
+    string GetPageUrl(int page)
+    {
+        var dict = new Dictionary<string, string>(queryParams, StringComparer.OrdinalIgnoreCase);
+        dict["pageIndex"] = page.ToString();
+        var qs = string.Join("&", dict.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
+        return $"{Context.Request.Path}?{qs}";
+    }
+}
+
+@if (totalPages > 1)
+{
+    <nav class="flex items-center justify-center gap-1.5 pt-6 text-xs font-semibold" aria-label="Pagination">
+        @if (pageIndex > 1)
+        {
+            <a href="@GetPageUrl(pageIndex - 1)" class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition flex items-center gap-1">
+                <i class="ph ph-caret-left"></i> @L["Pagination_Previous"]
+            </a>
+        }
+        else
+        {
+            <span class="px-3 py-1.5 rounded-btn bg-cream border border-borderLight text-muted/60 cursor-not-allowed flex items-center gap-1">
+                <i class="ph ph-caret-left"></i> @L["Pagination_Previous"]
+            </span>
+        }
+
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            if (i == 1 || i == totalPages || (i >= pageIndex - 2 && i <= pageIndex + 2))
+            {
+                if (i == pageIndex)
+                {
+                    <span class="px-3 py-1.5 rounded-btn bg-primary text-white font-bold shadow-sm">
+                        @i
+                    </span>
+                }
+                else
+                {
+                    <a href="@GetPageUrl(i)" class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition">
+                        @i
+                    </a>
+                }
+            }
+            else if (i == pageIndex - 3 || i == pageIndex + 3)
+            {
+                <span class="px-2 py-1.5 text-muted">...</span>
+            }
+        }
+
+        @if (pageIndex < totalPages)
+        {
+            <a href="@GetPageUrl(pageIndex + 1)" class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition flex items-center gap-1">
+                @L["Pagination_Next"] <i class="ph ph-caret-right"></i>
+            </a>
+        }
+        else
+        {
+            <span class="px-3 py-1.5 rounded-btn bg-cream border border-borderLight text-muted/60 cursor-not-allowed flex items-center gap-1">
+                @L["Pagination_Next"] <i class="ph ph-caret-right"></i>
+            </span>
+        }
+    </nav>
+}
+

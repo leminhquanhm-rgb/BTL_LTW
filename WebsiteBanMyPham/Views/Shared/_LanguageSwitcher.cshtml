@@ -1,0 +1,25 @@
+@{
+    var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var isVi = currentCulture.StartsWith("vi", StringComparison.OrdinalIgnoreCase);
+}
+
+<div class="inline-flex items-center rounded-btn border border-borderLight bg-cream p-0.5 text-xs font-semibold shadow-sm">
+    <form asp-area="" asp-controller="Culture" asp-action="SetLanguage" method="post" class="inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="culture" value="vi-VN" />
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <button type="submit" class="px-2 py-1 rounded-[4px] transition @(isVi ? "bg-primary text-white font-bold shadow-sm" : "text-charcoal hover:text-primary")" title="Tiếng Việt">
+            VI
+        </button>
+    </form>
+    <form asp-area="" asp-controller="Culture" asp-action="SetLanguage" method="post" class="inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="culture" value="en-US" />
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <button type="submit" class="px-2 py-1 rounded-[4px] transition @(!isVi ? "bg-primary text-white font-bold shadow-sm" : "text-charcoal hover:text-primary")" title="English">
+            EN
+        </button>
+    </form>
+</div>
+

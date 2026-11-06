@@ -1,0 +1,18 @@
+@model List<WebsiteBanMyPham.Models.DanhMuc>
+
+@if (Model != null && Model.Any())
+{
+    <nav class="bg-pastel/60 border-b border-borderLight overflow-x-auto py-2 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto flex items-center gap-2 sm:gap-4 text-xs font-semibold text-charcoal whitespace-nowrap">
+            <span class="text-primary font-bold flex items-center gap-1 shrink-0">
+                <i class="ph-fill ph-squares-four text-sm"></i> @L["Header_Categories"]:
+            </span>
+            @foreach (var dm in Model)
+            {
+                <a asp-controller="SanPham" asp-action="Index" asp-route-danhMuc="@dm.MaDM" class="px-2.5 py-1 rounded-btn hover:bg-surface hover:text-primary transition">
+                    @LocalizationHelper.TenDanhMuc(dm.MaDM, dm.TenDM)
+                </a>
+            }
+        </div>
+    </nav>
+}

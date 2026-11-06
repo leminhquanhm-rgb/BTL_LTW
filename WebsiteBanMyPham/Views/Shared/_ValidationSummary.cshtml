@@ -1,0 +1,10 @@
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="p-4 mb-4 rounded-card bg-[#FCEAEA] border border-[#F5C2C2] text-statusDanger text-xs space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-sm">
+            <i class="ph-fill ph-warning-circle text-base"></i> @L["Toast_ErrorTitle"]
+        </div>
+        <div asp-validation-summary="All" class="list-disc pl-5 space-y-0.5"></div>
+    </div>
+}
+

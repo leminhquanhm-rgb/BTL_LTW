@@ -188,7 +188,7 @@ Tên Controller khách hàng theo tài liệu: TrangChu, SanPham, ChiTietSanPham
 -   Ngôn ngữ được lưu bằng cookie (CookieRequestCultureProvider). Hành động đổi ngôn ngữ chỉ chấp nhận returnUrl cục bộ (Url.IsLocalUrl) để tránh open redirect. Không dùng Accept-Language để tự đổi ngôn ngữ: mặc định luôn là tiếng Việt cho đến khi người dùng chọn.
 -   Mọi chữ hiển thị cho người dùng (View, nhãn và thông báo validation của ViewModel, thông báo trong Service, nhãn trạng thái, tiêu đề trang, thông báo lỗi, nội dung OTP demo) đều lấy từ tài nguyên; không viết cứng chuỗi.
 -   Thông báo trả về từ Service dùng IStringLocalizer<SharedResource>. Thông báo ghi log (ILogger) dành cho lập trình viên nên giữ nguyên, không cần dịch.
--   Dữ liệu lấy từ database (tên sản phẩm, mô tả, danh mục, thương hiệu, banner, khuyến mãi) giữ nguyên tiếng Việt, không dịch.
+-   Dữ liệu lấy từ database (tên sản phẩm, mô tả, thương hiệu, banner, khuyến mãi) giữ nguyên tiếng Việt, không dịch. Ngoại lệ duy nhất: tên danh mục được dịch bằng khóa tài nguyên DanhMuc_{MaDM} (qua ILocalizationHelper); nếu chưa có khóa thì dùng tên gốc trong database. Danh mục mới do Admin thêm sau này cần thêm khóa tương ứng vào cả hai tệp .resx.
 -   Định dạng theo ngôn ngữ: tiền tiếng Việt "135.000đ", tiếng Anh "135,000 VND"; ngày giờ tiếng Việt dd/MM/yyyy HH:mm, tiếng Anh MM/dd/yyyy h:mm tt. Dùng helper tập trung trong thư mục Helpers/, không viết định dạng rải rác.
 -   Khi thêm chữ mới ở bất kỳ bước nào: thêm khóa vào CẢ HAI tệp .resx trong cùng nhiệm vụ. Báo cáo cuối mỗi nhiệm vụ nêu số khóa của mỗi tệp (phải bằng nhau).
 
