@@ -143,6 +143,8 @@ WebsiteBanMyPham/
 │       └── Views/
 │
 ├── Constants/
+├── Helpers/
+├── Resources/
 ├── Controllers/
 ├── Models/
 ├── ViewModels/
@@ -176,6 +178,19 @@ CRUD đơn giản có thể sử dụng DbContext trực tiếp trong Controller
 Không over-engineering.
 
 Tên Controller khách hàng theo tài liệu: TrangChu, SanPham, ChiTietSanPham, GioHang, DatHang, ThanhToan, TaiKhoan, DonHang, DanhGia, KhieuNai. Controller quản trị đặt trong Areas/Admin/Controllers.
+
+### 2.7. Đa ngôn ngữ (Internationalization)
+
+-   Hỗ trợ hai ngôn ngữ: tiếng Việt (vi-VN, mặc định) và tiếng Anh (en-US).
+-   Dùng cơ chế chuẩn của ASP.NET Core: AddLocalization (ResourcesPath = "Resources"), AddViewLocalization, AddDataAnnotationsLocalization, UseRequestLocalization.
+-   Tệp tài nguyên chung: Resources/SharedResource.resx (tiếng Việt, mặc định) và Resources/SharedResource.en.resx (tiếng Anh), kèm lớp đánh dấu SharedResource. Hai tệp luôn phải có CÙNG tập khóa.
+-   Khóa là mã định danh tiếng Anh theo nhóm, ví dụ Nav_Home, Common_Save, Validation_Required, Msg_Order_OutOfStock, Status_Order_ChoXacNhan. KHÔNG dùng câu tiếng Việt làm khóa.
+-   Ngôn ngữ được lưu bằng cookie (CookieRequestCultureProvider). Hành động đổi ngôn ngữ chỉ chấp nhận returnUrl cục bộ (Url.IsLocalUrl) để tránh open redirect. Không dùng Accept-Language để tự đổi ngôn ngữ: mặc định luôn là tiếng Việt cho đến khi người dùng chọn.
+-   Mọi chữ hiển thị cho người dùng (View, nhãn và thông báo validation của ViewModel, thông báo trong Service, nhãn trạng thái, tiêu đề trang, thông báo lỗi, nội dung OTP demo) đều lấy từ tài nguyên; không viết cứng chuỗi.
+-   Thông báo trả về từ Service dùng IStringLocalizer<SharedResource>. Thông báo ghi log (ILogger) dành cho lập trình viên nên giữ nguyên, không cần dịch.
+-   Dữ liệu lấy từ database (tên sản phẩm, mô tả, danh mục, thương hiệu, banner, khuyến mãi) giữ nguyên tiếng Việt, không dịch.
+-   Định dạng theo ngôn ngữ: tiền tiếng Việt "135.000đ", tiếng Anh "135,000 VND"; ngày giờ tiếng Việt dd/MM/yyyy HH:mm, tiếng Anh MM/dd/yyyy h:mm tt. Dùng helper tập trung trong thư mục Helpers/, không viết định dạng rải rác.
+-   Khi thêm chữ mới ở bất kỳ bước nào: thêm khóa vào CẢ HAI tệp .resx trong cùng nhiệm vụ. Báo cáo cuối mỗi nhiệm vụ nêu số khóa của mỗi tệp (phải bằng nhau).
 
 ## 3. TÀI LIỆU CHÍNH THỨC
 
@@ -956,8 +971,19 @@ Bước 3 – ViewModel và Services (chia hai phần: 3A tài khoản và đăn
 -   Không tự ý sửa Model scaffold.
 -   Không dùng Migrations.
 
+Bước 3C – Đa ngôn ngữ nền tảng
+
+-   Cấu hình localization trong Program.cs (AddLocalization, AddViewLocalization, AddDataAnnotationsLocalization, UseRequestLocalization với vi-VN mặc định và en-US, cookie provider).
+-   Tạo lớp SharedResource, Resources/SharedResource.resx (vi) và SharedResource.en.resx (en).
+-   Tạo CultureController đổi ngôn ngữ (chỉ chấp nhận returnUrl cục bộ).
+-   Tạo Helpers/ cho định dạng tiền, ngày giờ và nhãn trạng thái theo ngôn ngữ.
+-   Chuyển thông báo trong Services và nhãn, thông báo validation trong ViewModel sang tài nguyên.
+-   Không tạo View hoặc giao diện (thuộc Bước 4).
+
 Bước 4 – Giao diện chung
 
+-   Nút chuyển ngôn ngữ VI | EN trên header của cả layout khách hàng và layout Admin.
+-   Mọi chữ trong layout và View lấy từ tài nguyên, không viết cứng.
 -   Layout khách hàng.
 -   Layout Admin.
 -   Header.
@@ -1100,9 +1126,8 @@ Sau báo cáo phải dừng và chờ người dùng xác nhận.
 
 ## 11. QUY ƯỚC CHUNG
 
--   Giao diện sử dụng tiếng Việt có dấu.
--   Tiền tệ hiển thị theo định dạng 135.000đ.
--   Ngày giờ hiển thị theo định dạng dd/MM/yyyy HH:mm.
+-   Giao diện hỗ trợ tiếng Việt có dấu (mặc định) và tiếng Anh theo mục 2.7.
+-   Tiền và ngày giờ hiển thị theo ngôn ngữ hiện tại (xem mục 2.7), qua helper trong Helpers/.
 -   Các cột ngày giờ lưu vào database dùng DateTime.Now (giờ địa phương, khớp SYSDATETIME() của SQL Server); không trộn DateTime.UtcNow (trừ ExpiresUtc của cookie).
 -   Hằng số vai trò và trạng thái đặt trong thư mục Constants/ (ví dụ VaiTroConstant).
 -   Tên trạng thái trong code phải khai báo tập trung trong static class hằng số phù hợp.
@@ -1243,6 +1268,8 @@ Admin
 22. Không báo cáo hoàn thành khi chưa kiểm thử.
 
 23. Không tự động commit hoặc push Git.
+
+24. Không viết cứng (hard-code) chuỗi hiển thị trong View, ViewModel hoặc Service; phải dùng tài nguyên đa ngôn ngữ.
 
 ## 15. NGUYÊN TẮC CUỐI CÙNG
 
