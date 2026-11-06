@@ -1,6 +1,7 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
@@ -14,10 +15,17 @@ namespace WebsiteBanMyPham
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Cấu hình MemoryCache cho ứng dụng (dùng cho xác thực Cookie và tra cứu nhanh)
+            builder.Services.AddMemoryCache();
+
             // Cấu hình Đa ngôn ngữ (Localization)
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            builder.Services.AddControllersWithViews()
+            builder.Services.AddControllersWithViews(options =>
+            {
+                // Bộ lọc tự động chống tấn công CSRF cho tất cả action thay đổi dữ liệu (POST, PUT, DELETE)
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            })
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
                 {
@@ -39,6 +47,10 @@ namespace WebsiteBanMyPham
                     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
                     options.SlidingExpiration = true;
+                    options.Events = new CookieAuthenticationEvents
+                    {
+                        OnValidatePrincipal = CookieValidator.ValidatePrincipalAsync
+                    };
                 });
 
             // Đăng ký Helper đa ngôn ngữ

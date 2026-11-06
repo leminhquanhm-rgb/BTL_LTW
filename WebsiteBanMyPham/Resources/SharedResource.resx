@@ -702,4 +702,130 @@
   <data name="Common_Detail" xml:space="preserve">
     <value>Chi tiết</value>
   </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Đã xảy ra lỗi trong quá trình xử lý. Vui lòng thử lại sau.</value>
+  </data>
+  <data name="Account_LoginTitle" xml:space="preserve">
+    <value>Đăng nhập tài khoản</value>
+  </data>
+  <data name="Account_LoginSubtitle" xml:space="preserve">
+    <value>Chào mừng bạn quay trở lại với Serene Cosmetics</value>
+  </data>
+  <data name="Account_BtnLogin" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Account_ForgotPasswordLink" xml:space="preserve">
+    <value>Quên mật khẩu?</value>
+  </data>
+  <data name="Account_NoAccountYet" xml:space="preserve">
+    <value>Bạn chưa có tài khoản?</value>
+  </data>
+  <data name="Account_RegisterNow" xml:space="preserve">
+    <value>Đăng ký ngay</value>
+  </data>
+  <data name="Account_RegisterTitle" xml:space="preserve">
+    <value>Đăng ký tài khoản</value>
+  </data>
+  <data name="Account_RegisterSubtitle" xml:space="preserve">
+    <value>Trở thành thành viên để nhận nhiều ưu đãi làm đẹp độc quyền</value>
+  </data>
+  <data name="Account_BtnRegister" xml:space="preserve">
+    <value>Đăng ký tài khoản</value>
+  </data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve">
+    <value>Đã có tài khoản?</value>
+  </data>
+  <data name="Account_LoginNow" xml:space="preserve">
+    <value>Đăng nhập ngay</value>
+  </data>
+  <data name="Account_ForgotPasswordTitle" xml:space="preserve">
+    <value>Quên mật khẩu</value>
+  </data>
+  <data name="Account_ForgotPasswordSubtitle" xml:space="preserve">
+    <value>Nhập email đã đăng ký để nhận mã OTP xác minh đặt lại mật khẩu</value>
+  </data>
+  <data name="Account_BtnSendOtp" xml:space="preserve">
+    <value>Gửi mã xác minh OTP</value>
+  </data>
+  <data name="Account_BackToLogin" xml:space="preserve">
+    <value>Quay lại đăng nhập</value>
+  </data>
+  <data name="Account_VerifyOtpTitle" xml:space="preserve">
+    <value>Xác minh mã OTP</value>
+  </data>
+  <data name="Account_VerifyOtpSubtitle" xml:space="preserve">
+    <value>Mã xác minh 6 chữ số đã được tạo cho email:</value>
+  </data>
+  <data name="Account_OtpDemoNote" xml:space="preserve">
+    <value>(Môi trường Development: Tra cứu mã OTP tại Console / Output Log)</value>
+  </data>
+  <data name="Account_OtpDemoDesc" xml:space="preserve">
+    <value>Mở cửa sổ Output / Terminal đang chạy lệnh để lấy mã OTP 6 số vừa tạo phục vụ kiểm thử.</value>
+  </data>
+  <data name="Account_BtnVerifyOtp" xml:space="preserve">
+    <value>Xác minh &amp; Tiếp tục</value>
+  </data>
+  <data name="Account_ResetPasswordTitle" xml:space="preserve">
+    <value>Đặt lại mật khẩu mới</value>
+  </data>
+  <data name="Account_ResetPasswordSubtitle" xml:space="preserve">
+    <value>Thiết lập mật khẩu mới để khôi phục quyền truy cập tài khoản</value>
+  </data>
+  <data name="Account_BtnResetPassword" xml:space="preserve">
+    <value>Cập nhật mật khẩu mới</value>
+  </data>
+  <data name="Account_ProfileTitle" xml:space="preserve">
+    <value>Hồ sơ cá nhân</value>
+  </data>
+  <data name="Account_ProfileSubtitle" xml:space="preserve">
+    <value>Quản lý thông tin định danh và địa chỉ giao hàng của bạn</value>
+  </data>
+  <data name="Account_NavProfile" xml:space="preserve">
+    <value>Thông tin cá nhân</value>
+  </data>
+  <data name="Account_NavChangePassword" xml:space="preserve">
+    <value>Đổi mật khẩu</value>
+  </data>
+  <data name="Account_EmailReadonlyNote" xml:space="preserve">
+    <value>Email là định danh duy nhất và không thể thay đổi</value>
+  </data>
+  <data name="Account_BtnSaveProfile" xml:space="preserve">
+    <value>Lưu thông tin</value>
+  </data>
+  <data name="Account_ChangePasswordTitle" xml:space="preserve">
+    <value>Đổi mật khẩu</value>
+  </data>
+  <data name="Account_ChangePasswordSubtitle" xml:space="preserve">
+    <value>Đảm bảo an toàn cho tài khoản với mật khẩu tối thiểu 6 ký tự</value>
+  </data>
+  <data name="Account_BtnChangePassword" xml:space="preserve">
+    <value>Xác nhận đổi mật khẩu</value>
+  </data>
+  <data name="Account_AccessDeniedTitle" xml:space="preserve">
+    <value>Từ chối truy cập (403)</value>
+  </data>
+  <data name="Account_AccessDeniedDesc" xml:space="preserve">
+    <value>Rất tiếc, bạn không có quyền truy cập vào trang này hoặc khu vực quản trị.</value>
+  </data>
+  <data name="Account_BtnBackHome" xml:space="preserve">
+    <value>Quay lại trang chủ</value>
+  </data>
+  <data name="Account_BtnLoginOther" xml:space="preserve">
+    <value>Đăng nhập tài khoản khác</value>
+  </data>
+  <data name="Account_Role_KhachHang" xml:space="preserve">
+    <value>Khách hàng thân thiết</value>
+  </data>
+  <data name="Account_Role_QuanTriVien" xml:space="preserve">
+    <value>Quản trị viên hệ thống</value>
+  </data>
+  <data name="Account_Optional" xml:space="preserve">
+    <value>(Không bắt buộc)</value>
+  </data>
+  <data name="Placeholder_FullName" xml:space="preserve">
+    <value>Ví dụ: Nguyễn Văn A</value>
+  </data>
+  <data name="Placeholder_Address" xml:space="preserve">
+    <value>Số nhà, tên đường, phường/xã, quận/huyện...</value>
+  </data>
 </root>

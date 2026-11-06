@@ -11,7 +11,7 @@ namespace WebsiteBanMyPham.ViewModels
         public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = "Validation_Required")]
-        [StringLength(72, MinimumLength = 6, ErrorMessage = "Validation_StringLength")]
+        [StringLength(72, ErrorMessage = "Validation_MaxLength")]
         [DataType(DataType.Password)]
         [Display(Name = "Label_MatKhau")]
         public string MatKhau { get; set; } = null!;

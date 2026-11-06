@@ -1,0 +1,124 @@
+@model WebsiteBanMyPham.ViewModels.DoiMatKhauViewModel
+@using WebsiteBanMyPham.Constants
+
+@{
+    ViewData["Title"] = L["Account_ChangePasswordTitle"];
+}
+
+<div class="max-w-4xl mx-auto my-8 sm:my-12 px-4 space-y-6">
+    <!-- Tiêu đề trang -->
+    <div>
+        <h1 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">@L["Account_ChangePasswordTitle"]</h1>
+        <p class="text-xs sm:text-sm text-muted mt-1">@L["Account_ChangePasswordSubtitle"]</p>
+    </div>
+
+    <!-- Khung chính 2 cột: Sidebar điều hướng & Form nội dung -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Cột trái: Menu điều hướng tài khoản -->
+        <div class="md:col-span-1 space-y-3">
+            <div class="bg-surface p-4 sm:p-5 rounded-card border border-borderLight shadow-soft space-y-4">
+                <nav class="space-y-1 text-xs font-semibold">
+                    <a asp-action="HoSo"
+                       class="flex items-center gap-2.5 px-3 py-2 rounded-btn text-charcoal hover:bg-cream transition">
+                        <i class="ph ph-user text-base"></i>
+                        <span>@L["Account_NavProfile"]</span>
+                    </a>
+                    <a asp-action="DoiMatKhau"
+                       class="flex items-center gap-2.5 px-3 py-2 rounded-btn bg-cream text-primary transition">
+                        <i class="ph ph-lock-key text-base"></i>
+                        <span>@L["Account_NavChangePassword"]</span>
+                    </a>
+                </nav>
+
+                <div class="pt-2 border-t border-borderLight">
+                    <form asp-action="DangXuat" method="post">
+                        <button type="submit"
+                                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn text-statusDanger hover:bg-statusDanger/10 text-xs font-semibold transition">
+                            <i class="ph ph-sign-out text-base"></i>
+                            <span>@L["Nav_Logout"]</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Form đổi mật khẩu -->
+        <div class="md:col-span-2">
+            <div class="bg-surface p-6 sm:p-8 rounded-card border border-borderLight shadow-soft space-y-5">
+                <h2 class="text-base font-bold text-charcoal pb-3 border-b border-borderLight">
+                    @L["Account_ChangePasswordTitle"]
+                </h2>
+
+                <!-- Báo lỗi tổng quát nếu có -->
+                <div asp-validation-summary="ModelOnly" class="empty:hidden p-3 rounded-btn bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs"></div>
+
+                <form asp-action="DoiMatKhau" method="post" class="space-y-4">
+                    <!-- Mật khẩu hiện tại -->
+                    <div>
+                        <label asp-for="MatKhauHienTai" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                                <i class="ph ph-lock-key"></i>
+                            </span>
+                            <input asp-for="MatKhauHienTai" type="password" id="input-matkhau-hientai" autocomplete="current-password" placeholder="••••••••"
+                                   class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                            <button type="button" onclick="togglePassword('input-matkhau-hientai', this)"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                                <i class="ph ph-eye text-base"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="MatKhauHienTai" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+                    </div>
+
+                    <!-- Mật khẩu mới -->
+                    <div>
+                        <label asp-for="MatKhauMoi" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                                <i class="ph ph-shield-check"></i>
+                            </span>
+                            <input asp-for="MatKhauMoi" type="password" id="input-matkhau-moi" autocomplete="new-password" placeholder="••••••••"
+                                   class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                            <button type="button" onclick="togglePassword('input-matkhau-moi', this)"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                                <i class="ph ph-eye text-base"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="MatKhauMoi" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+                    </div>
+
+                    <!-- Xác nhận mật khẩu mới -->
+                    <div>
+                        <label asp-for="XacNhanMatKhauMoi" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                                <i class="ph ph-check-circle"></i>
+                            </span>
+                            <input asp-for="XacNhanMatKhauMoi" type="password" id="input-xacnhan-matkhau-moi" autocomplete="new-password" placeholder="••••••••"
+                                   class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                            <button type="button" onclick="togglePassword('input-xacnhan-matkhau-moi', this)"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                                <i class="ph ph-eye text-base"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="XacNhanMatKhauMoi" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+                    </div>
+
+                    <!-- Nút cập nhật -->
+                    <div class="pt-2">
+                        <button type="submit"
+                                class="w-full sm:w-auto px-6 py-2.5 bg-primary text-white font-bold rounded-btn shadow-sm hover:opacity-95 transition flex items-center justify-center gap-2 text-sm">
+                            <i class="ph ph-key text-base"></i>
+                            <span>@L["Account_BtnChangePassword"]</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

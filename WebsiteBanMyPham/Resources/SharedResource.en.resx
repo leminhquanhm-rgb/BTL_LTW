@@ -702,4 +702,130 @@
   <data name="Common_Detail" xml:space="preserve">
     <value>Details</value>
   </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>An error occurred during processing. Please try again later.</value>
+  </data>
+  <data name="Account_LoginTitle" xml:space="preserve">
+    <value>Account Login</value>
+  </data>
+  <data name="Account_LoginSubtitle" xml:space="preserve">
+    <value>Welcome back to Serene Cosmetics</value>
+  </data>
+  <data name="Account_BtnLogin" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="Account_ForgotPasswordLink" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+  <data name="Account_NoAccountYet" xml:space="preserve">
+    <value>Don't have an account yet?</value>
+  </data>
+  <data name="Account_RegisterNow" xml:space="preserve">
+    <value>Register now</value>
+  </data>
+  <data name="Account_RegisterTitle" xml:space="preserve">
+    <value>Register Account</value>
+  </data>
+  <data name="Account_RegisterSubtitle" xml:space="preserve">
+    <value>Become a member to receive exclusive beauty rewards</value>
+  </data>
+  <data name="Account_BtnRegister" xml:space="preserve">
+    <value>Register Account</value>
+  </data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+  <data name="Account_LoginNow" xml:space="preserve">
+    <value>Log in now</value>
+  </data>
+  <data name="Account_ForgotPasswordTitle" xml:space="preserve">
+    <value>Forgot Password</value>
+  </data>
+  <data name="Account_ForgotPasswordSubtitle" xml:space="preserve">
+    <value>Enter your registered email to receive an OTP verification code</value>
+  </data>
+  <data name="Account_BtnSendOtp" xml:space="preserve">
+    <value>Send Verification OTP</value>
+  </data>
+  <data name="Account_BackToLogin" xml:space="preserve">
+    <value>Back to login</value>
+  </data>
+  <data name="Account_VerifyOtpTitle" xml:space="preserve">
+    <value>Verify OTP Code</value>
+  </data>
+  <data name="Account_VerifyOtpSubtitle" xml:space="preserve">
+    <value>A 6-digit verification code has been issued for:</value>
+  </data>
+  <data name="Account_OtpDemoNote" xml:space="preserve">
+    <value>(Development: Check OTP code in Console / Output Log)</value>
+  </data>
+  <data name="Account_OtpDemoDesc" xml:space="preserve">
+    <value>Open the Output / Terminal window running the application to retrieve the newly generated 6-digit OTP code for testing.</value>
+  </data>
+  <data name="Account_BtnVerifyOtp" xml:space="preserve">
+    <value>Verify &amp; Continue</value>
+  </data>
+  <data name="Account_ResetPasswordTitle" xml:space="preserve">
+    <value>Reset New Password</value>
+  </data>
+  <data name="Account_ResetPasswordSubtitle" xml:space="preserve">
+    <value>Set a new password to restore access to your account</value>
+  </data>
+  <data name="Account_BtnResetPassword" xml:space="preserve">
+    <value>Update New Password</value>
+  </data>
+  <data name="Account_ProfileTitle" xml:space="preserve">
+    <value>Personal Profile</value>
+  </data>
+  <data name="Account_ProfileSubtitle" xml:space="preserve">
+    <value>Manage your identity details and shipping address</value>
+  </data>
+  <data name="Account_NavProfile" xml:space="preserve">
+    <value>Personal Information</value>
+  </data>
+  <data name="Account_NavChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Account_EmailReadonlyNote" xml:space="preserve">
+    <value>Email is the unique account identifier and cannot be changed</value>
+  </data>
+  <data name="Account_BtnSaveProfile" xml:space="preserve">
+    <value>Save Information</value>
+  </data>
+  <data name="Account_ChangePasswordTitle" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Account_ChangePasswordSubtitle" xml:space="preserve">
+    <value>Protect your account with a strong password of at least 6 characters</value>
+  </data>
+  <data name="Account_BtnChangePassword" xml:space="preserve">
+    <value>Confirm Change Password</value>
+  </data>
+  <data name="Account_AccessDeniedTitle" xml:space="preserve">
+    <value>Access Denied (403)</value>
+  </data>
+  <data name="Account_AccessDeniedDesc" xml:space="preserve">
+    <value>Sorry, you do not have permission to access this page or administrative area.</value>
+  </data>
+  <data name="Account_BtnBackHome" xml:space="preserve">
+    <value>Return to Homepage</value>
+  </data>
+  <data name="Account_BtnLoginOther" xml:space="preserve">
+    <value>Sign in with another account</value>
+  </data>
+  <data name="Account_Role_KhachHang" xml:space="preserve">
+    <value>Valued Customer</value>
+  </data>
+  <data name="Account_Role_QuanTriVien" xml:space="preserve">
+    <value>System Administrator</value>
+  </data>
+  <data name="Account_Optional" xml:space="preserve">
+    <value>(Optional)</value>
+  </data>
+  <data name="Placeholder_FullName" xml:space="preserve">
+    <value>e.g. Jane Doe</value>
+  </data>
+  <data name="Placeholder_Address" xml:space="preserve">
+    <value>House number, street, ward, district...</value>
+  </data>
 </root>

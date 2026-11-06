@@ -146,8 +146,10 @@ WebsiteBanMyPham/
 ├── Helpers/
 ├── Resources/
 ├── Controllers/
+│   └── Api/
 ├── Models/
 ├── ViewModels/
+│   └── Api/
 ├── Services/
 ├── Views/
 ├── wwwroot/
@@ -191,6 +193,32 @@ Tên Controller khách hàng theo tài liệu: TrangChu, SanPham, ChiTietSanPham
 -   Dữ liệu lấy từ database (tên sản phẩm, mô tả, thương hiệu, banner, khuyến mãi) giữ nguyên tiếng Việt, không dịch. Ngoại lệ duy nhất: tên danh mục được dịch bằng khóa tài nguyên DanhMuc_{MaDM} (qua ILocalizationHelper); nếu chưa có khóa thì dùng tên gốc trong database. Danh mục mới do Admin thêm sau này cần thêm khóa tương ứng vào cả hai tệp .resx.
 -   Định dạng theo ngôn ngữ: tiền tiếng Việt "135.000đ", tiếng Anh "135,000 VND"; ngày giờ tiếng Việt dd/MM/yyyy HH:mm, tiếng Anh MM/dd/yyyy h:mm tt. Dùng helper tập trung trong thư mục Helpers/, không viết định dạng rải rác.
 -   Khi thêm chữ mới ở bất kỳ bước nào: thêm khóa vào CẢ HAI tệp .resx trong cùng nhiệm vụ. Báo cáo cuối mỗi nhiệm vụ nêu số khóa của mỗi tệp (phải bằng nhau).
+
+### 2.8. Web API (RESTful)
+
+-   Dùng ASP.NET Core Web API ([ApiController]) đặt trong Controllers/Api/, tiền tố /api/v1/, tên tài nguyên số nhiều bằng tiếng Việt không dấu dạng kebab-case: san-pham, danh-muc, thuong-hieu, khuyen-mai, gio-hang, don-hang; API quản trị dưới /api/v1/admin/.
+-   Đúng ngữ nghĩa HTTP: GET đọc; POST tạo (201 kèm Location); PUT cập nhật toàn phần; DELETE xóa (204). Mã trạng thái dùng đúng: 200, 201, 204, 400, 401, 403, 404, 409. Lỗi trả về ProblemDetails (RFC 7807), thông báo theo ngôn ngữ hiện tại.
+-   Chỉ trả DTO (ViewModels/Api/), KHÔNG trả entity EF; JSON camelCase; danh sách có phân trang: pageIndex, pageSize (tối đa 50), và kết quả gồm items, pageIndex, pageSize, totalItems, totalPages.
+-   Xác thực API dùng chung Cookie của website (gọi từ trình duyệt bằng fetch/AJAX cùng nguồn gốc). Chưa đăng nhập: trả 401 dạng JSON (không chuyển hướng sang trang đăng nhập); sai vai trò: 403 dạng JSON. Cấu hình OnRedirectToLogin và OnRedirectToAccessDenied cho đường dẫn bắt đầu bằng /api.
+-   Mọi POST, PUT, PATCH, DELETE phải gửi header RequestVerificationToken (AntiForgery). Layout phát token qua thẻ meta; wwwroot/js/site.js có hàm apiFetch tự gắn token, xử lý lỗi và hiện toast.
+-   Controller API mỏng như MVC controller: nghiệp vụ và kiểm tra quyền sở hữu dùng lại Services.
+-   Tài liệu OpenAPI: Microsoft.AspNetCore.OpenApi cùng giao diện Scalar.AspNetCore (hoặc Swashbuckle nếu Scalar không tương thích .NET 10); chỉ bật ở môi trường Development; mô tả endpoint bằng XML comment và ProducesResponseType. Báo cáo phiên bản package đã dùng.
+-   Các thao tác AJAX làm thay đổi dữ liệu của website (thêm giỏ, đổi số lượng, áp mã, hủy đơn...) gọi qua các endpoint này.
+
+### 2.9. Soạn thảo văn bản (Rich text)
+
+-   Dùng Quill 2.x qua CDN ghim phiên bản (giấy phép MIT, không cần khóa) cho mô tả sản phẩm (SanPham.MoTa) ở trang Admin. Thanh công cụ giới hạn: in đậm, nghiêng, gạch chân, tiêu đề (h2, h3), danh sách, liên kết, xóa định dạng; không cho chèn ảnh hay video, không cho dán ảnh base64.
+-   BẮT BUỘC làm sạch HTML ở server bằng package HtmlSanitizer (Ganss.Xss) trước khi lưu, với danh sách cho phép: p, br, strong, em, u, h2, h3, ul, ol, li, blockquote, a (href chỉ http, https, mailto; tự thêm rel="noopener noreferrer"). Đóng gói trong IHtmlSanitizerService dùng chung.
+-   Không dùng Html.Raw cho bất kỳ HTML nào chưa qua làm sạch. Khi hiển thị mô tả ở trang khách hàng cũng đi qua helper làm sạch.
+-   Giới hạn độ dài mô tả (tối đa 20.000 ký tự) và kiểm tra ở server.
+
+### 2.10. Xuất Excel
+
+-   Dùng ClosedXML (MIT) trong IExcelExportService; trả về file .xlsx (MIME application/vnd.openxmlformats-officedocument.spreadsheetml.sheet).
+-   Chức năng xuất (chỉ QuanTriVien): báo cáo doanh thu theo tháng, danh sách đơn hàng theo bộ lọc hiện tại, danh sách sản phẩm và tồn kho (có sản phẩm sắp hết hàng).
+-   Có dòng tiêu đề, định dạng tiền và ngày theo ngôn ngữ hiện tại, tự điều chỉnh độ rộng cột, tên file kèm ngày giờ.
+-   Chống formula injection: ô văn bản bắt đầu bằng ký tự =, +, -, @ phải được ghi dạng văn bản, không để Excel hiểu là công thức.
+-   Doanh thu theo đúng quy tắc: đơn HoanThanh, tính theo NgayGiaoThanhCong. Giới hạn tối đa 50.000 dòng mỗi lần xuất, quá thì thông báo.
 
 ## 3. TÀI LIỆU CHÍNH THỨC
 
@@ -994,57 +1022,31 @@ Bước 4 – Giao diện chung
 -   JavaScript.
 -   Responsive.
 
-Bước 5 – Chức năng khách hàng
+Bước 5 – Chức năng khách hàng (chia thành 5A đến 5F)
 
-1.  Trang chủ.
-2.  Danh sách sản phẩm.
-3.  Chi tiết sản phẩm.
-4.  Tìm kiếm và lọc.
-5.  Đăng ký.
-6.  Đăng nhập.
-7.  Đăng xuất.
-8.  Quên mật khẩu.
-9.  Thông tin tài khoản.
+Bước 5A – Tài khoản: đăng ký, đăng nhập, đăng xuất, quên mật khẩu bằng OTP, hồ sơ, đổi mật khẩu.
 
-10. Giỏ hàng.
+Bước 5B – Sản phẩm: trang chủ (banner từ database, sản phẩm mới, bán chạy, khuyến mãi), danh sách sản phẩm với tìm kiếm và lọc bằng AJAX (trả về partial), chi tiết sản phẩm (điểm sao và đánh giá đã duyệt), và Web API công khai (san-pham, danh-muc, thuong-hieu, khuyen-mai).
 
-11. Đặt hàng.
+Bước 5C – Giỏ hàng và mã khuyến mãi: thêm, sửa số lượng, xóa bằng AJAX qua Web API gio-hang và khuyen-mai.
 
-12. Thanh toán.
+Bước 5D – Đặt hàng, Mua ngay và thanh toán: COD, Online mô phỏng; chống bấm đặt hàng hai lần.
 
-13. Đơn hàng của tôi.
+Bước 5E – Đơn hàng của tôi, hủy đơn (qua Web API), đánh giá, khiếu nại; tạo IDanhGiaService và IKhieuNaiService.
 
-14. Hủy đơn.
+Bước 5F – Hoàn thiện Web API và tài liệu OpenAPI: rà soát chuẩn REST, ProblemDetails, 401 và 403 dạng JSON, phân trang, header chống giả mạo, API quản trị danh-muc và thuong-hieu (CRUD đầy đủ).
 
-15. Đánh giá.
+Bước 6 – Chức năng quản trị (chia thành 6A đến 6E)
 
-16. Khiếu nại.
+Bước 6A – Dashboard, thống kê và xuất Excel (tạo IThongKeService, IExcelExportService).
 
-Bước 6 – Chức năng quản trị
+Bước 6B – Sản phẩm (soạn thảo rich text, tải ảnh), hình ảnh, danh mục, thương hiệu, tồn kho và cảnh báo.
 
-1.  Dashboard.
-2.  Danh mục.
-3.  Thương hiệu.
-4.  Sản phẩm.
-5.  Hình ảnh.
-6.  Tồn kho.
-7.  Đơn hàng.
-8.  Thanh toán.
-9.  Hoàn tiền.
+Bước 6C – Đơn hàng, thanh toán, hoàn tiền, phương thức thanh toán.
 
-10. Phương thức thanh toán.
+Bước 6D – Khuyến mãi, banner, tài khoản (khóa và mở khóa phải xóa cache của CookieValidator).
 
-11. Khuyến mãi.
-
-12. Banner.
-
-13. Tài khoản.
-
-14. Đánh giá.
-
-15. Khiếu nại.
-
-16. Thống kê.
+Bước 6E – Đánh giá (duyệt, từ chối) và khiếu nại (phản hồi, đổi trạng thái).
 
 Bước 7 – Kiểm thử và hoàn thiện
 
@@ -1270,6 +1272,8 @@ Admin
 23. Không tự động commit hoặc push Git.
 
 24. Không viết cứng (hard-code) chuỗi hiển thị trong View, ViewModel hoặc Service; phải dùng tài nguyên đa ngôn ngữ.
+
+25. Không dùng Html.Raw với HTML chưa qua làm sạch; không trả entity EF từ Web API; mọi API thay đổi dữ liệu phải kiểm tra AntiForgery và quyền.
 
 ## 15. NGUYÊN TẮC CUỐI CÙNG
 

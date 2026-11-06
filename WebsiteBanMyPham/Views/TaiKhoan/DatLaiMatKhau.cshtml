@@ -1,0 +1,84 @@
+@model WebsiteBanMyPham.ViewModels.DatLaiMatKhauViewModel
+
+@{
+    ViewData["Title"] = L["Account_ResetPasswordTitle"];
+}
+
+<div class="max-w-md mx-auto my-10 sm:my-14 px-4">
+    <div class="bg-surface p-6 sm:p-8 rounded-card border border-borderLight shadow-soft space-y-6">
+        <!-- Tiêu đề trang -->
+        <div class="text-center space-y-2">
+            <div class="w-12 h-12 mx-auto rounded-full bg-pastel/70 flex items-center justify-center text-primary text-2xl mb-2">
+                <i class="ph ph-password"></i>
+            </div>
+            <h1 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">@L["Account_ResetPasswordTitle"]</h1>
+            <p class="text-xs sm:text-sm text-muted">@L["Account_ResetPasswordSubtitle"]</p>
+        </div>
+
+        <!-- Báo lỗi tổng quát nếu có -->
+        <div asp-validation-summary="ModelOnly" class="empty:hidden p-3 rounded-btn bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs"></div>
+
+        <!-- Biểu mẫu đặt lại mật khẩu -->
+        <form asp-action="DatLaiMatKhau" method="post" class="space-y-4">
+            <!-- Email và OTP được lưu an toàn trong trường ẩn -->
+            <input type="hidden" asp-for="Email" />
+            <input type="hidden" asp-for="Otp" />
+
+            <!-- Mật khẩu mới -->
+            <div>
+                <label asp-for="MatKhauMoi" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-lock-key"></i>
+                    </span>
+                    <input asp-for="MatKhauMoi" type="password" id="reset-matkhaumoi" autocomplete="new-password" placeholder="••••••••"
+                           class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                    <button type="button" onclick="togglePassword('reset-matkhaumoi', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                        <i class="ph ph-eye text-base"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="MatKhauMoi" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Xác nhận mật khẩu mới -->
+            <div>
+                <label asp-for="XacNhanMatKhauMoi" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-shield-check"></i>
+                    </span>
+                    <input asp-for="XacNhanMatKhauMoi" type="password" id="reset-xacnhan-matkhaumoi" autocomplete="new-password" placeholder="••••••••"
+                           class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                    <button type="button" onclick="togglePassword('reset-xacnhan-matkhaumoi', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                        <i class="ph ph-eye text-base"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="XacNhanMatKhauMoi" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Nút xác nhận lưu -->
+            <div class="pt-2">
+                <button type="submit"
+                        class="w-full py-2.5 bg-primary text-white font-bold rounded-btn shadow-sm hover:opacity-95 transition flex items-center justify-center gap-2 text-sm">
+                    <i class="ph ph-check text-base"></i>
+                    <span>@L["Account_BtnResetPassword"]</span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Quay lại đăng nhập -->
+        <div class="border-t border-borderLight pt-4 text-center text-xs">
+            <a asp-action="DangNhap" class="text-charcoal/80 hover:text-primary font-medium inline-flex items-center gap-1.5 transition">
+                <i class="ph ph-arrow-left"></i>
+                <span>@L["Account_BackToLogin"]</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

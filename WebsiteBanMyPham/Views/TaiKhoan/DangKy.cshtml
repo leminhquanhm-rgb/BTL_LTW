@@ -1,0 +1,137 @@
+@model WebsiteBanMyPham.ViewModels.DangKyViewModel
+
+@{
+    ViewData["Title"] = L["Account_RegisterTitle"];
+}
+
+<div class="max-w-lg mx-auto my-10 sm:my-14 px-4">
+    <div class="bg-surface p-6 sm:p-8 rounded-card border border-borderLight shadow-soft space-y-6">
+        <!-- Tiêu đề trang -->
+        <div class="text-center space-y-2">
+            <div class="w-12 h-12 mx-auto rounded-full bg-pastel/70 flex items-center justify-center text-primary text-2xl mb-2">
+                <i class="ph ph-user-plus"></i>
+            </div>
+            <h1 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">@L["Account_RegisterTitle"]</h1>
+            <p class="text-xs sm:text-sm text-muted">@L["Account_RegisterSubtitle"]</p>
+        </div>
+
+        <!-- Báo lỗi tổng quát nếu có -->
+        <div asp-validation-summary="ModelOnly" class="empty:hidden p-3 rounded-btn bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs"></div>
+
+        <!-- Biểu mẫu đăng ký -->
+        <form asp-action="DangKy" method="post" class="space-y-4">
+            <!-- Họ và tên -->
+            <div>
+                <label asp-for="HoTen" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-user"></i>
+                    </span>
+                    <input asp-for="HoTen" type="text" placeholder="@L["Placeholder_FullName"]"
+                           class="w-full pl-10 pr-3.5 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                </div>
+                <span asp-validation-for="HoTen" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label asp-for="Email" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-envelope-simple"></i>
+                    </span>
+                    <input asp-for="Email" type="email" autocomplete="username" placeholder="name@example.com"
+                           class="w-full pl-10 pr-3.5 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                </div>
+                <span asp-validation-for="Email" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Số điện thoại (không bắt buộc) -->
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label asp-for="SoDienThoai" class="block text-xs font-semibold text-charcoal"></label>
+                    <span class="text-[11px] text-muted italic">@L["Account_Optional"]</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-phone"></i>
+                    </span>
+                    <input asp-for="SoDienThoai" type="tel" placeholder="0901234567"
+                           class="w-full pl-10 pr-3.5 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                </div>
+                <span asp-validation-for="SoDienThoai" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Địa chỉ (không bắt buộc) -->
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label asp-for="DiaChi" class="block text-xs font-semibold text-charcoal"></label>
+                    <span class="text-[11px] text-muted italic">@L["Account_Optional"]</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-map-pin"></i>
+                    </span>
+                    <input asp-for="DiaChi" type="text" placeholder="@L["Placeholder_Address"]"
+                           class="w-full pl-10 pr-3.5 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                </div>
+                <span asp-validation-for="DiaChi" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Mật khẩu -->
+            <div>
+                <label asp-for="MatKhau" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-lock-key"></i>
+                    </span>
+                    <input asp-for="MatKhau" type="password" id="reg-matkhau" autocomplete="new-password" placeholder="••••••••"
+                           class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                    <button type="button" onclick="togglePassword('reg-matkhau', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                        <i class="ph ph-eye text-base"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="MatKhau" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Xác nhận mật khẩu -->
+            <div>
+                <label asp-for="XacNhanMatKhau" class="block text-xs font-semibold text-charcoal mb-1.5"></label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base pointer-events-none">
+                        <i class="ph ph-shield-check"></i>
+                    </span>
+                    <input asp-for="XacNhanMatKhau" type="password" id="reg-xacnhan-matkhau" autocomplete="new-password" placeholder="••••••••"
+                           class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
+                    <button type="button" onclick="togglePassword('reg-xacnhan-matkhau', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
+                        <i class="ph ph-eye text-base"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="XacNhanMatKhau" class="text-statusDanger text-xs mt-1 block font-medium"></span>
+            </div>
+
+            <!-- Nút đăng ký -->
+            <div class="pt-2">
+                <button type="submit"
+                        class="w-full py-2.5 bg-primary text-white font-bold rounded-btn shadow-sm hover:opacity-95 transition flex items-center justify-center gap-2 text-sm">
+                    <i class="ph ph-user-plus text-base"></i>
+                    <span>@L["Account_BtnRegister"]</span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Chuyển sang đăng nhập -->
+        <div class="border-t border-borderLight pt-4 text-center text-xs text-muted">
+            <span>@L["Account_AlreadyHaveAccount"]</span>
+            <a asp-action="DangNhap" class="text-primary font-semibold hover:underline ml-1">
+                @L["Account_LoginNow"]
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

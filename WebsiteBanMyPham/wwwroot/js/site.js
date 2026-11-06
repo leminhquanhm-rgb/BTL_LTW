@@ -71,3 +71,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+// 5. Ẩn / Hiện mật khẩu (Toggle Password Visibility)
+function togglePassword(inputId, btn) {
+    var input = document.getElementById(inputId);
+    if (!input) return;
+
+    var icon = btn.querySelector("i");
+    if (input.type === "password") {
+        input.type = "text";
+        if (icon) {
+            icon.classList.remove("ph-eye");
+            icon.classList.add("ph-eye-slash");
+        }
+    } else {
+        input.type = "password";
+        if (icon) {
+            icon.classList.remove("ph-eye-slash");
+            icon.classList.add("ph-eye");
+        }
+    }
+}
