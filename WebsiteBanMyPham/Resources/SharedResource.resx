@@ -1576,4 +1576,190 @@
   <data name="Label_MoTa" xml:space="preserve">
     <value>Mô tả</value>
   </data>
+  <data name="Admin_Dashboard_Revenue_Total" xml:space="preserve">
+    <value>Tổng Doanh Thu</value>
+  </data>
+  <data name="Admin_Dashboard_Revenue_ThisMonth" xml:space="preserve">
+    <value>Doanh thu tháng này</value>
+  </data>
+  <data name="Admin_Dashboard_Revenue_CompareLastMonth" xml:space="preserve">
+    <value>so với tháng trước</value>
+  </data>
+  <data name="Admin_Dashboard_Orders_Total" xml:space="preserve">
+    <value>Tổng Đơn Hàng</value>
+  </data>
+  <data name="Admin_Dashboard_Orders_ViewAction" xml:space="preserve">
+    <value>Xem &amp; cập nhật trạng thái →</value>
+  </data>
+  <data name="Admin_Dashboard_Products_Total" xml:space="preserve">
+    <value>Số Lượng Sản Phẩm</value>
+  </data>
+  <data name="Admin_Dashboard_Products_LowStockCount" xml:space="preserve">
+    <value>{0} sản phẩm sắp hết hàng</value>
+  </data>
+  <data name="Admin_Dashboard_Customers_Total" xml:space="preserve">
+    <value>Tổng Khách Hàng</value>
+  </data>
+  <data name="Admin_Dashboard_Customers_NewThisMonth" xml:space="preserve">
+    <value>+{0} tài khoản mới tháng này</value>
+  </data>
+  <data name="Admin_Dashboard_Chart_Title" xml:space="preserve">
+    <value>Biểu đồ Doanh thu 6 tháng gần nhất</value>
+  </data>
+  <data name="Admin_Dashboard_Chart_SubTitle" xml:space="preserve">
+    <value>Tính trên các đơn hàng ở trạng thái Hoàn thành</value>
+  </data>
+  <data name="Admin_Dashboard_Chart_NoData" xml:space="preserve">
+    <value>Chưa có dữ liệu doanh thu hoàn thành trong 6 tháng này</value>
+  </data>
+  <data name="Admin_Dashboard_OrderStatus_Title" xml:space="preserve">
+    <value>Tỷ lệ Trạng thái Đơn hàng</value>
+  </data>
+  <data name="Admin_Dashboard_Unit_Order" xml:space="preserve">
+    <value>đơn</value>
+  </data>
+  <data name="Admin_Dashboard_Unit_Product" xml:space="preserve">
+    <value>sản phẩm</value>
+  </data>
+  <data name="Admin_Dashboard_Unit_Customer" xml:space="preserve">
+    <value>khách</value>
+  </data>
+  <data name="Admin_Dashboard_TopSelling_Title" xml:space="preserve">
+    <value>Top 5 Sản phẩm Bán chạy</value>
+  </data>
+  <data name="Admin_Dashboard_TopSelling_Empty" xml:space="preserve">
+    <value>Chưa có đơn hàng hoàn thành để xếp hạng</value>
+  </data>
+  <data name="Admin_Dashboard_LowStock_Title" xml:space="preserve">
+    <value>Cảnh báo Tồn kho &amp; Sắp hết hàng</value>
+  </data>
+  <data name="Admin_Dashboard_LowStock_Empty" xml:space="preserve">
+    <value>Tất cả sản phẩm đều có số lượng tồn kho an toàn</value>
+  </data>
+  <data name="Admin_Dashboard_LowStock_OutOfStock" xml:space="preserve">
+    <value>Hết hàng</value>
+  </data>
+  <data name="Admin_Dashboard_LowStock_LowStock" xml:space="preserve">
+    <value>Sắp hết hàng</value>
+  </data>
+  <data name="Admin_Dashboard_Stock_Current" xml:space="preserve">
+    <value>Tồn kho</value>
+  </data>
+  <data name="Admin_Dashboard_Stock_Threshold" xml:space="preserve">
+    <value>Ngưỡng cảnh báo</value>
+  </data>
+  <data name="Admin_Excel_Export_Section" xml:space="preserve">
+    <value>Báo cáo &amp; Xuất dữ liệu Excel</value>
+  </data>
+  <data name="Admin_Excel_Export_SelectYear" xml:space="preserve">
+    <value>Chọn năm:</value>
+  </data>
+  <data name="Admin_Excel_Export_RevenueMonthly" xml:space="preserve">
+    <value>Xuất doanh thu theo tháng</value>
+  </data>
+  <data name="Admin_Excel_Export_ProductsStock" xml:space="preserve">
+    <value>Xuất sản phẩm &amp; tồn kho</value>
+  </data>
+  <data name="Admin_Excel_Export_Orders" xml:space="preserve">
+    <value>Xuất danh sách đơn hàng</value>
+  </data>
+  <data name="Admin_Excel_Error_MaxRows" xml:space="preserve">
+    <value>Dữ liệu xuất vượt quá giới hạn 50.000 dòng. Vui lòng thu hẹp bộ lọc.</value>
+  </data>
+  <data name="Admin_Excel_Col_Month" xml:space="preserve">
+    <value>Tháng</value>
+  </data>
+  <data name="Admin_Excel_Col_CompletedOrders" xml:space="preserve">
+    <value>Số đơn hoàn thành</value>
+  </data>
+  <data name="Admin_Excel_Col_Revenue" xml:space="preserve">
+    <value>Doanh thu</value>
+  </data>
+  <data name="Admin_Excel_Col_Total" xml:space="preserve">
+    <value>Tổng cộng</value>
+  </data>
+  <data name="Admin_Excel_Col_ProductCode" xml:space="preserve">
+    <value>Mã SP</value>
+  </data>
+  <data name="Admin_Excel_Col_ProductName" xml:space="preserve">
+    <value>Tên sản phẩm</value>
+  </data>
+  <data name="Admin_Excel_Col_Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="Admin_Excel_Col_Brand" xml:space="preserve">
+    <value>Thương hiệu</value>
+  </data>
+  <data name="Admin_Excel_Col_Price" xml:space="preserve">
+    <value>Giá bán</value>
+  </data>
+  <data name="Admin_Excel_Col_Stock" xml:space="preserve">
+    <value>Tồn kho</value>
+  </data>
+  <data name="Admin_Excel_Col_Threshold" xml:space="preserve">
+    <value>Ngưỡng cảnh báo</value>
+  </data>
+  <data name="Admin_Excel_Col_Status" xml:space="preserve">
+    <value>Trạng thái kinh doanh</value>
+  </data>
+  <data name="Admin_Excel_Col_Warning" xml:space="preserve">
+    <value>Cảnh báo tồn kho</value>
+  </data>
+  <data name="Admin_Excel_Col_OrderCode" xml:space="preserve">
+    <value>Mã đơn hàng</value>
+  </data>
+  <data name="Admin_Excel_Col_Customer" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Admin_Excel_Col_Recipient" xml:space="preserve">
+    <value>Người nhận</value>
+  </data>
+  <data name="Admin_Excel_Col_Phone" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
+  <data name="Admin_Excel_Col_OrderDate" xml:space="preserve">
+    <value>Ngày đặt</value>
+  </data>
+  <data name="Admin_Excel_Col_OrderStatus" xml:space="preserve">
+    <value>Trạng thái đơn</value>
+  </data>
+  <data name="Admin_Excel_Col_PaymentMethod" xml:space="preserve">
+    <value>Phương thức thanh toán</value>
+  </data>
+  <data name="Admin_Excel_Col_PaymentStatus" xml:space="preserve">
+    <value>Trạng thái thanh toán</value>
+  </data>
+  <data name="Admin_Excel_Col_TotalPayment" xml:space="preserve">
+    <value>Tổng thanh toán</value>
+  </data>
+  <data name="Admin_Excel_Col_WaybillDate" xml:space="preserve">
+    <value>Ngày vận đơn</value>
+  </data>
+  <data name="Admin_Excel_Col_DeliveredDate" xml:space="preserve">
+    <value>Ngày giao thành công</value>
+  </data>
+  <data name="Admin_Excel_Status_Active" xml:space="preserve">
+    <value>Đang kinh doanh</value>
+  </data>
+  <data name="Admin_Excel_Status_Inactive" xml:space="preserve">
+    <value>Ngừng kinh doanh</value>
+  </data>
+  <data name="Admin_Excel_Export_SelectMonth" xml:space="preserve">
+    <value>Chọn tháng:</value>
+  </data>
+  <data name="Admin_Excel_Month_All" xml:space="preserve">
+    <value>Tất cả các tháng</value>
+  </data>
+  <data name="Admin_Excel_Error_InvalidMonth" xml:space="preserve">
+    <value>Tháng không hợp lệ, vui lòng chọn từ tháng 1 đến tháng 12.</value>
+  </data>
+  <data name="Admin_Excel_Col_Subtotal" xml:space="preserve">
+    <value>Tiền hàng</value>
+  </data>
+  <data name="Admin_Excel_Col_PromoCode" xml:space="preserve">
+    <value>Mã khuyến mãi</value>
+  </data>
+  <data name="Admin_Excel_Col_Discount" xml:space="preserve">
+    <value>Tiền giảm</value>
+  </data>
 </root>

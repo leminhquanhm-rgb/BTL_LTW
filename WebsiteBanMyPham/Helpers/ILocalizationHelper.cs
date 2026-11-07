@@ -15,5 +15,8 @@ namespace WebsiteBanMyPham.Helpers
         string GetPaymentMethodLabel(string tenPT);
         string GetReviewStatusLabel(string? trangThai);
         string GetComplaintStatusLabel(string? trangThai);
+        string FormatCompactCurrency(decimal amount);
+        string FormatShortMonth(int month, int year);
+        string FormatMonthName(int month);
     }
 }

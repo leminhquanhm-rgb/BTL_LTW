@@ -35,6 +35,10 @@ namespace WebsiteBanMyPham.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
+                if (User.IsInRole(VaiTroConstant.QuanTriVien))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                }
                 return RedirectToAction("Index", "TrangChu");
             }
 
@@ -47,6 +51,10 @@ namespace WebsiteBanMyPham.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
+                if (User.IsInRole(VaiTroConstant.QuanTriVien))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                }
                 return RedirectToAction("Index", "TrangChu");
             }
 
@@ -76,6 +84,10 @@ namespace WebsiteBanMyPham.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
+                if (User.IsInRole(VaiTroConstant.QuanTriVien))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                }
                 return RedirectToAction("Index", "TrangChu");
             }
 
@@ -90,6 +102,10 @@ namespace WebsiteBanMyPham.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
+                if (User.IsInRole(VaiTroConstant.QuanTriVien))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                }
                 return RedirectToAction("Index", "TrangChu");
             }
 
@@ -113,6 +129,11 @@ namespace WebsiteBanMyPham.Controllers
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return LocalRedirect(returnUrl);
+            }
+
+            if (result.User.VaiTro == VaiTroConstant.QuanTriVien)
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
 
             return RedirectToAction("Index", "TrangChu");

@@ -1,0 +1,354 @@
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = L["Admin_Nav_Dashboard"].Value;
+}
+
+<div class="space-y-6">
+
+    <!-- 1. BỐN THẺ CHỈ SỐ KPI TỔNG QUAN -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        
+        <!-- Thẻ 1: Tổng Doanh Thu -->
+        <div class="bg-[#F8DDE5]/70 p-5 rounded-card border border-nude shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Revenue_Total"]</span>
+            <p class="text-2xl font-bold text-charcoal pt-1">@LocalizationHelper.FormatCurrency(Model.TongDoanhThu)</p>
+            @if (Model.PhanTramThayDoiDoanhThu.HasValue)
+            {
+                if (Model.PhanTramThayDoiDoanhThu >= 0)
+                {
+                    <p class="text-xs text-statusSuccess font-semibold">↑ +@Model.PhanTramThayDoiDoanhThu% @L["Admin_Dashboard_Revenue_CompareLastMonth"]</p>
+                }
+                else
+                {
+                    <p class="text-xs text-statusDanger font-semibold">↓ @Model.PhanTramThayDoiDoanhThu% @L["Admin_Dashboard_Revenue_CompareLastMonth"]</p>
+                }
+            }
+            else
+            {
+                <p class="text-xs text-charcoal/70 font-medium">@L["Admin_Dashboard_Revenue_ThisMonth"]: @LocalizationHelper.FormatCurrency(Model.DoanhThuThangHienTai)</p>
+            }
+        </div>
+
+        <!-- Thẻ 2: Tổng Đơn Hàng -->
+        <div class="bg-[#EFECE6] p-5 rounded-card border border-borderLight shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Orders_Total"]</span>
+            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongDonHang @L["Admin_Dashboard_Unit_Order"]</p>
+            <p class="text-xs text-charcoal/70 font-medium">@L["Admin_Dashboard_Orders_ViewAction"]</p>
+        </div>
+
+        <!-- Thẻ 3: Số Lượng Sản Phẩm -->
+        <div class="bg-[#E8F3EE] p-5 rounded-card border border-borderLight shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Products_Total"]</span>
+            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongSanPham @L["Admin_Dashboard_Unit_Product"]</p>
+            @if (Model.SoLuongSanPhamSapHet > 0)
+            {
+                <p class="text-xs text-statusDanger font-semibold">@string.Format(L["Admin_Dashboard_Products_LowStockCount"].Value, Model.SoLuongSanPhamSapHet)</p>
+            }
+            else
+            {
+                <p class="text-xs text-statusSuccess font-semibold">@L["Admin_Dashboard_LowStock_Empty"]</p>
+            }
+        </div>
+
+        <!-- Thẻ 4: Tổng Khách Hàng -->
+        <div class="bg-[#F7EFE8] p-5 rounded-card border border-borderLight shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Customers_Total"]</span>
+            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongKhachHang @L["Admin_Dashboard_Unit_Customer"]</p>
+            <p class="text-xs text-charcoal font-medium">@string.Format(L["Admin_Dashboard_Customers_NewThisMonth"].Value, Model.SoKhachHangMoiThangNay)</p>
+        </div>
+
+    </div>
+
+    <!-- 2. BIỂU ĐỒ DOANH THU 6 THÁNG & TỶ LỆ TRẠNG THÁI ĐƠN HÀNG -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Cột trái: Biểu đồ Doanh thu 6 tháng -->
+        <div class="lg:col-span-8 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-charcoal text-base">@L["Admin_Dashboard_Chart_Title"]</h3>
+                    <p class="text-xs text-muted">@L["Admin_Dashboard_Chart_SubTitle"]</p>
+                </div>
+                <span class="px-2.5 py-1 bg-cream border border-borderLight rounded text-xs font-semibold text-charcoal">
+                    @DateTime.Now.Year
+                </span>
+            </div>
+
+            @if (!Model.CoDuLieuDoanhThu6Thang)
+            {
+                <div class="h-52 flex flex-col items-center justify-center text-muted text-xs border-b border-borderLight gap-2">
+                    <i class="ph ph-chart-bar text-3xl text-muted/60"></i>
+                    <p>@L["Admin_Dashboard_Chart_NoData"]</p>
+                </div>
+            }
+            else
+            {
+                <div class="h-52 flex items-end justify-between gap-2 sm:gap-4 pt-8 px-2 sm:px-4 border-b border-borderLight">
+                    @foreach (var item in Model.BieuDo6Thang)
+                    {
+                        var compactText = LocalizationHelper.FormatCompactCurrency(item.DoanhThu);
+                        var fullText = LocalizationHelper.FormatCurrency(item.DoanhThu);
+                        var monthLabel = LocalizationHelper.FormatShortMonth(item.Thang, item.Nam);
+
+                        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end" title="@fullText">
+                            <span class="text-[11px] @(item.LaThangHienTai ? "font-bold text-primary" : "text-muted")">
+                                @compactText
+                            </span>
+                            <div class="w-full max-w-[44px] rounded-t-btn transition-all duration-300 @(item.LaThangHienTai ? "bg-primary shadow-sm" : (item.DoanhThu > 0 ? "bg-nude hover:bg-primary/70" : "bg-pastel/40"))"
+                                 style="height: @(item.ChieuCaoPhanTram)%;"></div>
+                            <span class="text-xs @(item.LaThangHienTai ? "font-bold text-charcoal" : "text-muted") pb-1">
+                                @monthLabel
+                            </span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Cột phải: Tỷ lệ trạng thái đơn hàng -->
+        <div class="lg:col-span-4 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <h3 class="font-bold text-charcoal text-base">@L["Admin_Dashboard_OrderStatus_Title"]</h3>
+            <div class="space-y-3.5 text-xs">
+                @foreach (var st in Model.DanhSachTrangThaiDon)
+                {
+                    var (colorClass, bgClass) = st.TrangThai switch
+                    {
+                        TrangThaiDonHangConstant.ChoXacNhan => ("text-statusWarning", "bg-statusWarning"),
+                        TrangThaiDonHangConstant.DaXacNhan => ("text-statusInfo", "bg-statusInfo"),
+                        TrangThaiDonHangConstant.DangGiao => ("text-primary", "bg-primary"),
+                        TrangThaiDonHangConstant.HoanThanh => ("text-statusSuccess", "bg-statusSuccess"),
+                        TrangThaiDonHangConstant.DaHuy => ("text-statusDanger", "bg-statusDanger"),
+                        _ => ("text-charcoal", "bg-muted")
+                    };
+
+                    <div>
+                        <div class="flex justify-between mb-1.5">
+                            <span class="font-medium text-charcoal">@st.TenTrangThai</span>
+                            <span class="font-bold @colorClass">@st.SoLuong @L["Admin_Dashboard_Unit_Order"] (@st.TyLePhanTram%)</span>
+                        </div>
+                        <div class="w-full h-2 bg-cream rounded-full overflow-hidden">
+                            <div class="h-full @bgClass transition-all duration-300" style="width: @(st.TyLePhanTram)%;"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3. TOP 5 SẢN PHẨM BÁN CHẠY & CẢNH BÁO TỒN KHO -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Khối 1: Top 5 Sản phẩm Bán chạy -->
+        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <h3 class="font-bold text-charcoal text-base">@L["Admin_Dashboard_TopSelling_Title"]</h3>
+
+            @if (Model.TopBanChay.Count == 0)
+            {
+                <div class="py-10 text-center text-muted text-xs">
+                    <i class="ph ph-shopping-bag text-3xl mb-2 text-muted/50 block"></i>
+                    @L["Admin_Dashboard_TopSelling_Empty"]
+                </div>
+            }
+            else
+            {
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <thead>
+                            <tr class="bg-cream/60 font-bold text-charcoal">
+                                <th class="p-2.5">@L["Admin_Excel_Col_ProductName"]</th>
+                                <th class="p-2.5 text-right">@L["Admin_Excel_Col_Price"]</th>
+                                <th class="p-2.5 text-center">@L["Admin_Excel_Col_CompletedOrders"]</th>
+                                <th class="p-2.5 text-right">@L["Admin_Excel_Col_Revenue"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-borderLight">
+                            @foreach (var item in Model.TopBanChay)
+                            {
+                                <tr class="hover:bg-cream/30 transition">
+                                    <td class="p-2.5 flex items-center gap-2.5">
+                                        @if (!string.IsNullOrEmpty(item.DuongDanAnh))
+                                        {
+                                            <img src="@item.DuongDanAnh" alt="@item.TenSP" class="w-9 h-9 object-cover rounded shrink-0 border border-borderLight" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-9 h-9 bg-cream rounded shrink-0 flex items-center justify-center text-muted border border-borderLight">
+                                                <i class="ph ph-image text-sm"></i>
+                                            </div>
+                                        }
+                                        <span class="font-semibold text-charcoal line-clamp-1 max-w-[180px]" title="@item.TenSP">
+                                            @item.TenSP
+                                        </span>
+                                    </td>
+                                    <td class="p-2.5 text-right text-charcoal/80">
+                                        @LocalizationHelper.FormatCurrency(item.Gia)
+                                    </td>
+                                    <td class="p-2.5 text-center font-bold text-primary">
+                                        @item.SoLuongBan
+                                    </td>
+                                    <td class="p-2.5 text-right font-bold text-charcoal">
+                                        @LocalizationHelper.FormatCurrency(item.DoanhThu)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        <!-- Khối 2: Cảnh báo Tồn kho & Sắp hết hàng -->
+        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+            <h3 class="font-bold text-charcoal text-base">@L["Admin_Dashboard_LowStock_Title"]</h3>
+
+            @if (Model.DanhSachSapHetHang.Count == 0)
+            {
+                <div class="py-10 text-center text-muted text-xs">
+                    <i class="ph ph-check-circle text-3xl mb-2 text-statusSuccess/60 block"></i>
+                    @L["Admin_Dashboard_LowStock_Empty"]
+                </div>
+            }
+            else
+            {
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs divide-y divide-borderLight">
+                        <thead>
+                            <tr class="bg-cream/60 font-bold text-charcoal">
+                                <th class="p-2.5">@L["Admin_Excel_Col_ProductName"]</th>
+                                <th class="p-2.5">@L["Admin_Excel_Col_Category"]</th>
+                                <th class="p-2.5 text-center">@L["Admin_Dashboard_Stock_Current"]</th>
+                                <th class="p-2.5 text-center">@L["Admin_Dashboard_Stock_Threshold"]</th>
+                                <th class="p-2.5 text-right">@L["Admin_Excel_Col_Warning"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-borderLight">
+                            @foreach (var item in Model.DanhSachSapHetHang)
+                            {
+                                <tr class="hover:bg-cream/30 transition">
+                                    <td class="p-2.5 flex items-center gap-2.5">
+                                        @if (!string.IsNullOrEmpty(item.DuongDanAnh))
+                                        {
+                                            <img src="@item.DuongDanAnh" alt="@item.TenSP" class="w-9 h-9 object-cover rounded shrink-0 border border-borderLight" />
+                                        }
+                                        else
+                                        {
+                                            <div class="w-9 h-9 bg-cream rounded shrink-0 flex items-center justify-center text-muted border border-borderLight">
+                                                <i class="ph ph-image text-sm"></i>
+                                            </div>
+                                        }
+                                        <span class="font-semibold text-charcoal line-clamp-1 max-w-[160px]" title="@item.TenSP">
+                                            @item.TenSP
+                                        </span>
+                                    </td>
+                                    <td class="p-2.5 text-charcoal/80">
+                                        @LocalizationHelper.TenDanhMuc(item.MaDM, item.TenDM)
+                                    </td>
+                                    <td class="p-2.5 text-center font-bold @(item.LaHetHang ? "text-statusDanger" : "text-statusWarning")">
+                                        @item.SoLuongTon
+                                    </td>
+                                    <td class="p-2.5 text-center text-muted">
+                                        @item.NguongCanhBao
+                                    </td>
+                                    <td class="p-2.5 text-right">
+                                        @if (item.LaHetHang)
+                                        {
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FCEAEA] text-statusDanger">
+                                                @L["Admin_Dashboard_LowStock_OutOfStock"]
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FDF3E7] text-statusWarning">
+                                                @L["Admin_Dashboard_LowStock_LowStock"]
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <!-- 4. KHU VỰC XUẤT BÁO CÁO EXCEL -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+        <div class="flex items-center gap-2.5 border-b border-borderLight pb-3">
+            <i class="ph-fill ph-file-xls text-2xl text-statusSuccess"></i>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Excel_Export_Section"]</h3>
+                <p class="text-xs text-muted">@L["Admin_Excel_Error_MaxRows"]</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+
+            <!-- Xuất Doanh Thu Theo Tháng -->
+            <form asp-area="Admin" asp-controller="Dashboard" asp-action="XuatDoanhThuTheoThang" method="get" class="p-4 bg-cream/50 rounded-btn border border-borderLight flex flex-col justify-between gap-3">
+                <div class="space-y-2.5">
+                    <p class="font-bold text-xs text-charcoal">@L["Admin_Excel_Export_RevenueMonthly"]</p>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <div class="flex items-center gap-1.5">
+                            <label for="nam-doanhthu" class="text-xs text-muted">@L["Admin_Excel_Export_SelectYear"]</label>
+                            <select id="nam-doanhthu" name="nam" class="px-2 py-1 text-xs border border-borderLight rounded bg-surface font-semibold text-charcoal focus:outline-none focus:border-primary">
+                                @foreach (var y in Model.DanhSachNam)
+                                {
+                                    if (y == Model.NamDuocChon)
+                                    {
+                                        <option value="@y" selected>@y</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@y">@y</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <label for="thang-doanhthu" class="text-xs text-muted">@L["Admin_Excel_Export_SelectMonth"]</label>
+                            <select id="thang-doanhthu" name="thang" class="px-2 py-1 text-xs border border-borderLight rounded bg-surface font-semibold text-charcoal focus:outline-none focus:border-primary">
+                                <option value="" selected>@L["Admin_Excel_Month_All"]</option>
+                                @for (int m = 1; m <= 12; m++)
+                                {
+                                    <option value="@m">@LocalizationHelper.FormatMonthName(m)</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-2 bg-statusSuccess hover:opacity-90 text-white rounded-btn text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
+                    <i class="ph ph-download-simple text-sm"></i> @L["Admin_Excel_Export_RevenueMonthly"]
+                </button>
+            </form>
+
+            <!-- Xuất Báo Cáo Tồn Kho -->
+            <div class="p-4 bg-cream/50 rounded-btn border border-borderLight flex flex-col justify-between gap-3">
+                <div class="space-y-1">
+                    <p class="font-bold text-xs text-charcoal">@L["Admin_Excel_Export_ProductsStock"]</p>
+                    <p class="text-xs text-muted">@L["Admin_Dashboard_LowStock_Title"]</p>
+                </div>
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="XuatSanPhamTonKho" class="w-full py-2 bg-statusSuccess hover:opacity-90 text-white rounded-btn text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm text-center">
+                    <i class="ph ph-download-simple text-sm"></i> @L["Admin_Excel_Export_ProductsStock"]
+                </a>
+            </div>
+
+            <!-- Xuất Danh Sách Đơn Hàng -->
+            <div class="p-4 bg-cream/50 rounded-btn border border-borderLight flex flex-col justify-between gap-3">
+                <div class="space-y-1">
+                    <p class="font-bold text-xs text-charcoal">@L["Admin_Excel_Export_Orders"]</p>
+                    <p class="text-xs text-muted">@L["Admin_Dashboard_Orders_Total"]</p>
+                </div>
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="XuatDanhSachDonHang" class="w-full py-2 bg-statusSuccess hover:opacity-90 text-white rounded-btn text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm text-center">
+                    <i class="ph ph-download-simple text-sm"></i> @L["Admin_Excel_Export_Orders"]
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+

@@ -217,7 +217,7 @@ Tên Controller khách hàng theo tài liệu: TrangChu, SanPham, ChiTietSanPham
 ### 2.10. Xuất Excel
 
 -   Dùng ClosedXML (MIT) trong IExcelExportService; trả về file .xlsx (MIME application/vnd.openxmlformats-officedocument.spreadsheetml.sheet).
--   Chức năng xuất (chỉ QuanTriVien): báo cáo doanh thu theo tháng, danh sách đơn hàng theo bộ lọc hiện tại, danh sách sản phẩm và tồn kho (có sản phẩm sắp hết hàng).
+-   Chức năng xuất (chỉ QuanTriVien): báo cáo doanh thu theo tháng cho phép chọn cả năm (12 tháng) hoặc một tháng (danh sách chi tiết đơn hoàn thành), danh sách đơn hàng theo bộ lọc hiện tại, danh sách sản phẩm và tồn kho (có sản phẩm sắp hết hàng).
 -   Có dòng tiêu đề, định dạng tiền và ngày theo ngôn ngữ hiện tại, tự điều chỉnh độ rộng cột, tên file kèm ngày giờ.
 -   Chống formula injection: ô văn bản bắt đầu bằng ký tự =, +, -, @ phải được ghi dạng văn bản, không để Excel hiểu là công thức.
 -   Doanh thu theo đúng quy tắc: đơn HoanThanh, tính theo NgayGiaoThanhCong. Giới hạn tối đa 50.000 dòng mỗi lần xuất, quá thì thông báo.

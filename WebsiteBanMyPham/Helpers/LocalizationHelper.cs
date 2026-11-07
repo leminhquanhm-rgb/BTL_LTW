@@ -135,5 +135,52 @@ namespace WebsiteBanMyPham.Helpers
             var localized = _localizer[$"Status_Complaint_{trangThai}"];
             return localized.ResourceNotFound ? trangThai : localized.Value;
         }
+
+        public string FormatCompactCurrency(decimal amount)
+        {
+            var currentCulture = CultureInfo.CurrentUICulture.Name;
+            bool isEn = currentCulture.StartsWith("en", StringIgnoreCase);
+            var culture = isEn ? EnCulture : ViCulture;
+
+            if (amount >= 1_000_000m)
+            {
+                decimal millions = amount / 1_000_000m;
+                string suffix = isEn ? "M" : "Tr";
+                return $"{millions.ToString("0.#", culture)}{suffix}";
+            }
+
+            if (amount >= 1_000m)
+            {
+                decimal thousands = amount / 1_000m;
+                return $"{thousands.ToString("0.#", culture)}K";
+            }
+
+            return amount.ToString("N0", culture);
+        }
+
+        public string FormatShortMonth(int month, int year)
+        {
+            var currentCulture = CultureInfo.CurrentUICulture.Name;
+            if (currentCulture.StartsWith("en", StringIgnoreCase))
+            {
+                return EnCulture.DateTimeFormat.GetAbbreviatedMonthName(month);
+            }
+            return $"T{month}";
+        }
+
+        public string FormatMonthName(int month)
+        {
+            if (month < 1 || month > 12)
+            {
+                return month.ToString();
+            }
+
+            var currentCulture = CultureInfo.CurrentUICulture.Name;
+            if (currentCulture.StartsWith("en", StringIgnoreCase))
+            {
+                return EnCulture.DateTimeFormat.GetMonthName(month);
+            }
+            return $"Tháng {month}";
+        }
     }
 }
