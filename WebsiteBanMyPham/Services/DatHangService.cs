@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
 
@@ -52,7 +53,11 @@ namespace WebsiteBanMyPham.Services
                     .AsNoTracking()
                     .Where(g => g.MaTK == maTK && danhSachMaGH.Contains(g.MaGH))
                     .Include(g => g.MaSPNavigation)
-                    .ThenInclude(s => s.AnhSanPham)
+                        .ThenInclude(s => s.AnhSanPham)
+                    .Include(g => g.MaSPNavigation)
+                        .ThenInclude(s => s.MaDMNavigation)
+                    .Include(g => g.MaSPNavigation)
+                        .ThenInclude(s => s.MaTHNavigation)
                     .ToListAsync();
 
                 if (cartLines.Count != danhSachMaGH.Count)
@@ -63,9 +68,9 @@ namespace WebsiteBanMyPham.Services
                 foreach (var line in cartLines)
                 {
                     var sp = line.MaSPNavigation;
-                    bool hopLe = sp.TrangThai && sp.SoLuongTon >= line.SoLuong && line.SoLuong > 0 && sp.SoLuongTon > 0;
+                    bool hopLe = sp.IsDangBan() && sp.SoLuongTon >= line.SoLuong && line.SoLuong > 0 && sp.SoLuongTon > 0;
                     string? thongBao = null;
-                    if (!sp.TrangThai)
+                    if (!sp.IsDangBan())
                     {
                         thongBao = _localizer["Cart_ItemStoppedWarning"].Value;
                     }
@@ -93,7 +98,7 @@ namespace WebsiteBanMyPham.Services
                         GiaGoc = sp.GiaGoc,
                         SoLuong = line.SoLuong,
                         SoLuongTon = sp.SoLuongTon,
-                        TrangThaiSP = sp.TrangThai,
+                        TrangThaiSP = sp.IsDangBan(),
                         HopLeDeDat = hopLe,
                         ThongBaoTrangThai = thongBao
                     });
@@ -108,6 +113,8 @@ namespace WebsiteBanMyPham.Services
                 var sp = await _context.SanPham
                     .AsNoTracking()
                     .Include(s => s.AnhSanPham)
+                    .Include(s => s.MaDMNavigation)
+                    .Include(s => s.MaTHNavigation)
                     .FirstOrDefaultAsync(s => s.MaSP == maSPMuaNgay.Value);
 
                 if (sp == null)
@@ -115,9 +122,9 @@ namespace WebsiteBanMyPham.Services
                     return (false, _localizer["Msg_Order_ProductNotFound"].Value, null);
                 }
 
-                bool hopLe = sp.TrangThai && sp.SoLuongTon >= soLuongMuaNgay && soLuongMuaNgay > 0 && sp.SoLuongTon > 0;
+                bool hopLe = sp.IsDangBan() && sp.SoLuongTon >= soLuongMuaNgay && soLuongMuaNgay > 0 && sp.SoLuongTon > 0;
                 string? thongBao = null;
-                if (!sp.TrangThai)
+                if (!sp.IsDangBan())
                 {
                     thongBao = _localizer["Cart_ItemStoppedWarning"].Value;
                 }
@@ -145,7 +152,7 @@ namespace WebsiteBanMyPham.Services
                     GiaGoc = sp.GiaGoc,
                     SoLuong = soLuongMuaNgay,
                     SoLuongTon = sp.SoLuongTon,
-                    TrangThaiSP = sp.TrangThai,
+                    TrangThaiSP = sp.IsDangBan(),
                     HopLeDeDat = hopLe,
                     ThongBaoTrangThai = thongBao
                 });
@@ -236,7 +243,11 @@ namespace WebsiteBanMyPham.Services
                     _localizer["Validation_RangeMin"].Value, 0);
             }
 
-            var sp = await _context.SanPham.AsNoTracking().FirstOrDefaultAsync(s => s.MaSP == maSP);
+            var sp = await _context.SanPham
+                .AsNoTracking()
+                .Include(s => s.MaDMNavigation)
+                .Include(s => s.MaTHNavigation)
+                .FirstOrDefaultAsync(s => s.MaSP == maSP);
             if (sp == null)
             {
                 return (false, StatusCodes.Status404NotFound,
@@ -244,7 +255,7 @@ namespace WebsiteBanMyPham.Services
                     _localizer["Msg_Order_ProductNotFound"].Value, 0);
             }
 
-            if (!sp.TrangThai || sp.SoLuongTon < soLuong)
+            if (!sp.IsDangBan() || sp.SoLuongTon < soLuong)
             {
                 return (false, StatusCodes.Status400BadRequest,
                     _localizer["Api_Error_InvalidPromoRequest"].Value,
@@ -277,6 +288,9 @@ namespace WebsiteBanMyPham.Services
                 .AsNoTracking()
                 .Where(g => g.MaTK == maTK && distinctIds.Contains(g.MaGH))
                 .Include(g => g.MaSPNavigation)
+                    .ThenInclude(s => s.MaDMNavigation)
+                .Include(g => g.MaSPNavigation)
+                    .ThenInclude(s => s.MaTHNavigation)
                 .ToListAsync();
 
             if (items.Count != distinctIds.Count)
@@ -286,7 +300,7 @@ namespace WebsiteBanMyPham.Services
                     _localizer["Api_Error_CartItemNotFound"].Value, 0);
             }
 
-            var hopLeItems = items.Where(i => i.MaSPNavigation.TrangThai && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
+            var hopLeItems = items.Where(i => i.MaSPNavigation.IsDangBan() && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
             decimal tongTienHang = hopLeItems.Sum(i => i.MaSPNavigation.Gia * i.SoLuong);
 
             return (true, StatusCodes.Status200OK, null, null, tongTienHang);

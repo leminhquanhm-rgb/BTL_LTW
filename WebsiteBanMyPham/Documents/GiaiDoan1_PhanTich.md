@@ -141,6 +141,7 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 * Mỗi sản phẩm thuộc một danh mục và một thương hiệu.
 * Giá bán và số lượng tồn kho không được nhỏ hơn 0.
 * Sản phẩm ngừng kinh doanh không được thêm vào giỏ hàng hoặc đặt mua.
+* Sản phẩm đang bán được định nghĩa là SanPham.TrangThai = 1, DanhMuc.TrangThai = 1 và ThuongHieu.TrangThai = 1. Khi danh mục hoặc thương hiệu ngừng hoạt động, mọi sản phẩm thuộc danh mục/thương hiệu đó được đối xử tương tự sản phẩm ngừng kinh doanh ở phía khách hàng.
 * Không xóa vật lý sản phẩm đã phát sinh đơn hàng; thay vào đó, chuyển trạng thái sang ngừng kinh doanh để bảo đảm lịch sử đơn hàng.
 * Admin có quyền cập nhật số lượng tồn kho.
 * Khi số lượng tồn kho thấp hơn hoặc bằng ngưỡng cảnh báo, hệ thống hiển thị cảnh báo cho Admin.

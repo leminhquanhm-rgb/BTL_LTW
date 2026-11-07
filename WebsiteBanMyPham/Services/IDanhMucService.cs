@@ -10,6 +10,7 @@ namespace WebsiteBanMyPham.Services
         Task<(LoaiLoiDanhMuc LoaiLoi, int MaDM, DanhMucAdminDto? Dto)> TaoAsync(string tenDM, string? moTa, bool trangThai);
         Task<(LoaiLoiDanhMuc LoaiLoi, DanhMucAdminDto? Dto)> CapNhatAsync(int maDM, string tenDM, string? moTa, bool trangThai);
         Task<(LoaiLoiDanhMuc LoaiLoi, int SoLuongSP)> XoaAsync(int maDM);
+        Task<int> LaySoSanPhamCuaDanhMucAsync(int maDM);
     }
 }
 

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
 
@@ -42,6 +43,10 @@ namespace WebsiteBanMyPham.Services
                 .Where(g => g.MaTK == maTK)
                 .Include(g => g.MaSPNavigation)
                     .ThenInclude(sp => sp.AnhSanPham)
+                .Include(g => g.MaSPNavigation)
+                    .ThenInclude(sp => sp.MaDMNavigation)
+                .Include(g => g.MaSPNavigation)
+                    .ThenInclude(sp => sp.MaTHNavigation)
                 .OrderByDescending(g => g.NgayThem)
                 .ThenByDescending(g => g.MaGH)
                 .ToListAsync();
@@ -65,7 +70,7 @@ namespace WebsiteBanMyPham.Services
                     GiaGoc = sp.GiaGoc,
                     SoLuong = g.SoLuong,
                     SoLuongTon = sp.SoLuongTon,
-                    TrangThaiKinhDoanh = sp.TrangThai
+                    TrangThaiKinhDoanh = sp.IsDangBan()
                 };
 
                 if (!item.TrangThaiKinhDoanh)
@@ -100,6 +105,10 @@ namespace WebsiteBanMyPham.Services
                 .Where(x => x.MaGH == maGH && x.MaTK == maTK)
                 .Include(x => x.MaSPNavigation)
                     .ThenInclude(sp => sp.AnhSanPham)
+                .Include(x => x.MaSPNavigation)
+                    .ThenInclude(sp => sp.MaDMNavigation)
+                .Include(x => x.MaSPNavigation)
+                    .ThenInclude(sp => sp.MaTHNavigation)
                 .FirstOrDefaultAsync();
 
             if (g == null)
@@ -122,7 +131,7 @@ namespace WebsiteBanMyPham.Services
                 GiaGoc = sp.GiaGoc,
                 SoLuong = g.SoLuong,
                 SoLuongTon = sp.SoLuongTon,
-                TrangThaiKinhDoanh = sp.TrangThai
+                TrangThaiKinhDoanh = sp.IsDangBan()
             };
 
             if (!item.TrangThaiKinhDoanh)
@@ -154,13 +163,17 @@ namespace WebsiteBanMyPham.Services
                 return (false, _localizer["Msg_Cart_OnlyCustomer"].Value, LoaiLoiGioHang.DuLieuKhongHopLe, 0, 0, false);
             }
 
-            var sp = await _context.SanPham.AsNoTracking().FirstOrDefaultAsync(s => s.MaSP == maSP);
+            var sp = await _context.SanPham
+                .AsNoTracking()
+                .Include(s => s.MaDMNavigation)
+                .Include(s => s.MaTHNavigation)
+                .FirstOrDefaultAsync(s => s.MaSP == maSP);
             if (sp == null)
             {
                 return (false, _localizer["Api_Error_ProductNotFoundDetail", maSP].Value, LoaiLoiGioHang.KhongTimThay, 0, 0, false);
             }
 
-            if (!sp.TrangThai)
+            if (!sp.IsDangBan())
             {
                 return (false, _localizer["Msg_Cart_ProductStopped"].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan, 0, 0, false);
             }
@@ -244,6 +257,9 @@ namespace WebsiteBanMyPham.Services
 
             var dongGio = await _context.GioHang
                 .Include(g => g.MaSPNavigation)
+                    .ThenInclude(s => s.MaDMNavigation)
+                .Include(g => g.MaSPNavigation)
+                    .ThenInclude(s => s.MaTHNavigation)
                 .FirstOrDefaultAsync(g => g.MaGH == maGH && g.MaTK == maTK);
 
             if (dongGio == null)
@@ -252,7 +268,7 @@ namespace WebsiteBanMyPham.Services
             }
 
             var sp = dongGio.MaSPNavigation;
-            if (!sp.TrangThai)
+            if (!sp.IsDangBan())
             {
                 return (false, _localizer["Msg_Cart_ItemProductStopped"].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan);
             }

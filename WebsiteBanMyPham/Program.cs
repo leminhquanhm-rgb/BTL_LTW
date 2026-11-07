@@ -150,6 +150,7 @@ namespace WebsiteBanMyPham
             builder.Services.AddScoped<IThuongHieuService, ThuongHieuService>();
             builder.Services.AddScoped<IThongKeService, ThongKeService>();
             builder.Services.AddScoped<IExcelExportService, ExcelExportService>();
+            builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
             var app = builder.Build();
 

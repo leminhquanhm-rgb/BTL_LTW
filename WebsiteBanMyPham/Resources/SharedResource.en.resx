@@ -1762,4 +1762,176 @@
   <data name="Admin_Excel_Col_Discount" xml:space="preserve">
     <value>Discount</value>
   </data>
+  <!-- Bước 6B-1: File Upload Service -->
+  <data name="Upload_Error_NoFile" xml:space="preserve">
+    <value>Please select a file to upload.</value>
+  </data>
+  <data name="Upload_Error_FileTooLarge" xml:space="preserve">
+    <value>File size must not exceed 2MB.</value>
+  </data>
+  <data name="Upload_Error_InvalidExtension" xml:space="preserve">
+    <value>Unsupported file format (only .jpg, .jpeg, .png, .webp allowed).</value>
+  </data>
+  <data name="Upload_Error_InvalidMimeType" xml:space="preserve">
+    <value>Invalid file MIME type.</value>
+  </data>
+  <data name="Upload_Error_InvalidMagicBytes" xml:space="preserve">
+    <value>Invalid or corrupted image file.</value>
+  </data>
+  <data name="Upload_Error_System" xml:space="preserve">
+    <value>An error occurred while uploading the file.</value>
+  </data>
+
+  <!-- Bước 6B-1: Admin Quản lý Danh mục -->
+  <data name="Admin_Category_Title" xml:space="preserve">
+    <value>Category Management</value>
+  </data>
+  <data name="Admin_Category_List" xml:space="preserve">
+    <value>Category List</value>
+  </data>
+  <data name="Admin_Category_Add" xml:space="preserve">
+    <value>Add Category</value>
+  </data>
+  <data name="Admin_Category_Edit" xml:space="preserve">
+    <value>Edit Category</value>
+  </data>
+  <data name="Admin_Category_Name" xml:space="preserve">
+    <value>Category Name</value>
+  </data>
+  <data name="Admin_Category_Desc" xml:space="preserve">
+    <value>Category Description</value>
+  </data>
+  <data name="Admin_Category_Status" xml:space="preserve">
+    <value>Active Status</value>
+  </data>
+  <data name="Admin_Category_ProductCount" xml:space="preserve">
+    <value>Product Count</value>
+  </data>
+  <data name="Admin_Category_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Admin_Category_SearchPlaceholder" xml:space="preserve">
+    <value>Search by category name...</value>
+  </data>
+  <data name="Admin_Category_Empty" xml:space="preserve">
+    <value>No categories found.</value>
+  </data>
+  <data name="Admin_Category_CreateSuccess" xml:space="preserve">
+    <value>Category added successfully.</value>
+  </data>
+  <data name="Admin_Category_UpdateSuccess" xml:space="preserve">
+    <value>Category updated successfully.</value>
+  </data>
+  <data name="Admin_Category_DeleteSuccess" xml:space="preserve">
+    <value>Category deleted successfully.</value>
+  </data>
+  <data name="Admin_Category_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this category?</value>
+  </data>
+  <data name="Admin_Category_DeactivateConfirm" xml:space="preserve">
+    <value>This category has {0} products on sale. Deactivating it will hide all of these products from customer view. Are you sure you want to proceed?</value>
+  </data>
+  <data name="Admin_Category_ActivateConfirm" xml:space="preserve">
+    <value>Are you sure you want to reactivate this category?</value>
+  </data>
+  <data name="Admin_Category_ToggleSuccess" xml:space="preserve">
+    <value>Category status updated successfully.</value>
+  </data>
+
+  <!-- Bước 6B-1: Admin Quản lý Thương hiệu -->
+  <data name="Admin_Brand_Management" xml:space="preserve">
+    <value>Brand Management</value>
+  </data>
+  <data name="Admin_Brand_List" xml:space="preserve">
+    <value>Brand List</value>
+  </data>
+  <data name="Admin_Brand_Add" xml:space="preserve">
+    <value>Add Brand</value>
+  </data>
+  <data name="Admin_Brand_Edit" xml:space="preserve">
+    <value>Edit Brand</value>
+  </data>
+  <data name="Admin_Brand_Name" xml:space="preserve">
+    <value>Brand Name</value>
+  </data>
+  <data name="Admin_Brand_Logo" xml:space="preserve">
+    <value>Brand Logo</value>
+  </data>
+  <data name="Admin_Brand_Desc" xml:space="preserve">
+    <value>Brand Description</value>
+  </data>
+  <data name="Admin_Brand_Status" xml:space="preserve">
+    <value>Active Status</value>
+  </data>
+  <data name="Admin_Brand_ProductCount" xml:space="preserve">
+    <value>Product Count</value>
+  </data>
+  <data name="Admin_Brand_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Admin_Brand_SearchPlaceholder" xml:space="preserve">
+    <value>Search by brand name...</value>
+  </data>
+  <data name="Admin_Brand_Empty" xml:space="preserve">
+    <value>No brands found.</value>
+  </data>
+  <data name="Admin_Brand_CreateSuccess" xml:space="preserve">
+    <value>Brand added successfully.</value>
+  </data>
+  <data name="Admin_Brand_UpdateSuccess" xml:space="preserve">
+    <value>Brand updated successfully.</value>
+  </data>
+  <data name="Admin_Brand_DeleteSuccess" xml:space="preserve">
+    <value>Brand deleted successfully.</value>
+  </data>
+  <data name="Admin_Brand_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this brand?</value>
+  </data>
+  <data name="Admin_Brand_DeactivateConfirm" xml:space="preserve">
+    <value>This brand has {0} products on sale. Deactivating it will hide all of these products from customer view. Are you sure you want to proceed?</value>
+  </data>
+  <data name="Admin_Brand_ActivateConfirm" xml:space="preserve">
+    <value>Are you sure you want to reactivate this brand?</value>
+  </data>
+  <data name="Admin_Brand_ToggleSuccess" xml:space="preserve">
+    <value>Brand status updated successfully.</value>
+  </data>
+  <data name="Admin_Brand_DeleteLogo" xml:space="preserve">
+    <value>Delete current logo</value>
+  </data>
+  <data name="Admin_Brand_ChangeLogo" xml:space="preserve">
+    <value>Change logo</value>
+  </data>
+  <data name="Admin_Brand_UploadHint" xml:space="preserve">
+    <value>Supports JPG, PNG, WebP. Maximum size 2MB.</value>
+  </data>
+  <data name="Admin_Brand_NoLogo" xml:space="preserve">
+    <value>No logo</value>
+  </data>
+
+  <!-- Bước 6B-1: Admin Tabs & Bộ lọc -->
+  <data name="Admin_Tab_Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Admin_Tab_Brands" xml:space="preserve">
+    <value>Brands</value>
+  </data>
+  <data name="Admin_Filter_AllStatus" xml:space="preserve">
+    <value>All statuses</value>
+  </data>
+  <data name="Admin_Filter_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Admin_Filter_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Admin_Action_Activate" xml:space="preserve">
+    <value>Activate</value>
+  </data>
+  <data name="Admin_Action_Deactivate" xml:space="preserve">
+    <value>Deactivate</value>
+  </data>
+  <data name="Admin_Confirm_Title" xml:space="preserve">
+    <value>Confirm Action</value>
+  </data>
 </root>

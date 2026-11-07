@@ -104,7 +104,8 @@ namespace WebsiteBanMyPham.Services
         public async Task<(LoaiLoiThuongHieu LoaiLoi, int MaTH, ThuongHieuAdminDto? Dto)> TaoAsync(
             string tenTH,
             string? moTa,
-            bool trangThai)
+            bool trangThai,
+            string? logo = null)
         {
             var tenTrim = tenTH?.Trim() ?? string.Empty;
             var moTaTrim = string.IsNullOrWhiteSpace(moTa) ? null : moTa.Trim();
@@ -127,7 +128,7 @@ namespace WebsiteBanMyPham.Services
                 {
                     TenTH = tenTrim,
                     MoTa = moTaTrim,
-                    Logo = null, // Bước 5F không xử lý upload ảnh, Logo khởi tạo null
+                    Logo = string.IsNullOrWhiteSpace(logo) ? null : logo.Trim(),
                     TrangThai = trangThai
                 };
 
@@ -172,7 +173,9 @@ namespace WebsiteBanMyPham.Services
             int maTH,
             string tenTH,
             string? moTa,
-            bool trangThai)
+            bool trangThai,
+            string? logo = null,
+            bool capNhatLogo = false)
         {
             var tenTrim = tenTH?.Trim() ?? string.Empty;
             var moTaTrim = string.IsNullOrWhiteSpace(moTa) ? null : moTa.Trim();
@@ -199,7 +202,10 @@ namespace WebsiteBanMyPham.Services
             {
                 th.TenTH = tenTrim;
                 th.MoTa = moTaTrim;
-                // Logo giữ nguyên giá trị hiện có, không nhận gán tùy ý qua API
+                if (capNhatLogo)
+                {
+                    th.Logo = string.IsNullOrWhiteSpace(logo) ? null : logo.Trim();
+                }
                 th.TrangThai = trangThai;
 
                 await _context.SaveChangesAsync();
@@ -261,6 +267,12 @@ namespace WebsiteBanMyPham.Services
                 }
                 throw;
             }
+        }
+
+        public async Task<int> LaySoSanPhamCuaThuongHieuAsync(int maTH)
+        {
+            return await _context.SanPham
+                .CountAsync(s => s.MaTH == maTH && s.TrangThai && s.MaDMNavigation.TrangThai);
         }
     }
 }

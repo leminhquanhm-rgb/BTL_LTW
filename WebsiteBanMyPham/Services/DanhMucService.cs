@@ -258,6 +258,12 @@ namespace WebsiteBanMyPham.Services
                 throw;
             }
         }
+
+        public async Task<int> LaySoSanPhamCuaDanhMucAsync(int maDM)
+        {
+            return await _context.SanPham
+                .CountAsync(s => s.MaDM == maDM && s.TrangThai && s.MaTHNavigation.TrangThai);
+        }
     }
 }
 

@@ -550,6 +550,7 @@ Quy tắc xóa dữ liệu
 -   Không xóa cứng sản phẩm có lịch sử đơn hàng.
 -   Nếu có GiaGoc thì hiển thị gạch ngang cạnh giá bán và tính nhãn phần trăm giảm = (GiaGoc - Gia) / GiaGoc. Đây là giảm giá hiển thị, khác với mã khuyến mãi.
 -   Sản phẩm hết hàng hoặc ngừng kinh doanh phải hiển thị nhãn tương ứng và vô hiệu nút Thêm giỏ, Mua ngay.
+-   Định nghĩa sản phẩm đang bán: SanPham.TrangThai = 1 VÀ DanhMuc.TrangThai = 1 VÀ ThuongHieu.TrangThai = 1. Khi danh mục HOẶC thương hiệu ngừng hoạt động (TrangThai = 0), mọi sản phẩm thuộc danh mục/thương hiệu đó được đối xử y hệt sản phẩm ngừng kinh doanh ở phía khách hàng (ẩn khỏi danh sách tìm kiếm, lọc, trang chủ; trang chi tiết và giỏ hàng hiển thị nhãn Ngừng kinh doanh và vô hiệu nút Thêm giỏ, Mua ngay; không thể đặt hàng).
 
 ### 6.3. Giỏ hàng
 

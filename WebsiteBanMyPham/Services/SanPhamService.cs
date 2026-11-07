@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
 
@@ -24,7 +25,7 @@ namespace WebsiteBanMyPham.Services
 
             var query = _context.SanPham
                 .AsNoTracking()
-                .Where(s => s.TrangThai);
+                .DangBan();
 
             if (!string.IsNullOrWhiteSpace(filter.TuKhoa))
             {
@@ -86,7 +87,7 @@ namespace WebsiteBanMyPham.Services
                     s.Gia,
                     s.GiaGoc,
                     s.SoLuongTon,
-                    s.TrangThai,
+                    DangBan = s.TrangThai && s.MaDMNavigation.TrangThai && s.MaTHNavigation.TrangThai,
                     s.MaDM,
                     TenDanhMuc = s.MaDMNavigation.TenDM,
                     s.MaTH,
@@ -125,7 +126,7 @@ namespace WebsiteBanMyPham.Services
                     Gia = p.Gia,
                     GiaGoc = p.GiaGoc,
                     SoLuongTon = p.SoLuongTon,
-                    TrangThai = p.TrangThai,
+                    TrangThai = p.DangBan,
                     MaDM = p.MaDM,
                     TenDanhMuc = p.TenDanhMuc,
                     MaTH = p.MaTH,
@@ -152,7 +153,7 @@ namespace WebsiteBanMyPham.Services
                     s.Gia,
                     s.GiaGoc,
                     s.SoLuongTon,
-                    s.TrangThai,
+                    DangBan = s.TrangThai && s.MaDMNavigation.TrangThai && s.MaTHNavigation.TrangThai,
                     s.MaDM,
                     TenDanhMuc = s.MaDMNavigation.TenDM,
                     s.MaTH,
@@ -197,7 +198,8 @@ namespace WebsiteBanMyPham.Services
             // Tối đa 4 sản phẩm cùng danh mục đang kinh doanh (không phải chính nó)
             var relatedProductsRaw = await _context.SanPham
                 .AsNoTracking()
-                .Where(s => s.MaDM == product.MaDM && s.MaSP != maSp && s.TrangThai)
+                .Where(s => s.MaDM == product.MaDM && s.MaSP != maSp)
+                .DangBan()
                 .OrderByDescending(s => s.NgayTao)
                 .ThenBy(s => s.MaSP)
                 .Take(4)
@@ -208,7 +210,7 @@ namespace WebsiteBanMyPham.Services
                     s.Gia,
                     s.GiaGoc,
                     s.SoLuongTon,
-                    s.TrangThai,
+                    DangBan = s.TrangThai && s.MaDMNavigation.TrangThai && s.MaTHNavigation.TrangThai,
                     s.MaDM,
                     TenDanhMuc = s.MaDMNavigation.TenDM,
                     s.MaTH,
@@ -245,7 +247,7 @@ namespace WebsiteBanMyPham.Services
                     Gia = p.Gia,
                     GiaGoc = p.GiaGoc,
                     SoLuongTon = p.SoLuongTon,
-                    TrangThai = p.TrangThai,
+                    TrangThai = p.DangBan,
                     MaDM = p.MaDM,
                     TenDanhMuc = p.TenDanhMuc,
                     MaTH = p.MaTH,
@@ -264,7 +266,7 @@ namespace WebsiteBanMyPham.Services
                 Gia = product.Gia,
                 GiaGoc = product.GiaGoc,
                 SoLuongTon = product.SoLuongTon,
-                TrangThai = product.TrangThai,
+                TrangThai = product.DangBan,
                 MaDM = product.MaDM,
                 TenDanhMuc = product.TenDanhMuc,
                 MaTH = product.MaTH,
@@ -293,7 +295,7 @@ namespace WebsiteBanMyPham.Services
             // 1. Sản phẩm mới: 8 sản phẩm theo NgayTao giảm dần
             var spMoiRaw = await _context.SanPham
                 .AsNoTracking()
-                .Where(s => s.TrangThai)
+                .DangBan()
                 .OrderByDescending(s => s.NgayTao)
                 .ThenBy(s => s.MaSP)
                 .Take(8)
@@ -304,7 +306,7 @@ namespace WebsiteBanMyPham.Services
                     s.Gia,
                     s.GiaGoc,
                     s.SoLuongTon,
-                    s.TrangThai,
+                    DangBan = s.TrangThai && s.MaDMNavigation.TrangThai && s.MaTHNavigation.TrangThai,
                     s.MaDM,
                     TenDanhMuc = s.MaDMNavigation.TenDM,
                     s.MaTH,
@@ -316,7 +318,7 @@ namespace WebsiteBanMyPham.Services
             // 2. Sản phẩm bán chạy: tổng SoLuong trong ChiTietDonHang của đơn HoanThanh giảm dần
             var spBanChayQuery = await _context.SanPham
                 .AsNoTracking()
-                .Where(s => s.TrangThai)
+                .DangBan()
                 .Select(s => new
                 {
                     s.MaSP,
@@ -324,7 +326,7 @@ namespace WebsiteBanMyPham.Services
                     s.Gia,
                     s.GiaGoc,
                     s.SoLuongTon,
-                    s.TrangThai,
+                    DangBan = s.TrangThai && s.MaDMNavigation.TrangThai && s.MaTHNavigation.TrangThai,
                     s.MaDM,
                     TenDanhMuc = s.MaDMNavigation.TenDM,
                     s.MaTH,
@@ -374,7 +376,7 @@ namespace WebsiteBanMyPham.Services
                     Gia = p.Gia,
                     GiaGoc = p.GiaGoc,
                     SoLuongTon = p.SoLuongTon,
-                    TrangThai = p.TrangThai,
+                    TrangThai = p.DangBan,
                     MaDM = p.MaDM,
                     TenDanhMuc = p.TenDanhMuc,
                     MaTH = p.MaTH,
@@ -395,7 +397,7 @@ namespace WebsiteBanMyPham.Services
                     Gia = p.Gia,
                     GiaGoc = p.GiaGoc,
                     SoLuongTon = p.SoLuongTon,
-                    TrangThai = p.TrangThai,
+                    TrangThai = p.DangBan,
                     MaDM = p.MaDM,
                     TenDanhMuc = p.TenDanhMuc,
                     MaTH = p.MaTH,
@@ -444,7 +446,7 @@ namespace WebsiteBanMyPham.Services
                     MaDM = d.MaDM,
                     TenDM = d.TenDM,
                     MoTa = d.MoTa,
-                    SoLuongSanPham = d.SanPham.Count(s => s.TrangThai)
+                    SoLuongSanPham = d.SanPham.Count(s => s.TrangThai && s.MaTHNavigation.TrangThai)
                 })
                 .ToListAsync();
         }
@@ -461,7 +463,7 @@ namespace WebsiteBanMyPham.Services
                     TenTH = t.TenTH,
                     Logo = t.Logo,
                     MoTa = t.MoTa,
-                    SoLuongSanPham = t.SanPham.Count(s => s.TrangThai)
+                    SoLuongSanPham = t.SanPham.Count(s => s.TrangThai && s.MaDMNavigation.TrangThai)
                 })
                 .ToListAsync();
         }

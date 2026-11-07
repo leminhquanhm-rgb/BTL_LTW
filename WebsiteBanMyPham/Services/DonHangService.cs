@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.ViewModels;
 
@@ -126,6 +127,8 @@ namespace WebsiteBanMyPham.Services
                 // Đọc thông tin sản phẩm mới nhất từ DB bằng AsNoTracking
                 var spDbList = await _context.SanPham
                     .AsNoTracking()
+                    .Include(s => s.MaDMNavigation)
+                    .Include(s => s.MaTHNavigation)
                     .Where(s => listMaSP.Contains(s.MaSP))
                     .ToListAsync();
 
@@ -142,7 +145,7 @@ namespace WebsiteBanMyPham.Services
                 {
                     var sp = spDbList.First(s => s.MaSP == item.MaSP);
 
-                    if (!sp.TrangThai)
+                    if (!sp.IsDangBan())
                     {
                         await transaction.RollbackAsync();
                         return (false, _localizer["Msg_Order_ProductStopped", sp.TenSP].Value, null);
@@ -201,7 +204,8 @@ namespace WebsiteBanMyPham.Services
                 foreach (var (sp, soLuong) in danhSachSanPhamDat)
                 {
                     var affectedSP = await _context.SanPham
-                        .Where(s => s.MaSP == sp.MaSP && s.TrangThai && s.SoLuongTon >= soLuong)
+                        .DangBan()
+                        .Where(s => s.MaSP == sp.MaSP && s.SoLuongTon >= soLuong)
                         .ExecuteUpdateAsync(s => s.SetProperty(p => p.SoLuongTon, p => p.SoLuongTon - soLuong));
 
                     if (affectedSP == 0)

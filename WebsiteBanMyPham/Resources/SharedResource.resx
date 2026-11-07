@@ -1762,4 +1762,176 @@
   <data name="Admin_Excel_Col_Discount" xml:space="preserve">
     <value>Tiền giảm</value>
   </data>
+  <!-- Bước 6B-1: File Upload Service -->
+  <data name="Upload_Error_NoFile" xml:space="preserve">
+    <value>Vui lòng chọn tệp để tải lên.</value>
+  </data>
+  <data name="Upload_Error_FileTooLarge" xml:space="preserve">
+    <value>Dung lượng tệp không được vượt quá 2MB.</value>
+  </data>
+  <data name="Upload_Error_InvalidExtension" xml:space="preserve">
+    <value>Định dạng tệp không được hỗ trợ (chỉ chấp nhận .jpg, .jpeg, .png, .webp).</value>
+  </data>
+  <data name="Upload_Error_InvalidMimeType" xml:space="preserve">
+    <value>Kiểu nội dung tệp không hợp lệ.</value>
+  </data>
+  <data name="Upload_Error_InvalidMagicBytes" xml:space="preserve">
+    <value>Tệp hình ảnh không hợp lệ hoặc bị hỏng.</value>
+  </data>
+  <data name="Upload_Error_System" xml:space="preserve">
+    <value>Có lỗi xảy ra trong quá trình tải tệp lên hệ thống.</value>
+  </data>
+
+  <!-- Bước 6B-1: Admin Quản lý Danh mục -->
+  <data name="Admin_Category_Title" xml:space="preserve">
+    <value>Quản lý danh mục</value>
+  </data>
+  <data name="Admin_Category_List" xml:space="preserve">
+    <value>Danh sách danh mục</value>
+  </data>
+  <data name="Admin_Category_Add" xml:space="preserve">
+    <value>Thêm danh mục</value>
+  </data>
+  <data name="Admin_Category_Edit" xml:space="preserve">
+    <value>Chỉnh sửa danh mục</value>
+  </data>
+  <data name="Admin_Category_Name" xml:space="preserve">
+    <value>Tên danh mục</value>
+  </data>
+  <data name="Admin_Category_Desc" xml:space="preserve">
+    <value>Mô tả danh mục</value>
+  </data>
+  <data name="Admin_Category_Status" xml:space="preserve">
+    <value>Trạng thái hoạt động</value>
+  </data>
+  <data name="Admin_Category_ProductCount" xml:space="preserve">
+    <value>Số sản phẩm</value>
+  </data>
+  <data name="Admin_Category_Actions" xml:space="preserve">
+    <value>Thao tác</value>
+  </data>
+  <data name="Admin_Category_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm theo tên danh mục...</value>
+  </data>
+  <data name="Admin_Category_Empty" xml:space="preserve">
+    <value>Không có danh mục nào phù hợp.</value>
+  </data>
+  <data name="Admin_Category_CreateSuccess" xml:space="preserve">
+    <value>Thêm danh mục mới thành công.</value>
+  </data>
+  <data name="Admin_Category_UpdateSuccess" xml:space="preserve">
+    <value>Cập nhật danh mục thành công.</value>
+  </data>
+  <data name="Admin_Category_DeleteSuccess" xml:space="preserve">
+    <value>Xóa danh mục thành công.</value>
+  </data>
+  <data name="Admin_Category_DeleteConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa danh mục này?</value>
+  </data>
+  <data name="Admin_Category_DeactivateConfirm" xml:space="preserve">
+    <value>Danh mục này đang có {0} sản phẩm đang bán. Khi ngừng hoạt động, toàn bộ các sản phẩm này sẽ bị ẩn khỏi giao diện khách hàng. Bạn có chắc chắn muốn tiếp tục?</value>
+  </data>
+  <data name="Admin_Category_ActivateConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn kích hoạt lại danh mục này?</value>
+  </data>
+  <data name="Admin_Category_ToggleSuccess" xml:space="preserve">
+    <value>Cập nhật trạng thái danh mục thành công.</value>
+  </data>
+
+  <!-- Bước 6B-1: Admin Quản lý Thương hiệu -->
+  <data name="Admin_Brand_Management" xml:space="preserve">
+    <value>Quản lý thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_List" xml:space="preserve">
+    <value>Danh sách thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_Add" xml:space="preserve">
+    <value>Thêm thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_Edit" xml:space="preserve">
+    <value>Chỉnh sửa thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_Name" xml:space="preserve">
+    <value>Tên thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_Logo" xml:space="preserve">
+    <value>Logo thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_Desc" xml:space="preserve">
+    <value>Mô tả thương hiệu</value>
+  </data>
+  <data name="Admin_Brand_Status" xml:space="preserve">
+    <value>Trạng thái hoạt động</value>
+  </data>
+  <data name="Admin_Brand_ProductCount" xml:space="preserve">
+    <value>Số sản phẩm</value>
+  </data>
+  <data name="Admin_Brand_Actions" xml:space="preserve">
+    <value>Thao tác</value>
+  </data>
+  <data name="Admin_Brand_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm theo tên thương hiệu...</value>
+  </data>
+  <data name="Admin_Brand_Empty" xml:space="preserve">
+    <value>Không có thương hiệu nào phù hợp.</value>
+  </data>
+  <data name="Admin_Brand_CreateSuccess" xml:space="preserve">
+    <value>Thêm thương hiệu mới thành công.</value>
+  </data>
+  <data name="Admin_Brand_UpdateSuccess" xml:space="preserve">
+    <value>Cập nhật thương hiệu thành công.</value>
+  </data>
+  <data name="Admin_Brand_DeleteSuccess" xml:space="preserve">
+    <value>Xóa thương hiệu thành công.</value>
+  </data>
+  <data name="Admin_Brand_DeleteConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa thương hiệu này?</value>
+  </data>
+  <data name="Admin_Brand_DeactivateConfirm" xml:space="preserve">
+    <value>Thương hiệu này đang có {0} sản phẩm đang bán. Khi ngừng hoạt động, toàn bộ các sản phẩm này sẽ bị ẩn khỏi giao diện khách hàng. Bạn có chắc chắn muốn tiếp tục?</value>
+  </data>
+  <data name="Admin_Brand_ActivateConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn kích hoạt lại thương hiệu này?</value>
+  </data>
+  <data name="Admin_Brand_ToggleSuccess" xml:space="preserve">
+    <value>Cập nhật trạng thái thương hiệu thành công.</value>
+  </data>
+  <data name="Admin_Brand_DeleteLogo" xml:space="preserve">
+    <value>Xóa logo hiện tại</value>
+  </data>
+  <data name="Admin_Brand_ChangeLogo" xml:space="preserve">
+    <value>Thay đổi logo</value>
+  </data>
+  <data name="Admin_Brand_UploadHint" xml:space="preserve">
+    <value>Hỗ trợ định dạng JPG, PNG, WebP. Dung lượng tối đa 2MB.</value>
+  </data>
+  <data name="Admin_Brand_NoLogo" xml:space="preserve">
+    <value>Chưa có logo</value>
+  </data>
+
+  <!-- Bước 6B-1: Admin Tabs & Bộ lọc -->
+  <data name="Admin_Tab_Categories" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="Admin_Tab_Brands" xml:space="preserve">
+    <value>Thương hiệu</value>
+  </data>
+  <data name="Admin_Filter_AllStatus" xml:space="preserve">
+    <value>Tất cả trạng thái</value>
+  </data>
+  <data name="Admin_Filter_Active" xml:space="preserve">
+    <value>Đang hoạt động</value>
+  </data>
+  <data name="Admin_Filter_Inactive" xml:space="preserve">
+    <value>Ngừng hoạt động</value>
+  </data>
+  <data name="Admin_Action_Activate" xml:space="preserve">
+    <value>Kích hoạt</value>
+  </data>
+  <data name="Admin_Action_Deactivate" xml:space="preserve">
+    <value>Ngừng hoạt động</value>
+  </data>
+  <data name="Admin_Confirm_Title" xml:space="preserve">
+    <value>Xác nhận thao tác</value>
+  </data>
 </root>
