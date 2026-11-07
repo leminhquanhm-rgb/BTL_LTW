@@ -1,8 +1,8 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Services;
 using WebsiteBanMyPham.ViewModels.Api;
 
@@ -25,16 +25,6 @@ namespace WebsiteBanMyPham.Controllers.Api
             _localizer = localizer;
         }
 
-        private int? LayMaTaiKhoanHienTai()
-        {
-            var maTKStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (int.TryParse(maTKStr, out int maTK))
-            {
-                return maTK;
-            }
-            return null;
-        }
-
         /// <summary>
         /// Lấy toàn bộ các dòng sản phẩm trong giỏ hàng của khách hàng hiện tại
         /// </summary>
@@ -44,7 +34,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetGioHang()
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -86,12 +76,12 @@ namespace WebsiteBanMyPham.Controllers.Api
         /// Lấy tổng số lượng sản phẩm trong giỏ hàng để cập nhật badge header
         /// </summary>
         [HttpGet("so-luong")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SoLuongGioHangDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetSoLuong()
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -104,7 +94,7 @@ namespace WebsiteBanMyPham.Controllers.Api
             }
 
             int soLuong = await _gioHangService.DemSoLuongAsync(maTK.Value);
-            return Ok(new { tongSoLuong = soLuong });
+            return Ok(new SoLuongGioHangDto { TongSoLuong = soLuong });
         }
 
         /// <summary>
@@ -118,7 +108,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetItem(int maGH)
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -175,7 +165,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> ThemVaoGio([FromBody] ThemGioHangRequestDto request)
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -262,7 +252,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CapNhatSoLuong(int maGH, [FromBody] CapNhatGioHangRequestDto request)
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -339,7 +329,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> XoaDongGioHang(int maGH)
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails

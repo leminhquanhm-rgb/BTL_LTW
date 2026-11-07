@@ -17,6 +17,12 @@ namespace WebsiteBanMyPham.Services
             int maSP, int soLuong);
 
         /// <summary>
+        /// Kiểm tra quyền sở hữu và tính tổng tiền hàng các dòng giỏ hàng được chọn phục vụ API khuyến mãi.
+        /// </summary>
+        Task<(bool HopLe, int StatusCode, string? ErrorTitle, string? ErrorDetail, decimal TongTienHang)> KiemTraNguonGioHangChoKhuyenMaiAsync(
+            int maTK, List<int> maGHDaChon);
+
+        /// <summary>
         /// Kiểm tra phương thức thanh toán có hợp lệ và được phép sử dụng hay không, trả kèm tên phương thức (TenPT).
         /// </summary>
         Task<(bool HopLe, string? ErrorMessage, string? TenPT)> KiemTraPhuongThucThanhToanAsync(int maPT);

@@ -8,6 +8,9 @@ using WebsiteBanMyPham.ViewModels.Api;
 
 namespace WebsiteBanMyPham.Controllers.Api
 {
+    /// <summary>
+    /// API Quản lý Đơn hàng cho Khách hàng
+    /// </summary>
     [ApiController]
     [Route("api/v1/don-hang")]
     [Authorize(Roles = VaiTroConstant.KhachHang)]
@@ -31,7 +34,12 @@ namespace WebsiteBanMyPham.Controllers.Api
         /// <summary>
         /// Lấy danh sách đơn hàng của khách hàng (có lọc trạng thái, phân trang).
         /// </summary>
+        /// <param name="trangThai">Trạng thái đơn hàng cần lọc</param>
+        /// <param name="pageIndex">Trang hiện tại (>= 1, mặc định 1)</param>
+        /// <param name="pageSize">Số đơn hàng mỗi trang (1 - 50, mặc định 10)</param>
         [HttpGet]
+        [ProducesResponseType(typeof(DonHangKhachListDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> LayDanhSach(
             [FromQuery] string? trangThai,
             [FromQuery] int pageIndex = 1,
@@ -40,7 +48,13 @@ namespace WebsiteBanMyPham.Controllers.Api
             var maTK = User.LayMaTK();
             if (!maTK.HasValue || maTK.Value <= 0)
             {
-                return Unauthorized();
+                return Unauthorized(new ProblemDetails
+                {
+                    Status = StatusCodes.Status401Unauthorized,
+                    Title = _localizer["Api_Error_UnauthorizedTitle"].Value,
+                    Detail = _localizer["Api_Error_UnauthorizedDetail"].Value,
+                    Instance = HttpContext.Request.Path
+                });
             }
 
             // Xử lý phân trang giống SanPhamApiController (pageIndex < 1 gán 1, pageSize Math.Clamp 1-50)
@@ -88,13 +102,23 @@ namespace WebsiteBanMyPham.Controllers.Api
         /// <summary>
         /// Lấy chi tiết đơn hàng của khách hàng (lịch sử không lộ thông tin Admin).
         /// </summary>
+        /// <param name="maDH">Mã đơn hàng</param>
         [HttpGet("{maDH:int}")]
+        [ProducesResponseType(typeof(DonHangKhachChiTietDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LayChiTiet(int maDH)
         {
             var maTK = User.LayMaTK();
             if (!maTK.HasValue || maTK.Value <= 0)
             {
-                return Unauthorized();
+                return Unauthorized(new ProblemDetails
+                {
+                    Status = StatusCodes.Status401Unauthorized,
+                    Title = _localizer["Api_Error_UnauthorizedTitle"].Value,
+                    Detail = _localizer["Api_Error_UnauthorizedDetail"].Value,
+                    Instance = HttpContext.Request.Path
+                });
             }
 
             var donHang = await _donHangService.LayChiTietDonHangKhachAsync(maTK.Value, maDH);
@@ -104,7 +128,8 @@ namespace WebsiteBanMyPham.Controllers.Api
                 {
                     Status = StatusCodes.Status404NotFound,
                     Title = _localizer["Api_Error_NotFoundTitle"].Value,
-                    Detail = _localizer["Msg_Order_NotFound"].Value
+                    Detail = _localizer["Msg_Order_NotFound"].Value,
+                    Instance = HttpContext.Request.Path
                 });
             }
 
@@ -165,14 +190,27 @@ namespace WebsiteBanMyPham.Controllers.Api
         /// <summary>
         /// Hủy đơn hàng đang ở trạng thái Chờ xác nhận.
         /// </summary>
+        /// <param name="maDH">Mã đơn hàng cần hủy</param>
         [HttpPost("{maDH:int}/huy")]
         [ValidateAntiForgeryToken]
+        [ProducesResponseType(typeof(HuyDonHangResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> HuyDon(int maDH)
         {
             var maTK = User.LayMaTK();
             if (!maTK.HasValue || maTK.Value <= 0)
             {
-                return Unauthorized();
+                return Unauthorized(new ProblemDetails
+                {
+                    Status = StatusCodes.Status401Unauthorized,
+                    Title = _localizer["Api_Error_UnauthorizedTitle"].Value,
+                    Detail = _localizer["Api_Error_UnauthorizedDetail"].Value,
+                    Instance = HttpContext.Request.Path
+                });
             }
 
             var result = await _donHangService.HuyDonAsync(maTK.Value, maDH);
@@ -192,7 +230,8 @@ namespace WebsiteBanMyPham.Controllers.Api
                 {
                     Status = StatusCodes.Status404NotFound,
                     Title = _localizer["Api_Error_NotFoundTitle"].Value,
-                    Detail = _localizer["Msg_Order_NotFound"].Value
+                    Detail = _localizer["Msg_Order_NotFound"].Value,
+                    Instance = HttpContext.Request.Path
                 });
             }
 
@@ -202,7 +241,8 @@ namespace WebsiteBanMyPham.Controllers.Api
                 {
                     Status = StatusCodes.Status409Conflict,
                     Title = _localizer["Api_Error_ConflictTitle"].Value,
-                    Detail = _localizer["Msg_Order_CannotCancel"].Value
+                    Detail = _localizer["Msg_Order_CannotCancel"].Value,
+                    Instance = HttpContext.Request.Path
                 });
             }
 
@@ -212,7 +252,8 @@ namespace WebsiteBanMyPham.Controllers.Api
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Title = _localizer["Api_Error_InternalServerErrorTitle"].Value,
-                    Detail = _localizer["Msg_Order_CancelGeneralError"].Value
+                    Detail = _localizer["Msg_Order_CancelGeneralError"].Value,
+                    Instance = HttpContext.Request.Path
                 });
             }
 
@@ -220,9 +261,9 @@ namespace WebsiteBanMyPham.Controllers.Api
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = _localizer["Api_Error_BadRequestTitle"].Value,
-                Detail = result.ErrorMessage ?? _localizer["Common_Error"].Value
+                Detail = result.ErrorMessage ?? _localizer["Common_Error"].Value,
+                Instance = HttpContext.Request.Path
             });
         }
     }
 }
-

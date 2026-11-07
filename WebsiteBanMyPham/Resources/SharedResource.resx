@@ -1543,4 +1543,37 @@
   <data name="Complaint_TargetInfo" xml:space="preserve">
     <value>Thông tin đối tượng khiếu nại</value>
   </data>
+  <data name="Api_Admin_Category_Created" xml:space="preserve">
+    <value>Tạo danh mục thành công.</value>
+  </data>
+  <data name="Api_Admin_Category_NotFound" xml:space="preserve">
+    <value>Không tìm thấy danh mục yêu cầu.</value>
+  </data>
+  <data name="Api_Admin_Category_DuplicateName" xml:space="preserve">
+    <value>Tên danh mục '{0}' đã tồn tại trong hệ thống.</value>
+  </data>
+  <data name="Api_Admin_Category_HasProducts" xml:space="preserve">
+    <value>Danh mục đang có {0} sản phẩm liên kết, không thể xóa. Vui lòng chuyển trạng thái sang ngừng hoạt động.</value>
+  </data>
+  <data name="Api_Admin_Brand_Created" xml:space="preserve">
+    <value>Tạo thương hiệu thành công.</value>
+  </data>
+  <data name="Api_Admin_Brand_NotFound" xml:space="preserve">
+    <value>Không tìm thấy thương hiệu yêu cầu.</value>
+  </data>
+  <data name="Api_Admin_Brand_DuplicateName" xml:space="preserve">
+    <value>Tên thương hiệu '{0}' đã tồn tại trong hệ thống.</value>
+  </data>
+  <data name="Api_Admin_Brand_HasProducts" xml:space="preserve">
+    <value>Thương hiệu đang có {0} sản phẩm liên kết, không thể xóa. Vui lòng chuyển trạng thái sang ngừng hoạt động.</value>
+  </data>
+  <data name="Label_TenDM" xml:space="preserve">
+    <value>Tên danh mục</value>
+  </data>
+  <data name="Label_TenTH" xml:space="preserve">
+    <value>Tên thương hiệu</value>
+  </data>
+  <data name="Label_MoTa" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
 </root>

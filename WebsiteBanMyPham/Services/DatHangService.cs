@@ -255,6 +255,43 @@ namespace WebsiteBanMyPham.Services
             return (true, StatusCodes.Status200OK, null, null, tongTienHang);
         }
 
+        public async Task<(bool HopLe, int StatusCode, string? ErrorTitle, string? ErrorDetail, decimal TongTienHang)> KiemTraNguonGioHangChoKhuyenMaiAsync(
+            int maTK, List<int> maGHDaChon)
+        {
+            var distinctIds = maGHDaChon.Distinct().ToList();
+            if (distinctIds.Count == 0)
+            {
+                return (false, StatusCodes.Status400BadRequest,
+                    _localizer["Api_Error_InvalidPromoRequest"].Value,
+                    _localizer["Api_Error_EmptyCartSelection"].Value, 0);
+            }
+
+            if (distinctIds.Count > 100)
+            {
+                return (false, StatusCodes.Status400BadRequest,
+                    _localizer["Api_Error_InvalidPromoRequest"].Value,
+                    _localizer["Validation_MaxLength", 100].Value, 0);
+            }
+
+            var items = await _context.GioHang
+                .AsNoTracking()
+                .Where(g => g.MaTK == maTK && distinctIds.Contains(g.MaGH))
+                .Include(g => g.MaSPNavigation)
+                .ToListAsync();
+
+            if (items.Count != distinctIds.Count)
+            {
+                return (false, StatusCodes.Status404NotFound,
+                    _localizer["Api_Error_NotFoundTitle"].Value,
+                    _localizer["Api_Error_CartItemNotFound"].Value, 0);
+            }
+
+            var hopLeItems = items.Where(i => i.MaSPNavigation.TrangThai && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
+            decimal tongTienHang = hopLeItems.Sum(i => i.MaSPNavigation.Gia * i.SoLuong);
+
+            return (true, StatusCodes.Status200OK, null, null, tongTienHang);
+        }
+
         public async Task<(bool HopLe, string? ErrorMessage, string? TenPT)> KiemTraPhuongThucThanhToanAsync(int maPT)
         {
             var pt = await _context.PhuongThucThanhToan.AsNoTracking().FirstOrDefaultAsync(p => p.MaPT == maPT);

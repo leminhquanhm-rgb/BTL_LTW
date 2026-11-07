@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Scalar.AspNetCore;
 using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.Services;
@@ -33,6 +34,34 @@ namespace WebsiteBanMyPham
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
                         factory.Create(typeof(SharedResource));
                 });
+
+            // Cấu hình OpenAPI (.NET 10) tài liệu hóa các endpoint Web API (loại bỏ MVC controller)
+            builder.Services.AddOpenApi(options =>
+            {
+                options.AddDocumentTransformer((document, context, cancellationToken) =>
+                {
+                    document.Info = new()
+                    {
+                        Title = "Serene Cosmetics Web API",
+                        Version = "v1",
+                        Description = "Tài liệu RESTful Web API cho Website Quản lý và Kinh doanh Mỹ phẩm Trực tuyến Serene Cosmetics (.NET 10).\n\n" +
+                                      "LƯU Ý BẢO MẬT: Mọi thao tác ghi (POST, PUT, DELETE) yêu cầu Cookie đăng nhập (xác thực phiên) và Header RequestVerificationToken (chống giả mạo CSRF)."
+                    };
+
+                    // Chỉ đưa các controller trong Controllers/Api/ vào tài liệu (loại MVC controller)
+                    var nonApiPaths = document.Paths
+                        .Where(p => !p.Key.StartsWith("/api/", StringComparison.OrdinalIgnoreCase))
+                        .Select(p => p.Key)
+                        .ToList();
+
+                    foreach (var path in nonApiPaths)
+                    {
+                        document.Paths.Remove(path);
+                    }
+
+                    return Task.CompletedTask;
+                });
+            });
 
             builder.Services.AddDbContext<WebsiteBanMyPhamContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -117,11 +146,23 @@ namespace WebsiteBanMyPham
             builder.Services.AddScoped<IDatHangService, DatHangService>();
             builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
             builder.Services.AddScoped<IKhieuNaiService, KhieuNaiService>();
+            builder.Services.AddScoped<IDanhMucService, DanhMucService>();
+            builder.Services.AddScoped<IThuongHieuService, ThuongHieuService>();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
+            {
+                // Bật tài liệu OpenAPI và giao diện Scalar chỉ trong môi trường Development
+                app.MapOpenApi();
+                app.MapScalarApiReference(options =>
+                {
+                    options.WithTitle("Serene Cosmetics API Reference");
+                    options.WithTheme(ScalarTheme.Moon);
+                });
+            }
+            else
             {
                 app.UseExceptionHandler("/TrangChu/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

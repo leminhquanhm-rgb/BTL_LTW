@@ -1,10 +1,8 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
-using WebsiteBanMyPham.Models;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Services;
 using WebsiteBanMyPham.ViewModels.Api;
 
@@ -17,29 +15,16 @@ namespace WebsiteBanMyPham.Controllers.Api
     {
         private readonly IKhuyenMaiService _khuyenMaiService;
         private readonly IDatHangService _datHangService;
-        private readonly WebsiteBanMyPhamContext _context;
         private readonly IStringLocalizer<SharedResource> _localizer;
 
         public KhuyenMaiApiController(
             IKhuyenMaiService khuyenMaiService,
             IDatHangService datHangService,
-            WebsiteBanMyPhamContext context,
             IStringLocalizer<SharedResource> localizer)
         {
             _khuyenMaiService = khuyenMaiService;
             _datHangService = datHangService;
-            _context = context;
             _localizer = localizer;
-        }
-
-        private int? LayMaTaiKhoanHienTai()
-        {
-            var maTKStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (int.TryParse(maTKStr, out int maTK))
-            {
-                return maTK;
-            }
-            return null;
         }
 
         /// <summary>
@@ -70,7 +55,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         }
 
         /// <summary>
-        /// Kiểm tra tính hợp lệ và tính số tiền giảm của mã khuyến mãi cho các dòng giỏ được chọn
+        /// Kiểm tra tính hợp lệ và tính số tiền giảm của mã khuyến mãi cho các dòng giỏ được chọn hoặc nguồn Mua ngay
         /// </summary>
         [HttpPost("kiem-tra")]
         [Authorize(Roles = VaiTroConstant.KhachHang)]
@@ -81,7 +66,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> KiemTraKhuyenMai([FromBody] KiemTraKhuyenMaiRequestDto request)
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -134,54 +119,21 @@ namespace WebsiteBanMyPham.Controllers.Api
 
             if (hasCart)
             {
-                var distinctIds = request.MaGHDaChon!.Distinct().ToList();
-                if (distinctIds.Count == 0)
+                var cartCheck = await _datHangService.KiemTraNguonGioHangChoKhuyenMaiAsync(maTK.Value, request.MaGHDaChon!);
+                if (!cartCheck.HopLe)
                 {
-                    return BadRequest(new ProblemDetails
+                    return StatusCode(cartCheck.StatusCode, new ProblemDetails
                     {
-                        Status = StatusCodes.Status400BadRequest,
-                        Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
-                        Detail = _localizer["Api_Error_EmptyCartSelection"].Value,
+                        Status = cartCheck.StatusCode,
+                        Title = cartCheck.ErrorTitle,
+                        Detail = cartCheck.ErrorDetail,
                         Instance = HttpContext.Request.Path
                     });
                 }
-
-                if (distinctIds.Count > 100)
-                {
-                    return BadRequest(new ProblemDetails
-                    {
-                        Status = StatusCodes.Status400BadRequest,
-                        Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
-                        Detail = _localizer["Validation_MaxLength", 100].Value,
-                        Instance = HttpContext.Request.Path
-                    });
-                }
-
-                // Kiểm tra quyền sở hữu tất cả các dòng giỏ được chọn
-                var items = await _context.GioHang
-                    .AsNoTracking()
-                    .Where(g => g.MaTK == maTK.Value && distinctIds.Contains(g.MaGH))
-                    .Include(g => g.MaSPNavigation)
-                    .ToListAsync();
-
-                if (items.Count != distinctIds.Count)
-                {
-                    return NotFound(new ProblemDetails
-                    {
-                        Status = StatusCodes.Status404NotFound,
-                        Title = _localizer["Api_Error_NotFoundTitle"].Value,
-                        Detail = _localizer["Api_Error_CartItemNotFound"].Value,
-                        Instance = HttpContext.Request.Path
-                    });
-                }
-
-                // Tự động tính tổng tiền hàng từ các dòng giỏ hợp lệ thuộc khách hàng
-                var hopLeItems = items.Where(i => i.MaSPNavigation.TrangThai && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
-                tongTienHang = hopLeItems.Sum(i => i.MaSPNavigation.Gia * i.SoLuong);
+                tongTienHang = cartCheck.TongTienHang;
             }
             else
             {
-                // Toàn bộ logic nguồn Mua ngay xử lý trong Service theo Điều chỉnh 5
                 var buyNowCheck = await _datHangService.KiemTraNguonMuaNgayChoKhuyenMaiAsync(request.MaSP!.Value, request.SoLuong!.Value);
                 if (!buyNowCheck.HopLe)
                 {
@@ -224,7 +176,7 @@ namespace WebsiteBanMyPham.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LayDanhSachKhaDung([FromQuery] List<int>? maGH = null)
         {
-            var maTK = LayMaTaiKhoanHienTai();
+            var maTK = User.LayMaTK();
             if (!maTK.HasValue)
             {
                 return Unauthorized(new ProblemDetails
@@ -241,39 +193,19 @@ namespace WebsiteBanMyPham.Controllers.Api
                 return Ok(new List<KhuyenMaiDto>());
             }
 
-            var distinctIds = maGH.Distinct().ToList();
-            if (distinctIds.Count > 100)
+            var cartCheck = await _datHangService.KiemTraNguonGioHangChoKhuyenMaiAsync(maTK.Value, maGH);
+            if (!cartCheck.HopLe)
             {
-                return BadRequest(new ProblemDetails
+                return StatusCode(cartCheck.StatusCode, new ProblemDetails
                 {
-                    Status = StatusCodes.Status400BadRequest,
-                    Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
-                    Detail = _localizer["Validation_MaxLength", 100].Value,
+                    Status = cartCheck.StatusCode,
+                    Title = cartCheck.ErrorTitle,
+                    Detail = cartCheck.ErrorDetail,
                     Instance = HttpContext.Request.Path
                 });
             }
 
-            var items = await _context.GioHang
-                .AsNoTracking()
-                .Where(g => g.MaTK == maTK.Value && distinctIds.Contains(g.MaGH))
-                .Include(g => g.MaSPNavigation)
-                .ToListAsync();
-
-            if (items.Count != distinctIds.Count)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = StatusCodes.Status404NotFound,
-                    Title = _localizer["Api_Error_NotFoundTitle"].Value,
-                    Detail = _localizer["Api_Error_CartItemNotFound"].Value,
-                    Instance = HttpContext.Request.Path
-                });
-            }
-
-            var hopLeItems = items.Where(i => i.MaSPNavigation.TrangThai && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
-            decimal tongTienHang = hopLeItems.Sum(i => i.MaSPNavigation.Gia * i.SoLuong);
-
-            var list = await _khuyenMaiService.LayDanhSachMaKhaDungAsync(tongTienHang);
+            var list = await _khuyenMaiService.LayDanhSachMaKhaDungAsync(cartCheck.TongTienHang);
             var dtos = list.Select(k => new KhuyenMaiDto
             {
                 MaKM = k.MaKM,

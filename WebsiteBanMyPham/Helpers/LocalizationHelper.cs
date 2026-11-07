@@ -84,6 +84,12 @@ namespace WebsiteBanMyPham.Helpers
 
         public string TenDanhMuc(int maDM, string tenGoc)
         {
+            var currentCulture = CultureInfo.CurrentUICulture.Name;
+            if (!currentCulture.StartsWith("en", StringIgnoreCase))
+            {
+                return tenGoc;
+            }
+
             var localized = _localizer[$"DanhMuc_{maDM}"];
             if (localized.ResourceNotFound || string.IsNullOrWhiteSpace(localized.Value))
             {
