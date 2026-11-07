@@ -19,9 +19,9 @@
             </div>
             <h3 class="font-bold text-charcoal text-base">@L["Product_NoResults"]</h3>
             <p class="text-xs text-muted max-w-sm mx-auto">
-                Vui lòng thử tìm kiếm bằng từ khóa khác hoặc xóa bớt các tiêu chí lọc để xem thêm sản phẩm.
+                @L["Product_NoResultsHint"]
             </p>
-            <button type="button" onclick="document.getElementById('catalog-filter-form').reset(); onCatalogFilterChange('@L["Toast_NetworkError"]')"
+            <button type="button" onclick="document.getElementById('catalog-filter-form').reset(); onCatalogFilterChange()"
                     class="mt-2 px-4 py-2 bg-primary text-white text-xs font-bold rounded-btn transition shadow-sm inline-flex items-center gap-1.5">
                 <i class="ph ph-arrow-counter-clockwise"></i>
                 <span>@L["Product_ResetFilter"]</span>
@@ -57,7 +57,7 @@
                 @if (pIndex > 1)
                 {
                     <a href="@MakeUrl(pIndex - 1)"
-                       onclick="onCatalogPaginationClick(event, this, '@L["Toast_NetworkError"]')"
+                       onclick="onCatalogPaginationClick(event, this)"
                        class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition flex items-center gap-1">
                         <i class="ph ph-caret-left"></i>
                         <span>@L["Pagination_Previous"]</span>
@@ -84,7 +84,7 @@
                         else
                         {
                             <a href="@MakeUrl(i)"
-                               onclick="onCatalogPaginationClick(event, this, '@L["Toast_NetworkError"]')"
+                               onclick="onCatalogPaginationClick(event, this)"
                                class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition">
                                 @i
                             </a>
@@ -99,7 +99,7 @@
                 @if (pIndex < tPages)
                 {
                     <a href="@MakeUrl(pIndex + 1)"
-                       onclick="onCatalogPaginationClick(event, this, '@L["Toast_NetworkError"]')"
+                       onclick="onCatalogPaginationClick(event, this)"
                        class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-pastel/60 transition flex items-center gap-1">
                         <span>@L["Pagination_Next"]</span>
                         <i class="ph ph-caret-right"></i>

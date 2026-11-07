@@ -1002,4 +1002,147 @@
   <data name="Toast_NetworkError" xml:space="preserve">
     <value>Unable to load product data. Please try again later.</value>
   </data>
+
+  <!-- Bước 5C: Giỏ hàng và Web API AJAX -->
+  <data name="Api_Error_UnauthorizedTitle" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
+  <data name="Api_Error_UnauthorizedDetail" xml:space="preserve">
+    <value>You must sign in to perform this action.</value>
+  </data>
+  <data name="Api_Error_ForbiddenTitle" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="Api_Error_ForbiddenDetail" xml:space="preserve">
+    <value>You do not have permission to perform this action.</value>
+  </data>
+  <data name="Api_Error_AdminCannotUseCart" xml:space="preserve">
+    <value>Administrators cannot use cart features</value>
+  </data>
+  <data name="Api_Error_CartItemNotFound" xml:space="preserve">
+    <value>Cart item not found or does not belong to you.</value>
+  </data>
+  <data name="Api_Error_CartQuantityInvalid" xml:space="preserve">
+    <value>Product quantity must be between 1 and 99.</value>
+  </data>
+  <data name="Api_Error_SessionExpired" xml:space="preserve">
+    <value>Your session has expired. Please reload the page.</value>
+  </data>
+  <data name="Api_Error_ReloadPage" xml:space="preserve">
+    <value>Reload page</value>
+  </data>
+  <data name="Api_Error_InvalidPromoRequest" xml:space="preserve">
+    <value>Invalid coupon request.</value>
+  </data>
+  <data name="Api_Error_EmptyCartSelection" xml:space="preserve">
+    <value>Please select at least one item from your cart.</value>
+  </data>
+  <data name="Cart_PageTitle" xml:space="preserve">
+    <value>Your Shopping Cart</value>
+  </data>
+  <data name="Cart_PageSubtitle" xml:space="preserve">
+    <value>Select items to purchase, adjust quantities, and apply discount codes</value>
+  </data>
+  <data name="Cart_ContinueShopping" xml:space="preserve">
+    <value>+ Continue shopping</value>
+  </data>
+  <data name="Cart_CheckAll" xml:space="preserve">
+    <value>Select all items in cart</value>
+  </data>
+  <data name="Cart_TableHeader_Action" xml:space="preserve">
+    <value>Quantity / Total / Remove</value>
+  </data>
+  <data name="Cart_EmptyTitle" xml:space="preserve">
+    <value>Your shopping cart is empty</value>
+  </data>
+  <data name="Cart_EmptySubtitle" xml:space="preserve">
+    <value>Browse our cosmetics catalog and add your favorites to cart!</value>
+  </data>
+  <data name="Cart_SummaryTitle" xml:space="preserve">
+    <value>Cart Summary &amp; Discounts</value>
+  </data>
+  <data name="Cart_PromoSectionTitle" xml:space="preserve">
+    <value>Promo code (Enter or Select)</value>
+  </data>
+  <data name="Cart_RemovePromo" xml:space="preserve">
+    <value>Remove coupon</value>
+  </data>
+  <data name="Cart_PromoPlaceholder" xml:space="preserve">
+    <value>Enter promo code</value>
+  </data>
+  <data name="Cart_ApplyPromo" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Cart_AvailablePromosTitle" xml:space="preserve">
+    <value>Or select an available voucher below:</value>
+  </data>
+  <data name="Cart_SelectedCount" xml:space="preserve">
+    <value>Selected items:</value>
+  </data>
+  <data name="Cart_Subtotal" xml:space="preserve">
+    <value>Subtotal:</value>
+  </data>
+  <data name="Cart_Discount" xml:space="preserve">
+    <value>Promo discount:</value>
+  </data>
+  <data name="Cart_EstimatedTotal" xml:space="preserve">
+    <value>Estimated total:</value>
+  </data>
+  <data name="Cart_ProceedToCheckout" xml:space="preserve">
+    <value>Proceed to checkout</value>
+  </data>
+  <data name="Cart_CheckoutDisabledNote" xml:space="preserve">
+    <value>Checkout will be enabled in the next step</value>
+  </data>
+  <data name="Cart_AddedSuccess" xml:space="preserve">
+    <value>Product added to cart successfully!</value>
+  </data>
+  <data name="Cart_UpdatedSuccess" xml:space="preserve">
+    <value>Cart quantity updated successfully!</value>
+  </data>
+  <data name="Cart_DeletedSuccess" xml:space="preserve">
+    <value>Item removed from cart successfully!</value>
+  </data>
+  <data name="Cart_ConfirmDelete" xml:space="preserve">
+    <value>Are you sure you want to remove this item from your cart?</value>
+  </data>
+  <data name="Cart_ItemOutOfStockWarning" xml:space="preserve">
+    <value>Out of stock</value>
+  </data>
+  <data name="Cart_ItemStoppedWarning" xml:space="preserve">
+    <value>Discontinued</value>
+  </data>
+  <data name="Cart_ItemExceedWarning" xml:space="preserve">
+    <value>Exceeds stock (Only {0} left)</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Product_RelatedSubtitle" xml:space="preserve">
+    <value>Suggested products to complement your skincare routine</value>
+  </data>
+  <data name="Product_NoResultsHint" xml:space="preserve">
+    <value>Please try searching with different keywords or clear some filters to see more products.</value>
+  </data>
+  <data name="Product_NoRelatedProducts" xml:space="preserve">
+    <value>There are no other related products in this category.</value>
+  </data>
+  <data name="Payment_Method_COD" xml:space="preserve">
+    <value>Cash on delivery (COD)</value>
+  </data>
+  <data name="Payment_Method_Online" xml:space="preserve">
+    <value>Online payment</value>
+  </data>
+  <data name="Status_Payment_ChoHoan" xml:space="preserve">
+    <value>Refund pending</value>
+  </data>
+  <data name="Status_Payment_DaHoan" xml:space="preserve">
+    <value>Refunded</value>
+  </data>
+  <data name="Cart_MinOrder" xml:space="preserve">
+    <value>Min order:</value>
+  </data>
+  <data name="Cart_UsesRemaining" xml:space="preserve">
+    <value>{0} uses left</value>
+  </data>
 </root>

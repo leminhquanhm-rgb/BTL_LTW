@@ -64,11 +64,13 @@
             }
         </div>
 
-        <!-- Hai nút hành động: Thêm giỏ và Mua ngay (ở 5B hiển thị giao diện, vô hiệu khi hết hàng) -->
+        <!-- Hai nút hành động: Thêm giỏ và Mua ngay -->
         <div class="grid grid-cols-2 gap-2 text-xs">
             @if (Model.ConHang)
             {
                 <button type="button"
+                        onclick="themVaoGio(@Model.MaSP, 1, this)"
+                        data-ten-sp="@Model.TenSP"
                         class="py-2 bg-cream hover:bg-pastel text-charcoal font-bold rounded-btn border border-borderLight transition flex items-center justify-center gap-1 shadow-sm">
                     <i class="ph-bold ph-shopping-bag"></i>
                     <span>@L["Product_AddToCart"]</span>

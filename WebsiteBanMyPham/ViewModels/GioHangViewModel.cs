@@ -7,6 +7,7 @@ namespace WebsiteBanMyPham.ViewModels
         public string TenSP { get; set; } = null!;
         public string? DuongDanAnh { get; set; }
         public decimal GiaHienTai { get; set; }
+        public decimal? GiaGoc { get; set; }
         public int SoLuong { get; set; }
         public decimal ThanhTien => GiaHienTai * SoLuong;
         public int SoLuongTon { get; set; }

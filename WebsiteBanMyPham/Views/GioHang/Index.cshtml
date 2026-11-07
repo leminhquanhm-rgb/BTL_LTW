@@ -1,0 +1,564 @@
+@model WebsiteBanMyPham.ViewModels.GioHangViewModel
+@using System.Globalization
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+@{
+    ViewData["Title"] = L["Cart_PageTitle"];
+    var availablePromos = ViewBag.AvailablePromos as List<WebsiteBanMyPham.ViewModels.KhuyenMaiItemViewModel> ?? new();
+    var currentCulture = CultureInfo.CurrentUICulture.Name;
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <!-- Tiêu đề trang giỏ hàng -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-borderLight pb-4">
+        <div>
+            <h1 class="text-2xl font-bold font-serif text-charcoal">@L["Cart_PageTitle"]</h1>
+            <p class="text-xs text-muted mt-1">@L["Cart_PageSubtitle"]</p>
+        </div>
+        <a asp-controller="SanPham" asp-action="Index"
+           class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-surface border border-borderLight rounded-btn text-xs font-bold text-primary hover:bg-pastel/40 transition shadow-sm self-start sm:self-auto">
+            <span>@L["Cart_ContinueShopping"]</span>
+        </a>
+    </div>
+
+    @if (Model.Items.Count == 0)
+    {
+        <!-- Trạng thái giỏ hàng trống -->
+        <div id="cart-empty-view" class="bg-surface rounded-card border border-borderLight p-12 text-center shadow-soft space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-full bg-cream flex items-center justify-center text-3xl text-muted">
+                <i class="ph-bold ph-shopping-bag-open"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-bold text-charcoal">@L["Cart_EmptyTitle"]</h3>
+                <p class="text-xs text-muted max-w-sm mx-auto">@L["Cart_EmptySubtitle"]</p>
+            </div>
+            <div>
+                <a asp-controller="SanPham" asp-action="Index"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-soft">
+                    <span>@L["Cart_ContinueShopping"]</span>
+                    <i class="ph-bold ph-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Bố cục 2 cột: Danh sách sản phẩm (7 cột) & Tóm tắt + Voucher (5 cột) -->
+        <div id="cart-main-grid"
+             class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+             data-confirm-delete="@L["Cart_ConfirmDelete"]"
+             data-validation-required="@L["Validation_Required"]"
+             data-empty-selection="@L["Api_Error_EmptyCartSelection"]"
+             data-promo-not-found="@L["Msg_Promo_NotFound"]"
+             data-select-text="@L["Common_Select"]"
+             data-min-order="@L["Cart_MinOrder"]"
+             data-uses-remaining="@L["Cart_UsesRemaining"]">
+            <!-- Cột trái: Bảng dòng sản phẩm -->
+            <div class="lg:col-span-7 bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+                <div class="p-4 bg-cream border-b border-borderLight flex items-center justify-between text-xs font-bold text-charcoal">
+                    <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                        <input type="checkbox" id="cart-check-all" onchange="onToggleCheckAll(this)"
+                               class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer" />
+                        <span>@L["Cart_CheckAll"]</span>
+                    </label>
+                    <span class="text-muted">@L["Cart_TableHeader_Action"]</span>
+                </div>
+
+                <div id="cart-items-container" class="divide-y divide-borderLight">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div id="cart-row-@item.MaGH" data-magh="@item.MaGH" data-gia="@item.GiaHienTai"
+                             class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-cream/30 transition @(!item.HopLeDeDat ? "bg-cream/40" : "")">
+                            <!-- Checkbox, Ảnh & Tên sản phẩm -->
+                            <div class="flex items-start sm:items-center gap-3.5">
+                                <input type="checkbox"
+                                       class="cart-item-checkbox w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer mt-1 sm:mt-0 shrink-0"
+                                       data-magh="@item.MaGH"
+                                       onchange="onCartItemCheckChange()"
+                                       @(item.HopLeDeDat ? "checked" : "disabled") />
+
+                                <a asp-controller="ChiTietSanPham" asp-action="Index" asp-route-id="@item.MaSP" class="shrink-0 block">
+                                    <img src="@(string.IsNullOrEmpty(item.DuongDanAnh) ? "/images/placeholder.svg" : item.DuongDanAnh)"
+                                         alt="@item.TenSP"
+                                         onerror="this.src='/images/placeholder.svg'"
+                                         class="w-14 h-14 rounded-btn object-cover border border-borderLight" />
+                                </a>
+
+                                <div class="space-y-1">
+                                    <h4 class="text-xs sm:text-sm font-bold text-charcoal line-clamp-2 hover:text-primary transition leading-snug">
+                                        <a asp-controller="ChiTietSanPham" asp-action="Index" asp-route-id="@item.MaSP">@item.TenSP</a>
+                                    </h4>
+
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="font-bold text-primary">@LocHelper.FormatCurrency(item.GiaHienTai)</span>
+                                        @if (item.GiaGoc.HasValue && item.GiaGoc.Value > item.GiaHienTai)
+                                        {
+                                            <span class="text-muted line-through text-[11px]">@LocHelper.FormatCurrency(item.GiaGoc.Value)</span>
+                                        }
+                                    </div>
+
+                                    @if (!item.HopLeDeDat && !string.IsNullOrEmpty(item.ThongBaoTrangThai))
+                                    {
+                                        <div class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-statusDanger/10 text-statusDanger">
+                                            @item.ThongBaoTrangThai
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Bộ tăng giảm số lượng, Thành tiền & Nút xóa -->
+                            <div class="flex items-center justify-between sm:justify-end gap-4 pl-7 sm:pl-0">
+                                <div class="inline-flex items-center border border-borderLight rounded-btn bg-surface">
+                                    <button type="button"
+                                            onclick="onChangeQuantityBtn(@item.MaGH, -1)"
+                                            class="cart-btn-qty-minus px-2.5 py-1 text-xs font-bold text-charcoal hover:bg-pastel transition select-none disabled:opacity-40"
+                                            @(item.SoLuong <= 1 ? "disabled" : "")>-</button>
+                                    <input type="number"
+                                           id="cart-qty-input-@item.MaGH"
+                                           value="@item.SoLuong"
+                                           min="1" max="99"
+                                           onchange="onQuantityInputChange(@item.MaGH, this)"
+                                           class="w-12 text-center text-xs font-bold border-x border-borderLight py-1 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                    <button type="button"
+                                            onclick="onChangeQuantityBtn(@item.MaGH, 1)"
+                                            class="cart-btn-qty-plus px-2.5 py-1 text-xs font-bold text-charcoal hover:bg-pastel transition select-none disabled:opacity-40"
+                                            @(item.SoLuong >= 99 ? "disabled" : "")>+</button>
+                                </div>
+
+                                <span id="cart-item-total-@item.MaGH" class="text-xs sm:text-sm font-bold text-charcoal w-24 text-right">
+                                    @LocHelper.FormatCurrency(item.ThanhTien)
+                                </span>
+
+                                <button type="button"
+                                        onclick="onDeleteCartItem(@item.MaGH)"
+                                        class="text-muted hover:text-statusDanger transition p-1"
+                                        title="@L["Common_Delete"]">
+                                    <i class="ph-bold ph-trash text-base"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Cột phải: Khung Tóm tắt & Voucher -->
+            <div class="lg:col-span-5 bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5 sticky top-28">
+                <h3 class="text-base font-bold text-charcoal border-b border-borderLight pb-3">@L["Cart_SummaryTitle"]</h3>
+
+                <!-- Khung Voucher Kép: Vừa nhập mã + Vừa bấm chọn thẻ -->
+                <div class="p-4 rounded-card bg-cream border border-nude/70 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-charcoal flex items-center gap-1.5">
+                            <i class="ph-fill ph-ticket text-primary text-base"></i>
+                            <span>@L["Cart_PromoSectionTitle"]</span>
+                        </span>
+                        <button type="button" id="btn-remove-promo" onclick="onRemovePromoCode()" class="text-[11px] font-semibold text-statusDanger hover:underline hidden">
+                            @L["Cart_RemovePromo"]
+                        </button>
+                    </div>
+
+                    <!-- Ô nhập tay -->
+                    <div class="flex gap-2">
+                        <input id="cart-promo-input" type="text"
+                               placeholder="@L["Cart_PromoPlaceholder"]"
+                               class="flex-1 px-3 py-2 bg-surface border border-borderLight rounded-btn text-xs uppercase font-mono font-bold text-charcoal focus:outline-none focus:border-primary" />
+                        <button type="button" id="btn-apply-promo" onclick="onApplyPromoClick()"
+                                class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shrink-0 disabled:opacity-50">
+                            @L["Cart_ApplyPromo"]
+                        </button>
+                    </div>
+
+                    <!-- Thông báo phản hồi áp mã -->
+                    <p id="cart-promo-feedback" class="text-[11px] font-semibold hidden"></p>
+
+                    <!-- Danh sách thẻ voucher bấm chọn trực tiếp -->
+                    <div class="space-y-2 pt-2 border-t border-borderLight">
+                        <p class="text-[11px] font-bold text-muted uppercase">@L["Cart_AvailablePromosTitle"]</p>
+                        <div id="cart-voucher-cards" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                            @if (availablePromos.Count == 0)
+                            {
+                                <p class="text-xs text-muted italic py-1">@L["Msg_Promo_NotFound"]</p>
+                            }
+                            else
+                            {
+                                @foreach (var promo in availablePromos)
+                                {
+                                    <div class="p-2.5 rounded-btn bg-surface border border-borderLight hover:border-primary transition cursor-pointer flex items-center justify-between gap-2"
+                                         data-code="@promo.Code"
+                                         onclick="onSelectVoucherCard(this)">
+                                        <div class="space-y-0.5">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="px-1.5 py-0.5 rounded bg-pastel text-primary text-[10px] font-bold font-mono">@promo.Code</span>
+                                                <span class="text-xs font-bold text-charcoal">@promo.TenKM</span>
+                                            </div>
+                                            <p class="text-[10px] text-muted">
+                                                Đơn tối thiểu: @LocHelper.FormatCurrency(promo.DonToiThieu)
+                                                @(promo.SoLuotConLai.HasValue ? $" • Còn {promo.SoLuotConLai} lượt" : "")
+                                            </p>
+                                        </div>
+                                        <button type="button" class="px-2.5 py-1 rounded bg-cream hover:bg-pastel text-[11px] font-bold text-primary transition shrink-0">
+                                            @L["Common_Select"]
+                                        </button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chi tiết tiền tạm tính -->
+                <div class="space-y-2.5 text-xs border-b border-borderLight pb-4">
+                    <div class="flex justify-between text-muted">
+                        <span>@L["Cart_SelectedCount"]</span>
+                        <span id="summary-selected-count" class="font-bold text-charcoal">0</span>
+                    </div>
+                    <div class="flex justify-between text-muted">
+                        <span>@L["Cart_Subtotal"]</span>
+                        <span id="summary-subtotal" class="font-bold text-charcoal">0đ</span>
+                    </div>
+                    <div class="flex justify-between text-muted">
+                        <span>@L["Cart_Discount"]</span>
+                        <span id="summary-discount" class="font-bold text-statusSuccess">0đ</span>
+                    </div>
+                    <div class="flex justify-between text-base font-bold text-charcoal pt-2 border-t border-borderLight">
+                        <span>@L["Cart_EstimatedTotal"]</span>
+                        <span id="summary-total" class="text-xl text-primary font-bold">0đ</span>
+                    </div>
+                </div>
+
+                <!-- Nút Tiến hành đặt hàng & Thanh toán (Vô hiệu hóa ở Bước 5C theo yêu cầu) -->
+                <div class="space-y-1.5">
+                    <button type="button" id="btn-proceed-checkout" disabled
+                            class="w-full py-3.5 bg-primary text-white text-sm font-bold rounded-btn opacity-60 cursor-not-allowed flex items-center justify-center gap-2 shadow-soft">
+                        <span>@L["Cart_ProceedToCheckout"]</span>
+                        <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                    <p class="text-[11px] text-center text-muted italic">
+                        @L["Cart_CheckoutDisabledNote"]
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        var cartCulture = "@currentCulture";
+        var appliedPromoCode = "";
+        var appliedDiscountAmount = 0;
+        var qtyDebounceTimers = {};
+
+        function formatCurrencyClient(amount) {
+            amount = Math.max(0, amount || 0);
+            if (cartCulture === "en-US") {
+                return new Intl.NumberFormat("en-US").format(amount) + " VND";
+            }
+            return new Intl.NumberFormat("vi-VN").format(amount) + "đ";
+        }
+
+        function getSelectedCartItemIds() {
+            var checkboxes = document.querySelectorAll(".cart-item-checkbox:checked");
+            var ids = [];
+            checkboxes.forEach(function (cb) {
+                var id = parseInt(cb.getAttribute("data-magh"), 10);
+                if (id) ids.push(id);
+            });
+            return ids;
+        }
+
+        function onToggleCheckAll(inputOrChecked) {
+            var checked = (typeof inputOrChecked === "boolean") ? inputOrChecked : (inputOrChecked && inputOrChecked.checked);
+            var checkboxes = document.querySelectorAll(".cart-item-checkbox:not(:disabled)");
+            checkboxes.forEach(function (cb) {
+                cb.checked = checked;
+            });
+            recalculateCartSummary();
+        }
+
+        function onCartItemCheckChange() {
+            var allCheckboxes = document.querySelectorAll(".cart-item-checkbox:not(:disabled)");
+            var checkedCheckboxes = document.querySelectorAll(".cart-item-checkbox:checked");
+            var checkAll = document.getElementById("cart-check-all");
+            if (checkAll) {
+                checkAll.checked = allCheckboxes.length > 0 && allCheckboxes.length === checkedCheckboxes.length;
+            }
+            recalculateCartSummary();
+        }
+
+        async function recalculateCartSummary() {
+            var selectedIds = getSelectedCartItemIds();
+            var countEl = document.getElementById("summary-selected-count");
+            var subtotalEl = document.getElementById("summary-subtotal");
+            var discountEl = document.getElementById("summary-discount");
+            var totalEl = document.getElementById("summary-total");
+
+            if (countEl) countEl.innerText = selectedIds.length;
+
+            if (selectedIds.length === 0) {
+                if (subtotalEl) subtotalEl.innerText = formatCurrencyClient(0);
+                if (discountEl) discountEl.innerText = formatCurrencyClient(0);
+                if (totalEl) totalEl.innerText = formatCurrencyClient(0);
+                appliedDiscountAmount = 0;
+                setPromoFeedback("", false);
+                refreshAvailablePromos([]);
+                return;
+            }
+
+            // Tính tạm tính phía client trước
+            var subtotal = 0;
+            selectedIds.forEach(function (id) {
+                var row = document.getElementById("cart-row-" + id);
+                if (row) {
+                    var gia = parseFloat(row.getAttribute("data-gia")) || 0;
+                    var qtyInput = document.getElementById("cart-qty-input-" + id);
+                    var qty = parseInt(qtyInput?.value, 10) || 1;
+                    subtotal += gia * qty;
+                }
+            });
+
+            if (subtotalEl) subtotalEl.innerText = formatCurrencyClient(subtotal);
+
+            // Tự động kiểm tra lại mã nếu đang có mã áp dụng
+            if (appliedPromoCode) {
+                await verifyPromoCode(appliedPromoCode, selectedIds);
+            } else {
+                appliedDiscountAmount = 0;
+                if (discountEl) discountEl.innerText = formatCurrencyClient(0);
+                if (totalEl) totalEl.innerText = formatCurrencyClient(subtotal);
+            }
+
+            // Cập nhật danh sách voucher khả dụng theo dòng đã chọn
+            loadAvailablePromos(selectedIds);
+        }
+
+        async function onChangeQuantityBtn(maGH, delta) {
+            var input = document.getElementById("cart-qty-input-" + maGH);
+            if (!input) return;
+            var currentVal = parseInt(input.value, 10) || 1;
+            var newVal = currentVal + delta;
+            if (newVal < 1 || newVal > 99) return;
+            input.value = newVal;
+            onQuantityInputChange(maGH, newVal);
+        }
+
+        function onQuantityInputChange(maGH, inputOrVal) {
+            var qty = (typeof inputOrVal === "object" && inputOrVal !== null) ? parseInt(inputOrVal.value, 10) : parseInt(inputOrVal, 10);
+            if (isNaN(qty) || qty < 1) qty = 1;
+            if (qty > 99) qty = 99;
+            var input = document.getElementById("cart-qty-input-" + maGH);
+            if (input) input.value = qty;
+
+            clearTimeout(qtyDebounceTimers[maGH]);
+            qtyDebounceTimers[maGH] = setTimeout(function () {
+                sendUpdateQuantity(maGH, qty);
+            }, 300);
+        }
+
+        async function sendUpdateQuantity(maGH, qty) {
+            var res = await apiFetch("/api/v1/gio-hang/items/" + maGH, {
+                method: "PUT",
+                body: { soLuong: qty }
+            });
+
+            if (res && res.ok && res.data) {
+                updateCartBadge(res.data.tongSoLuongTrongGio);
+
+                // Cập nhật thành tiền của dòng
+                var row = document.getElementById("cart-row-" + maGH);
+                if (row) {
+                    var gia = parseFloat(row.getAttribute("data-gia")) || 0;
+                    var itemTotalEl = document.getElementById("cart-item-total-" + maGH);
+                    if (itemTotalEl) {
+                        itemTotalEl.innerText = formatCurrencyClient(gia * qty);
+                    }
+                }
+
+                // Cập nhật nút - / +
+                var minusBtn = row ? row.querySelector(".cart-btn-qty-minus") : null;
+                var plusBtn = row ? row.querySelector(".cart-btn-qty-plus") : null;
+                if (minusBtn) minusBtn.disabled = qty <= 1;
+                if (plusBtn) plusBtn.disabled = qty >= 99;
+
+                recalculateCartSummary();
+            } else {
+                // Nếu cập nhật thất bại (ví dụ vượt tồn kho), tải lại trang để hoàn nguyên số lượng
+                setTimeout(function () { window.location.reload(); }, 1200);
+            }
+        }
+
+        async function onDeleteCartItem(maGH) {
+            var grid = document.getElementById("cart-main-grid");
+            var confirmMsg = grid?.dataset?.confirmDelete || "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?";
+            if (!confirm(confirmMsg)) return;
+
+            var res = await apiFetch("/api/v1/gio-hang/items/" + maGH, {
+                method: "DELETE"
+            });
+
+            if (res && res.ok) {
+                var row = document.getElementById("cart-row-" + maGH);
+                if (row) row.remove();
+
+                var remainingRows = document.querySelectorAll("#cart-items-container > div");
+                if (remainingRows.length === 0) {
+                    window.location.reload();
+                    return;
+                }
+
+                refreshCartBadge();
+                recalculateCartSummary();
+            }
+        }
+
+        async function onApplyPromoClick() {
+            var input = document.getElementById("cart-promo-input");
+            if (!input) return;
+            var code = input.value.trim();
+            var grid = document.getElementById("cart-main-grid");
+            if (!code) {
+                var reqMsg = grid?.dataset?.validationRequired || "Trường này là bắt buộc.";
+                setPromoFeedback(reqMsg, false);
+                return;
+            }
+
+            var selectedIds = getSelectedCartItemIds();
+            if (selectedIds.length === 0) {
+                var emptyMsg = grid?.dataset?.emptySelection || "Vui lòng chọn ít nhất một sản phẩm trong giỏ hàng.";
+                setPromoFeedback(emptyMsg, false);
+                return;
+            }
+
+            var applyBtn = document.getElementById("btn-apply-promo");
+            if (applyBtn) applyBtn.disabled = true;
+
+            await verifyPromoCode(code, selectedIds);
+
+            if (applyBtn) applyBtn.disabled = false;
+        }
+
+        async function verifyPromoCode(code, selectedIds) {
+            var res = await apiFetch("/api/v1/khuyen-mai/kiem-tra", {
+                method: "POST",
+                body: { code: code, maGHDaChon: selectedIds }
+            });
+
+            var discountEl = document.getElementById("summary-discount");
+            var totalEl = document.getElementById("summary-total");
+            var removeBtn = document.getElementById("btn-remove-promo");
+
+            if (res && res.ok && res.data) {
+                var data = res.data;
+                if (data.hopLe) {
+                    appliedPromoCode = data.code || code;
+                    appliedDiscountAmount = data.tienGiam;
+
+                    if (discountEl) discountEl.innerText = "-" + formatCurrencyClient(data.tienGiam);
+                    if (totalEl) totalEl.innerText = formatCurrencyClient(data.tongThanhToan);
+
+                    setPromoFeedback(data.thongBao, true);
+                    if (removeBtn) removeBtn.classList.remove("hidden");
+                } else {
+                    appliedPromoCode = "";
+                    appliedDiscountAmount = 0;
+
+                    if (discountEl) discountEl.innerText = formatCurrencyClient(0);
+                    if (totalEl) totalEl.innerText = formatCurrencyClient(data.tongTienHang);
+
+                    setPromoFeedback(data.thongBao, false);
+                    if (removeBtn) removeBtn.classList.add("hidden");
+                }
+            }
+        }
+
+        function onSelectVoucherCard(btnOrCode) {
+            var code = "";
+            if (btnOrCode instanceof HTMLElement || (btnOrCode && btnOrCode.nodeType === 1)) {
+                code = btnOrCode.dataset.code || btnOrCode.getAttribute("data-code") || "";
+            } else if (typeof btnOrCode === "string") {
+                code = btnOrCode;
+            }
+            var input = document.getElementById("cart-promo-input");
+            if (input && code) {
+                input.value = code;
+                onApplyPromoClick();
+            }
+        }
+
+        function onRemovePromoCode() {
+            appliedPromoCode = "";
+            appliedDiscountAmount = 0;
+            var input = document.getElementById("cart-promo-input");
+            if (input) input.value = "";
+
+            var removeBtn = document.getElementById("btn-remove-promo");
+            if (removeBtn) removeBtn.classList.add("hidden");
+
+            setPromoFeedback("", false);
+            recalculateCartSummary();
+        }
+
+        function setPromoFeedback(msg, isSuccess) {
+            var fb = document.getElementById("cart-promo-feedback");
+            if (!fb) return;
+            if (!msg) {
+                fb.classList.add("hidden");
+                fb.innerText = "";
+                return;
+            }
+            fb.innerText = msg;
+            fb.className = "text-[11px] font-semibold block " + (isSuccess ? "text-statusSuccess" : "text-statusDanger");
+        }
+
+        async function loadAvailablePromos(selectedIds) {
+            if (selectedIds.length === 0) {
+                refreshAvailablePromos([]);
+                return;
+            }
+            var query = selectedIds.map(function (id) { return "maGH=" + id; }).join("&");
+            var res = await apiFetch("/api/v1/khuyen-mai/kha-dung?" + query, { method: "GET" });
+            if (res && res.ok && Array.isArray(res.data)) {
+                refreshAvailablePromos(res.data);
+            }
+        }
+
+        function refreshAvailablePromos(promos) {
+            var container = document.getElementById("cart-voucher-cards");
+            if (!container) return;
+            var grid = document.getElementById("cart-main-grid");
+            var notFoundText = grid?.dataset?.promoNotFound || "Không tìm thấy mã khuyến mãi khả dụng.";
+            var selectText = grid?.dataset?.selectText || "Chọn";
+            var minOrderLabel = grid?.dataset?.minOrder || "Đơn tối thiểu:";
+            var usesRemainingTemplate = grid?.dataset?.usesRemaining || "Còn {0} lượt";
+
+            if (!promos || promos.length === 0) {
+                container.innerHTML = '<p class="text-xs text-muted italic py-1">' + notFoundText + '</p>';
+                return;
+            }
+            var html = promos.map(function (p) {
+                var remain = p.soLuotConLai !== null ? (" • " + usesRemainingTemplate.replace("{0}", p.soLuotConLai)) : "";
+                return `
+                    <div class="p-2.5 rounded-btn bg-surface border border-borderLight hover:border-primary transition cursor-pointer flex items-center justify-between gap-2"
+                         data-code="${p.code}"
+                         onclick="onSelectVoucherCard(this)">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="px-1.5 py-0.5 rounded bg-pastel text-primary text-[10px] font-bold font-mono">${p.code}</span>
+                                <span class="text-xs font-bold text-charcoal">${p.tenKM}</span>
+                            </div>
+                            <p class="text-[10px] text-muted">${minOrderLabel} ${formatCurrencyClient(p.donToiThieu)}${remain}</p>
+                        </div>
+                        <button type="button" class="px-2.5 py-1 rounded bg-cream hover:bg-pastel text-[11px] font-bold text-primary transition shrink-0">
+                            ${selectText}
+                        </button>
+                    </div>
+                `;
+            }).join("");
+            container.innerHTML = html;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            onCartItemCheckChange();
+        });
+    </script>
+}
+

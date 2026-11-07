@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Models;
 using WebsiteBanMyPham.Services;
@@ -36,6 +37,12 @@ namespace WebsiteBanMyPham
             builder.Services.AddDbContext<WebsiteBanMyPhamContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Cấu hình Anti-Forgery Token cho Header (gọi qua AJAX / apiFetch)
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "RequestVerificationToken";
+            });
+
             // Cấu hình Cookie Authentication
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -49,7 +56,49 @@ namespace WebsiteBanMyPham
                     options.SlidingExpiration = true;
                     options.Events = new CookieAuthenticationEvents
                     {
-                        OnValidatePrincipal = CookieValidator.ValidatePrincipalAsync
+                        OnValidatePrincipal = CookieValidator.ValidatePrincipalAsync,
+                        OnRedirectToLogin = async context =>
+                        {
+                            if (context.Request.Path.StartsWithSegments("/api"))
+                            {
+                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                                context.Response.ContentType = "application/problem+json";
+                                var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
+                                var problem = new ProblemDetails
+                                {
+                                    Status = StatusCodes.Status401Unauthorized,
+                                    Title = localizer["Api_Error_UnauthorizedTitle"].Value,
+                                    Detail = localizer["Api_Error_UnauthorizedDetail"].Value,
+                                    Instance = context.Request.Path
+                                };
+                                await context.Response.WriteAsJsonAsync(problem);
+                            }
+                            else
+                            {
+                                context.Response.Redirect(context.RedirectUri);
+                            }
+                        },
+                        OnRedirectToAccessDenied = async context =>
+                        {
+                            if (context.Request.Path.StartsWithSegments("/api"))
+                            {
+                                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                                context.Response.ContentType = "application/problem+json";
+                                var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
+                                var problem = new ProblemDetails
+                                {
+                                    Status = StatusCodes.Status403Forbidden,
+                                    Title = localizer["Api_Error_ForbiddenTitle"].Value,
+                                    Detail = localizer["Api_Error_ForbiddenDetail"].Value,
+                                    Instance = context.Request.Path
+                                };
+                                await context.Response.WriteAsJsonAsync(problem);
+                            }
+                            else
+                            {
+                                context.Response.Redirect(context.RedirectUri);
+                            }
+                        }
                     };
                 });
 

@@ -31,6 +31,8 @@ namespace WebsiteBanMyPham.Controllers.Api
         /// <param name="thuongHieu">Mã thương hiệu</param>
         /// <param name="giaTu">Giá tối thiểu (VNĐ)</param>
         /// <param name="giaDen">Giá tối đa (VNĐ)</param>
+        /// <param name="mucGia">Khoảng giá quy ước: under300, 300to500, over500</param>
+        /// <param name="khoangGia">Bí danh khoảng giá (tương đương mucGia): under300, 300to500, over500</param>
         /// <param name="sapXep">Tiêu chí sắp xếp: moiNhat, giaTang, giaGiam, banChay</param>
         /// <param name="pageIndex">Trang hiện tại (>= 1, mặc định 1)</param>
         /// <param name="pageSize">Số sản phẩm mỗi trang (1 - 50, mặc định 12)</param>
@@ -43,6 +45,8 @@ namespace WebsiteBanMyPham.Controllers.Api
             [FromQuery] int? thuongHieu = null,
             [FromQuery] decimal? giaTu = null,
             [FromQuery] decimal? giaDen = null,
+            [FromQuery] string? mucGia = null,
+            [FromQuery] string? khoangGia = null,
             [FromQuery] string? sapXep = "moiNhat",
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 12)
@@ -69,10 +73,13 @@ namespace WebsiteBanMyPham.Controllers.Api
                 ThuongHieu = thuongHieu,
                 GiaTu = giaTu,
                 GiaDen = giaDen,
+                MucGia = mucGia ?? khoangGia,
                 SapXep = sapXep,
                 Trang = validPageIndex,
                 PageSize = validPageSize
             };
+
+            filter.ChuanHoaGia();
 
             var result = await _sanPhamService.TimKiemAsync(filter);
 

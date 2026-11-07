@@ -36,12 +36,14 @@ namespace WebsiteBanMyPham.Services
                 return new GioHangViewModel();
             }
 
+            // Sắp xếp theo NgayThem giảm dần rồi MaGH giảm dần theo Điều chỉnh 4
             var query = await _context.GioHang
                 .AsNoTracking()
                 .Where(g => g.MaTK == maTK)
                 .Include(g => g.MaSPNavigation)
                     .ThenInclude(sp => sp.AnhSanPham)
                 .OrderByDescending(g => g.NgayThem)
+                .ThenByDescending(g => g.MaGH)
                 .ToListAsync();
 
             var result = new GioHangViewModel();
@@ -51,7 +53,7 @@ namespace WebsiteBanMyPham.Services
                 var sp = g.MaSPNavigation;
                 var anhChinh = sp.AnhSanPham.FirstOrDefault(a => a.LaAnhChinh)?.DuongDan 
                                ?? sp.AnhSanPham.FirstOrDefault()?.DuongDan 
-                               ?? "/images/no-image.png";
+                               ?? "/images/placeholder.svg";
 
                 var item = new GioHangItemViewModel
                 {
@@ -60,6 +62,7 @@ namespace WebsiteBanMyPham.Services
                     TenSP = sp.TenSP,
                     DuongDanAnh = anhChinh,
                     GiaHienTai = sp.Gia,
+                    GiaGoc = sp.GiaGoc,
                     SoLuong = g.SoLuong,
                     SoLuongTon = sp.SoLuongTon,
                     TrangThaiKinhDoanh = sp.TrangThai
@@ -84,28 +87,87 @@ namespace WebsiteBanMyPham.Services
             return result;
         }
 
-        public async Task<(bool Success, string? ErrorMessage)> ThemVaoGioAsync(int maTK, int maSP, int soLuong)
+        public async Task<GioHangItemViewModel?> LayDongGioHangAsync(int maTK, int maGH)
         {
-            if (soLuong <= 0)
+            var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
+            if (!hopLe)
             {
-                return (false, _localizer["Msg_Cart_QuantityPositive"].Value);
+                return null;
+            }
+
+            var g = await _context.GioHang
+                .AsNoTracking()
+                .Where(x => x.MaGH == maGH && x.MaTK == maTK)
+                .Include(x => x.MaSPNavigation)
+                    .ThenInclude(sp => sp.AnhSanPham)
+                .FirstOrDefaultAsync();
+
+            if (g == null)
+            {
+                return null;
+            }
+
+            var sp = g.MaSPNavigation;
+            var anhChinh = sp.AnhSanPham.FirstOrDefault(a => a.LaAnhChinh)?.DuongDan 
+                           ?? sp.AnhSanPham.FirstOrDefault()?.DuongDan 
+                           ?? "/images/placeholder.svg";
+
+            var item = new GioHangItemViewModel
+            {
+                MaGH = g.MaGH,
+                MaSP = g.MaSP,
+                TenSP = sp.TenSP,
+                DuongDanAnh = anhChinh,
+                GiaHienTai = sp.Gia,
+                GiaGoc = sp.GiaGoc,
+                SoLuong = g.SoLuong,
+                SoLuongTon = sp.SoLuongTon,
+                TrangThaiKinhDoanh = sp.TrangThai
+            };
+
+            if (!item.TrangThaiKinhDoanh)
+            {
+                item.ThongBaoTrangThai = _localizer["Msg_Cart_StatusStopped"].Value;
+            }
+            else if (item.SoLuongTon <= 0)
+            {
+                item.ThongBaoTrangThai = _localizer["Msg_Cart_StatusOutOfStock"].Value;
+            }
+            else if (item.SoLuong > item.SoLuongTon)
+            {
+                item.ThongBaoTrangThai = _localizer["Msg_Cart_StatusExceedStock", item.SoLuongTon].Value;
+            }
+
+            return item;
+        }
+
+        public async Task<(bool Success, string? ErrorMessage, LoaiLoiGioHang LoaiLoi, int MaGH, int SoLuongDong, bool DaTonTaiTruocDo)> ThemVaoGioAsync(int maTK, int maSP, int soLuong)
+        {
+            if (soLuong <= 0 || soLuong > 99)
+            {
+                return (false, _localizer["Api_Error_CartQuantityInvalid"].Value, LoaiLoiGioHang.DuLieuKhongHopLe, 0, 0, false);
             }
 
             var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
             if (!hopLe)
             {
-                return (false, _localizer["Msg_Cart_OnlyCustomer"].Value);
+                return (false, _localizer["Msg_Cart_OnlyCustomer"].Value, LoaiLoiGioHang.DuLieuKhongHopLe, 0, 0, false);
             }
 
             var sp = await _context.SanPham.AsNoTracking().FirstOrDefaultAsync(s => s.MaSP == maSP);
-            if (sp == null || !sp.TrangThai)
+            if (sp == null)
             {
-                return (false, _localizer["Msg_Cart_ProductStopped"].Value);
+                return (false, _localizer["Api_Error_ProductNotFoundDetail", maSP].Value, LoaiLoiGioHang.KhongTimThay, 0, 0, false);
+            }
+
+            if (!sp.TrangThai)
+            {
+                return (false, _localizer["Msg_Cart_ProductStopped"].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan, 0, 0, false);
             }
 
             if (sp.SoLuongTon <= 0)
             {
-                return (false, _localizer["Msg_Cart_ProductOutOfStock"].Value);
+                return (false, _localizer["Msg_Cart_ProductOutOfStock"].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan, 0, 0, false);
             }
 
             var dongGioHienTai = await _context.GioHang.FirstOrDefaultAsync(g => g.MaTK == maTK && g.MaSP == maSP);
@@ -115,18 +177,18 @@ namespace WebsiteBanMyPham.Services
                 int soLuongSauKhiCong = dongGioHienTai.SoLuong + soLuong;
                 if (soLuongSauKhiCong > sp.SoLuongTon)
                 {
-                    return (false, _localizer["Msg_Cart_ExceedStockDetailed", dongGioHienTai.SoLuong, soLuong, sp.SoLuongTon].Value);
+                    return (false, _localizer["Msg_Cart_ExceedStockDetailed", dongGioHienTai.SoLuong, soLuong, sp.SoLuongTon].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan, 0, 0, false);
                 }
 
                 dongGioHienTai.SoLuong = soLuongSauKhiCong;
                 dongGioHienTai.NgayThem = DateTime.Now;
                 await _context.SaveChangesAsync();
-                return (true, null);
+                return (true, null, LoaiLoiGioHang.KhongCoLoi, dongGioHienTai.MaGH, dongGioHienTai.SoLuong, true);
             }
 
             if (soLuong > sp.SoLuongTon)
             {
-                return (false, _localizer["Msg_Cart_ExceedStock", soLuong, sp.SoLuongTon].Value);
+                return (false, _localizer["Msg_Cart_ExceedStock", soLuong, sp.SoLuongTon].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan, 0, 0, false);
             }
 
             var dongMoi = new GioHang
@@ -141,11 +203,11 @@ namespace WebsiteBanMyPham.Services
             {
                 _context.GioHang.Add(dongMoi);
                 await _context.SaveChangesAsync();
-                return (true, null);
+                return (true, null, LoaiLoiGioHang.KhongCoLoi, dongMoi.MaGH, dongMoi.SoLuong, false);
             }
             catch (DbUpdateException ex)
             {
-                // Bắt xung đột race condition UNIQUE(MaTK, MaSP) khi hai request đồng thời
+                // Bắt xung đột race condition UNIQUE(MaTK, MaSP) khi hai request gửi đồng thời
                 _logger.LogWarning(ex, "Xảy ra xung đột UNIQUE giỏ hàng cho MaTK {MaTK}, MaSP {MaSP}. Xử lý cộng dồn.", maTK, maSP);
                 _context.ChangeTracker.Clear();
 
@@ -155,29 +217,29 @@ namespace WebsiteBanMyPham.Services
                     int tongMoi = dongDaCo.SoLuong + soLuong;
                     if (tongMoi > sp.SoLuongTon)
                     {
-                        return (false, _localizer["Msg_Cart_ExceedStockAccumulated", tongMoi, sp.SoLuongTon].Value);
+                        return (false, _localizer["Msg_Cart_ExceedStockAccumulated", tongMoi, sp.SoLuongTon].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan, 0, 0, false);
                     }
                     dongDaCo.SoLuong = tongMoi;
                     dongDaCo.NgayThem = DateTime.Now;
                     await _context.SaveChangesAsync();
-                    return (true, null);
+                    return (true, null, LoaiLoiGioHang.KhongCoLoi, dongDaCo.MaGH, dongDaCo.SoLuong, true);
                 }
 
-                return (false, _localizer["Msg_Cart_AddFailed"].Value);
+                return (false, _localizer["Msg_Cart_AddFailed"].Value, LoaiLoiGioHang.DuLieuKhongHopLe, 0, 0, false);
             }
         }
 
-        public async Task<(bool Success, string? ErrorMessage)> CapNhatSoLuongAsync(int maTK, int maGH, int soLuongMoi)
+        public async Task<(bool Success, string? ErrorMessage, LoaiLoiGioHang LoaiLoi)> CapNhatSoLuongAsync(int maTK, int maGH, int soLuongMoi)
         {
-            if (soLuongMoi <= 0)
+            if (soLuongMoi <= 0 || soLuongMoi > 99)
             {
-                return (false, _localizer["Msg_Cart_QuantityMustBePositive"].Value);
+                return (false, _localizer["Api_Error_CartQuantityInvalid"].Value, LoaiLoiGioHang.DuLieuKhongHopLe);
             }
 
             var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
             if (!hopLe)
             {
-                return (false, _localizer["Msg_Cart_InvalidAction"].Value);
+                return (false, _localizer["Msg_Cart_InvalidAction"].Value, LoaiLoiGioHang.DuLieuKhongHopLe);
             }
 
             var dongGio = await _context.GioHang
@@ -186,45 +248,45 @@ namespace WebsiteBanMyPham.Services
 
             if (dongGio == null)
             {
-                return (false, _localizer["Msg_Cart_ItemNotFoundOrNotOwned"].Value);
+                return (false, _localizer["Api_Error_CartItemNotFound"].Value, LoaiLoiGioHang.KhongTimThay);
             }
 
             var sp = dongGio.MaSPNavigation;
             if (!sp.TrangThai)
             {
-                return (false, _localizer["Msg_Cart_ItemProductStopped"].Value);
+                return (false, _localizer["Msg_Cart_ItemProductStopped"].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan);
             }
 
             if (soLuongMoi > sp.SoLuongTon)
             {
-                return (false, _localizer["Msg_Cart_ExceedStock", soLuongMoi, sp.SoLuongTon].Value);
+                return (false, _localizer["Msg_Cart_ExceedStock", soLuongMoi, sp.SoLuongTon].Value, LoaiLoiGioHang.XungDotTonKhoHoacNgungBan);
             }
 
             dongGio.SoLuong = soLuongMoi;
             dongGio.NgayThem = DateTime.Now;
             await _context.SaveChangesAsync();
 
-            return (true, null);
+            return (true, null, LoaiLoiGioHang.KhongCoLoi);
         }
 
-        public async Task<(bool Success, string? ErrorMessage)> XoaKhoiGioAsync(int maTK, int maGH)
+        public async Task<(bool Success, string? ErrorMessage, LoaiLoiGioHang LoaiLoi)> XoaKhoiGioAsync(int maTK, int maGH)
         {
             var hopLe = await KiemTraKhachHangHopLeAsync(maTK);
             if (!hopLe)
             {
-                return (false, _localizer["Msg_Cart_InvalidAction"].Value);
+                return (false, _localizer["Msg_Cart_InvalidAction"].Value, LoaiLoiGioHang.DuLieuKhongHopLe);
             }
 
             var dongGio = await _context.GioHang.FirstOrDefaultAsync(g => g.MaGH == maGH && g.MaTK == maTK);
             if (dongGio == null)
             {
-                return (false, _localizer["Msg_Cart_ItemDeleteNotFound"].Value);
+                return (false, _localizer["Api_Error_CartItemNotFound"].Value, LoaiLoiGioHang.KhongTimThay);
             }
 
             _context.GioHang.Remove(dongGio);
             await _context.SaveChangesAsync();
 
-            return (true, null);
+            return (true, null, LoaiLoiGioHang.KhongCoLoi);
         }
 
         public async Task<int> DemSoLuongAsync(int maTK)

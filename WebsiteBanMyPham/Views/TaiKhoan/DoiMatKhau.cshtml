@@ -62,7 +62,7 @@
                             </span>
                             <input asp-for="MatKhauHienTai" type="password" id="input-matkhau-hientai" autocomplete="current-password" placeholder="••••••••"
                                    class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
-                            <button type="button" onclick="togglePassword('input-matkhau-hientai', this)"
+                            <button type="button" data-target="input-matkhau-hientai" onclick="togglePassword(this)"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
                                 <i class="ph ph-eye text-base"></i>
                             </button>
@@ -79,7 +79,7 @@
                             </span>
                             <input asp-for="MatKhauMoi" type="password" id="input-matkhau-moi" autocomplete="new-password" placeholder="••••••••"
                                    class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
-                            <button type="button" onclick="togglePassword('input-matkhau-moi', this)"
+                            <button type="button" data-target="input-matkhau-moi" onclick="togglePassword(this)"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
                                 <i class="ph ph-eye text-base"></i>
                             </button>
@@ -96,7 +96,7 @@
                             </span>
                             <input asp-for="XacNhanMatKhauMoi" type="password" id="input-xacnhan-matkhau-moi" autocomplete="new-password" placeholder="••••••••"
                                    class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
-                            <button type="button" onclick="togglePassword('input-xacnhan-matkhau-moi', this)"
+                            <button type="button" data-target="input-xacnhan-matkhau-moi" onclick="togglePassword(this)"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
                                 <i class="ph ph-eye text-base"></i>
                             </button>

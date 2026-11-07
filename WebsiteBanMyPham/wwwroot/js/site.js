@@ -17,7 +17,7 @@ function toggleAdminSidebar() {
 }
 
 // 3. Toast Notifications
-function showToast(message, isSuccess = true) {
+function showToast(message, isSuccess = true, actionHtml = null) {
     var toast = document.getElementById("toast");
     var toastMsg = document.getElementById("toast-msg");
     var toastIcon = document.getElementById("toast-icon");
@@ -25,7 +25,17 @@ function showToast(message, isSuccess = true) {
 
     if (!toast || !toastMsg) return;
 
-    toastMsg.innerText = message;
+    if (actionHtml) {
+        toastMsg.innerHTML = message + " " + actionHtml;
+    } else {
+        toastMsg.innerText = message;
+    }
+
+    if (toastTitle) {
+        var titleSuccess = document.getElementById("msg-toast-success")?.value || "THÀNH CÔNG";
+        var titleError = document.getElementById("msg-toast-error")?.value || "THÔNG BÁO";
+        toastTitle.innerText = isSuccess ? titleSuccess : titleError;
+    }
 
     if (toastIcon) {
         toastIcon.className = isSuccess 
@@ -36,9 +46,10 @@ function showToast(message, isSuccess = true) {
     toast.classList.remove("hidden");
 
     // Auto hide after 4 seconds
-    setTimeout(function () {
+    clearTimeout(window.__toastTimeout);
+    window.__toastTimeout = setTimeout(function () {
         hideToast();
-    }, 4000);
+    }, 4500);
 }
 
 function hideToast() {
@@ -73,11 +84,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // 5. Ẩn / Hiện mật khẩu (Toggle Password Visibility)
-function togglePassword(inputId, btn) {
-    var input = document.getElementById(inputId);
+function togglePassword(btnOrInputId, legacyBtn) {
+    var inputId = "";
+    var btn = null;
+    if (btnOrInputId instanceof HTMLElement || (btnOrInputId && btnOrInputId.nodeType === 1)) {
+        btn = btnOrInputId;
+        inputId = btn.dataset.target || btn.getAttribute("data-target") || "";
+    } else if (typeof btnOrInputId === "string") {
+        inputId = btnOrInputId;
+        btn = legacyBtn;
+    }
+    var input = inputId ? document.getElementById(inputId) : null;
     if (!input) return;
 
-    var icon = btn.querySelector("i");
+    var icon = btn ? btn.querySelector("i") : null;
     if (input.type === "password") {
         input.type = "text";
         if (icon) {
@@ -94,11 +114,25 @@ function togglePassword(inputId, btn) {
 }
 
 // 6. Sao chép mã khuyến mãi vào Clipboard
-function copyPromoCode(code, successMsg) {
+function copyPromoCode(btnOrCode, legacySuccessMsg) {
+    var code = "";
+    var successMsg = "";
+    if (btnOrCode instanceof HTMLElement || (btnOrCode && btnOrCode.nodeType === 1)) {
+        code = btnOrCode.dataset.code || btnOrCode.getAttribute("data-code") || "";
+        successMsg = btnOrCode.dataset.copied || btnOrCode.getAttribute("data-copied") || "";
+    } else if (typeof btnOrCode === "string") {
+        code = btnOrCode;
+        if (typeof legacySuccessMsg === "string") {
+            successMsg = legacySuccessMsg;
+        } else if (legacySuccessMsg instanceof HTMLElement) {
+            successMsg = legacySuccessMsg.dataset.copied || legacySuccessMsg.getAttribute("data-copied") || "";
+        }
+    }
     if (!code) return;
+    var finalMsg = successMsg || code;
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(code).then(function () {
-            showToast(successMsg || code, true);
+            showToast(finalMsg, true);
         }).catch(function () {
             showToast(code, true);
         });
@@ -109,7 +143,7 @@ function copyPromoCode(code, successMsg) {
         tempInput.select();
         document.execCommand("copy");
         document.body.removeChild(tempInput);
-        showToast(successMsg || code, true);
+        showToast(finalMsg, true);
     }
 }
 
@@ -177,7 +211,8 @@ function fetchCatalogProducts(url, updateHistory, errorMsg) {
         if (err.name === "AbortError") {
             return;
         }
-        showToast(errorMsg || "Lỗi tải dữ liệu. Vui lòng thử lại.", false);
+        var networkMsg = document.getElementById("msg-network-error")?.value || errorMsg || "Lỗi kết nối máy chủ. Vui lòng thử lại.";
+        showToast(networkMsg, false);
     });
 }
 
@@ -203,3 +238,148 @@ window.addEventListener("popstate", function () {
         fetchCatalogProducts(window.location.href, false);
     }
 });
+
+// 8. Hạ tầng gọi Web API qua Cookie & AntiForgery (apiFetch)
+async function apiFetch(url, options) {
+    options = options || {};
+    options.headers = options.headers || {};
+
+    var tokenMeta = document.querySelector('meta[name="csrf-token"]');
+    if (tokenMeta && tokenMeta.content) {
+        options.headers["RequestVerificationToken"] = tokenMeta.content;
+    }
+
+    if (options.body && typeof options.body === "object" && !(options.body instanceof FormData)) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(options.body);
+    }
+
+    options.credentials = "same-origin";
+
+    try {
+        var response = await fetch(url, options);
+
+        if (response.status === 401) {
+            var currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = "/TaiKhoan/DangNhap?returnUrl=" + currentUrl;
+            return { ok: false, status: 401 };
+        }
+
+        if (response.status === 204) {
+            return { ok: true, status: 204, data: null };
+        }
+
+        var responseText = await response.text();
+        var data = null;
+        var isJson = false;
+        if (responseText && responseText.trim().length > 0) {
+            try {
+                data = JSON.parse(responseText);
+                isJson = true;
+            } catch (e) {
+                isJson = false;
+            }
+        }
+
+        if (!response.ok) {
+            // Điều chỉnh 6: Khi nhận 400 mà thân phản hồi rỗng hoặc không phải JSON (token chống giả mạo sai/hết hạn)
+            if (response.status === 400 && (!isJson || !data)) {
+                var expiredMsg = document.getElementById("msg-session-expired")?.value || "Phiên làm việc đã hết hạn. Vui lòng tải lại trang.";
+                var reloadLabel = document.getElementById("msg-reload-page")?.value || "Tải lại trang";
+                var reloadBtnHtml = '<button onclick="window.location.reload()" class="underline font-bold ml-1 text-pastel hover:text-white">' + reloadLabel + '</button>';
+                showToast(expiredMsg, false, reloadBtnHtml);
+                return { ok: false, status: 400, error: expiredMsg };
+            }
+
+            var errorMsg = (data && (data.detail || data.title)) 
+                ? (data.detail || data.title) 
+                : ("HTTP Error " + response.status);
+            showToast(errorMsg, false);
+            return { ok: false, status: response.status, data: data, error: errorMsg };
+        }
+
+        return { ok: true, status: response.status, data: data };
+    } catch (err) {
+        var networkMsg = document.getElementById("msg-network-error")?.value || "Lỗi kết nối máy chủ. Vui lòng thử lại sau.";
+        showToast(networkMsg, false);
+        return { ok: false, status: 0, error: err };
+    }
+}
+
+// 9. Cập nhật Badge Giỏ hàng
+function updateCartBadge(count) {
+    var badge = document.getElementById("header-cart-count");
+    if (!badge) return;
+    var num = parseInt(count, 10) || 0;
+    badge.innerText = num;
+    if (num > 0) {
+        badge.classList.remove("hidden");
+    } else {
+        badge.classList.add("hidden");
+    }
+}
+
+function refreshCartBadge() {
+    var roleMeta = document.querySelector('meta[name="user-role"]');
+    if (roleMeta && roleMeta.content === "KhachHang") {
+        apiFetch("/api/v1/gio-hang/so-luong", { method: "GET" }).then(function (res) {
+            if (res && res.ok && res.data && typeof res.data.tongSoLuong !== "undefined") {
+                updateCartBadge(res.data.tongSoLuong);
+            }
+        });
+    }
+}
+
+// Điều chỉnh 8: Lắng nghe sự kiện pageshow khi nhấn Back/Forward (event.persisted là true)
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+        refreshCartBadge();
+    }
+});
+
+// 10. Hàm Thêm vào giỏ hàng dùng chung (ProductCard & ProductDetail)
+// Tham số inline chỉ gồm số nguyên (maSP, soLuong) hoặc this (btn). Tên sản phẩm đọc từ dataset.
+async function themVaoGio(maSP, soLuong, btnOrTenSP, legacyBtn) {
+    var roleMeta = document.querySelector('meta[name="user-role"]');
+    if (roleMeta && roleMeta.content === "QuanTriVien") {
+        var adminMsg = document.getElementById("msg-admin-cart")?.value || "Quản trị viên không sử dụng chức năng giỏ hàng";
+        showToast(adminMsg, false);
+        return;
+    }
+
+    var btn = null;
+    var tenSP = "";
+    if (btnOrTenSP instanceof HTMLElement || (btnOrTenSP && btnOrTenSP.nodeType === 1)) {
+        btn = btnOrTenSP;
+        tenSP = btn.dataset.tenSp || btn.getAttribute("data-ten-sp") || btn.getAttribute("data-tensp") || "";
+    } else if (legacyBtn instanceof HTMLElement || (legacyBtn && legacyBtn.nodeType === 1)) {
+        btn = legacyBtn;
+        tenSP = typeof btnOrTenSP === "string" ? btnOrTenSP : (btn.dataset.tenSp || btn.getAttribute("data-ten-sp") || btn.getAttribute("data-tensp") || "");
+    } else if (typeof btnOrTenSP === "string") {
+        tenSP = btnOrTenSP;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.classList.add("opacity-60", "pointer-events-none");
+    }
+
+    var qty = parseInt(soLuong, 10) || 1;
+    var res = await apiFetch("/api/v1/gio-hang/items", {
+        method: "POST",
+        body: { maSP: maSP, soLuong: qty }
+    });
+
+    if (btn) {
+        btn.disabled = false;
+        btn.classList.remove("opacity-60", "pointer-events-none");
+    }
+
+    if (res && res.ok) {
+        if (res.data && typeof res.data.tongSoLuongTrongGio !== "undefined") {
+            updateCartBadge(res.data.tongSoLuongTrongGio);
+        }
+        var successMsg = document.getElementById("msg-cart-added")?.value || "Đã thêm sản phẩm vào giỏ hàng!";
+        showToast(successMsg, true);
+    }
+}

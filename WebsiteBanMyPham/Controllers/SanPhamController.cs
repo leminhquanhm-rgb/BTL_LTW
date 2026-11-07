@@ -21,6 +21,7 @@ namespace WebsiteBanMyPham.Controllers
             decimal? giaTu = null,
             decimal? giaDen = null,
             string? mucGia = null,
+            string? khoangGia = null,
             string? sapXep = null,
             int trang = 1,
             int? pageIndex = null)
@@ -38,7 +39,7 @@ namespace WebsiteBanMyPham.Controllers
                 ThuongHieu = thuongHieu,
                 GiaTu = giaTu,
                 GiaDen = giaDen,
-                MucGia = mucGia,
+                MucGia = mucGia ?? khoangGia,
                 SapXep = sapXep,
                 Trang = actualTrang,
                 PageSize = 12

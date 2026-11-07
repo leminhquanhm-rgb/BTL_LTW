@@ -193,6 +193,8 @@ Tên Controller khách hàng theo tài liệu: TrangChu, SanPham, ChiTietSanPham
 -   Dữ liệu lấy từ database (tên sản phẩm, mô tả, thương hiệu, banner, khuyến mãi) giữ nguyên tiếng Việt, không dịch. Ngoại lệ duy nhất: tên danh mục được dịch bằng khóa tài nguyên DanhMuc_{MaDM} (qua ILocalizationHelper); nếu chưa có khóa thì dùng tên gốc trong database. Danh mục mới do Admin thêm sau này cần thêm khóa tương ứng vào cả hai tệp .resx.
 -   Định dạng theo ngôn ngữ: tiền tiếng Việt "135.000đ", tiếng Anh "135,000 VND"; ngày giờ tiếng Việt dd/MM/yyyy HH:mm, tiếng Anh MM/dd/yyyy h:mm tt. Dùng helper tập trung trong thư mục Helpers/, không viết định dạng rải rác.
 -   Khi thêm chữ mới ở bất kỳ bước nào: thêm khóa vào CẢ HAI tệp .resx trong cùng nhiệm vụ. Báo cáo cuối mỗi nhiệm vụ nêu số khóa của mỗi tệp (phải bằng nhau).
+-   Không nhúng chuỗi tài nguyên trực tiếp vào chuỗi JavaScript bằng @L["..."] (Razor mã hóa HTML các ký tự có dấu thành dạng &#x1EA1;, trong khối script hoặc hộp thoại confirm sẽ hiện nguyên mã). Truyền chữ cho JavaScript bằng thuộc tính data-* (ví dụ data-confirm="@L["Cart_ConfirmDelete"]", JavaScript đọc bằng dataset) hoặc serialize JSON bằng System.Text.Json.
+-   Kiểm tra khóa thiếu phải quét ĐỦ ba loại tệp: .cs, .cshtml và .js, gồm cả khóa ghép chuỗi động (Status_Order_*, DanhMuc_*, Payment_Method_*...). Sau mỗi nhiệm vụ có giao diện, phải mở từng trang mới ở CẢ HAI ngôn ngữ và dùng Ctrl+F tìm các tiền tố Common_, Nav_, Cart_, Product_, Account_, Msg_, Status_, Label_, Home_, Payment_: không được còn chữ dạng Nhóm_Tên hiện ra trên giao diện (đó là khóa chưa có bản dịch).
 
 ### 2.8. Web API (RESTful)
 

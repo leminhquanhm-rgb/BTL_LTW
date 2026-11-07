@@ -24,13 +24,13 @@
                 <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm pointer-events-none"></i>
                 <input type="text" form="catalog-filter-form" name="tuKhoa" value="@Model.Filter.TuKhoa"
                        placeholder="@L["Placeholder_SearchProduct"]"
-                       oninput="onCatalogSearchInput(this, '@L["Toast_NetworkError"]')"
+                       oninput="onCatalogSearchInput(this)"
                        class="w-full pl-9 pr-3.5 py-2 bg-surface border border-borderLight rounded-btn text-xs text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition shadow-sm" />
             </div>
 
             <!-- Thứ tự sắp xếp -->
             <select form="catalog-filter-form" name="sapXep"
-                    onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')"
+                    onchange="onCatalogFilterChange()"
                     class="px-3 py-2 bg-surface border border-borderLight rounded-btn text-xs text-charcoal font-semibold focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition shadow-sm cursor-pointer">
                 <option value="moiNhat" selected="@(Model.Filter.SapXep == "moiNhat")">@L["Product_SortDefault"]</option>
                 <option value="banChay" selected="@(Model.Filter.SapXep == "banChay")">@L["Product_SortBestSeller"]</option>
@@ -53,7 +53,7 @@
                         <i class="ph-fill ph-funnel text-primary"></i>
                         <span>@L["Product_FilterTitle"]</span>
                     </h3>
-                    <button type="button" onclick="document.getElementById('catalog-filter-form').reset(); onCatalogFilterChange('@L["Toast_NetworkError"]')"
+                    <button type="button" onclick="document.getElementById('catalog-filter-form').reset(); onCatalogFilterChange()"
                             class="text-xs text-primary font-semibold hover:underline">
                         @L["Product_ResetFilter"]
                     </button>
@@ -64,7 +64,7 @@
                     <p class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_CategoryFilter"]</p>
                     <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
                         <input type="radio" name="danhMuc" value="" checked="@(!Model.Filter.DanhMuc.HasValue)"
-                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                               onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                         <span>@L["Product_AllCategories"]</span>
                     </label>
                     @foreach (var dm in Model.DanhSachDanhMuc)
@@ -72,7 +72,7 @@
                         <label class="flex items-center justify-between text-xs text-charcoal/90 cursor-pointer select-none">
                             <span class="flex items-center gap-2">
                                 <input type="radio" name="danhMuc" value="@dm.MaDM" checked="@(Model.Filter.DanhMuc == dm.MaDM)"
-                                       onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                                       onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                                 <span>@LocHelper.TenDanhMuc(dm.MaDM, dm.TenDM)</span>
                             </span>
                             <span class="text-[11px] text-muted">(@dm.SoLuongSanPham)</span>
@@ -85,7 +85,7 @@
                     <p class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_BrandFilter"]</p>
                     <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
                         <input type="radio" name="thuongHieu" value="" checked="@(!Model.Filter.ThuongHieu.HasValue)"
-                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                               onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                         <span>@L["Product_AllBrands"]</span>
                     </label>
                     @foreach (var th in Model.DanhSachThuongHieu)
@@ -93,7 +93,7 @@
                         <label class="flex items-center justify-between text-xs text-charcoal/90 cursor-pointer select-none">
                             <span class="flex items-center gap-2">
                                 <input type="radio" name="thuongHieu" value="@th.MaTH" checked="@(Model.Filter.ThuongHieu == th.MaTH)"
-                                       onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                                       onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                                 <span>@th.TenTH</span>
                             </span>
                             <span class="text-[11px] text-muted">(@th.SoLuongSanPham)</span>
@@ -106,22 +106,22 @@
                     <p class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_PriceFilter"]</p>
                     <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
                         <input type="radio" name="mucGia" value="all" checked="@(string.IsNullOrEmpty(Model.Filter.MucGia) || Model.Filter.MucGia == "all")"
-                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                               onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                         <span>@L["Product_AllPrices"]</span>
                     </label>
                     <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
                         <input type="radio" name="mucGia" value="under300" checked="@(Model.Filter.MucGia == "under300")"
-                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                               onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                         <span>@L["Product_PriceUnder300"]</span>
                     </label>
                     <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
                         <input type="radio" name="mucGia" value="300to500" checked="@(Model.Filter.MucGia == "300to500")"
-                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                               onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                         <span>@L["Product_Price300to500"]</span>
                     </label>
                     <label class="flex items-center gap-2 text-xs text-charcoal/90 cursor-pointer select-none">
                         <input type="radio" name="mucGia" value="over500" checked="@(Model.Filter.MucGia == "over500")"
-                               onchange="onCatalogFilterChange('@L["Toast_NetworkError"]')" class="accent-primary cursor-pointer" />
+                               onchange="onCatalogFilterChange()" class="accent-primary cursor-pointer" />
                         <span>@L["Product_PriceOver500"]</span>
                     </label>
                 </div>

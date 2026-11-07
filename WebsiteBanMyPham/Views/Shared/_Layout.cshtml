@@ -1,11 +1,14 @@
 @using System.Globalization
 @using WebsiteBanMyPham.Constants
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+    <meta name="user-role" content="@(User.IsInRole(VaiTroConstant.QuanTriVien) ? "QuanTriVien" : (User.IsInRole(VaiTroConstant.KhachHang) ? "KhachHang" : "Guest"))" />
     <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} - {L["Brand_Name"]}" : L["Brand_Name"].Value)</title>
 
     <!-- Tailwind CSS (Ghim phiên bản 3.4.17) -->

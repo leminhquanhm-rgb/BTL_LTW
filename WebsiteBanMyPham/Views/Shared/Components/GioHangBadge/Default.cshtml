@@ -3,9 +3,6 @@
 <a asp-controller="GioHang" asp-action="Index" class="px-3 py-2 rounded-btn bg-pastel hover:bg-nude text-charcoal flex items-center gap-1.5 text-xs font-bold transition shadow-sm" title="@L["Nav_Cart"]">
     <i class="ph-fill ph-shopping-bag text-lg text-primary"></i>
     <span class="hidden sm:inline">@L["Nav_Cart"]</span>
-    @if (Model.HasValue)
-    {
-        <span id="header-cart-count" class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[11px] font-bold">@Model.Value</span>
-    }
+    <span id="header-cart-count" class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[11px] font-bold @(Model.HasValue && Model.Value > 0 ? "" : "hidden")">@(Model ?? 0)</span>
 </a>
 

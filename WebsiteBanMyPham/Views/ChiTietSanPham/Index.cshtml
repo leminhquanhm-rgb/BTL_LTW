@@ -40,7 +40,7 @@
                     @for (int i = 0; i < Model.DanhSachAnh.Count; i++)
                     {
                         var img = Model.DanhSachAnh[i];
-                        <div onclick="document.getElementById('detail-main-img').src = '@img'"
+                        <div data-img="@img" onclick="changeDetailMainImg(this)"
                              class="aspect-square rounded-btn overflow-hidden border border-borderLight hover:border-primary cursor-pointer transition">
                             <img src="@img" alt="Thumbnail @i" onerror="this.src='/images/placeholder.svg'" class="w-full h-full object-cover" />
                         </div>
@@ -123,6 +123,8 @@
                 @if (Model.ConHang)
                 {
                     <button type="button"
+                            onclick="themVaoGio(@Model.MaSP, getDetailQty(), this)"
+                            data-ten-sp="@Model.TenSP"
                             class="flex-1 py-3 px-5 bg-cream hover:bg-pastel text-charcoal text-xs sm:text-sm font-bold rounded-btn border border-borderLight transition shadow-sm flex items-center justify-center gap-2">
                         <i class="ph-bold ph-shopping-bag text-base"></i>
                         <span>@L["Product_AddToCart"]</span>
@@ -210,7 +212,7 @@
             else
             {
                 <div class="p-8 text-center text-xs text-muted">
-                    <p>Không có sản phẩm liên quan nào khác trong danh mục này.</p>
+                    <p>@L["Product_NoRelatedProducts"]</p>
                 </div>
             }
         </div>
@@ -227,6 +229,18 @@
             if (val < 1) val = 1;
             if (val > 99) val = 99;
             el.innerText = val;
+        }
+
+        function getDetailQty() {
+            var el = document.getElementById('detail-qty');
+            return el ? (parseInt(el.innerText, 10) || 1) : 1;
+        }
+
+        function changeDetailMainImg(thumb) {
+            var main = document.getElementById('detail-main-img');
+            if (main && thumb && thumb.dataset.img) {
+                main.src = thumb.dataset.img;
+            }
         }
     </script>
 }

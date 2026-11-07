@@ -1002,4 +1002,147 @@
   <data name="Toast_NetworkError" xml:space="preserve">
     <value>Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.</value>
   </data>
+
+  <!-- Bước 5C: Giỏ hàng và Web API AJAX -->
+  <data name="Api_Error_UnauthorizedTitle" xml:space="preserve">
+    <value>Chưa đăng nhập</value>
+  </data>
+  <data name="Api_Error_UnauthorizedDetail" xml:space="preserve">
+    <value>Bạn cần đăng nhập để thực hiện thao tác này.</value>
+  </data>
+  <data name="Api_Error_ForbiddenTitle" xml:space="preserve">
+    <value>Không có quyền truy cập</value>
+  </data>
+  <data name="Api_Error_ForbiddenDetail" xml:space="preserve">
+    <value>Bạn không có quyền thực hiện thao tác này.</value>
+  </data>
+  <data name="Api_Error_AdminCannotUseCart" xml:space="preserve">
+    <value>Quản trị viên không sử dụng chức năng giỏ hàng</value>
+  </data>
+  <data name="Api_Error_CartItemNotFound" xml:space="preserve">
+    <value>Dòng giỏ hàng không tồn tại hoặc không thuộc quyền sở hữu của bạn.</value>
+  </data>
+  <data name="Api_Error_CartQuantityInvalid" xml:space="preserve">
+    <value>Số lượng sản phẩm phải từ 1 đến 99.</value>
+  </data>
+  <data name="Api_Error_SessionExpired" xml:space="preserve">
+    <value>Phiên làm việc đã hết hạn. Vui lòng tải lại trang.</value>
+  </data>
+  <data name="Api_Error_ReloadPage" xml:space="preserve">
+    <value>Tải lại trang</value>
+  </data>
+  <data name="Api_Error_InvalidPromoRequest" xml:space="preserve">
+    <value>Yêu cầu kiểm tra mã không hợp lệ.</value>
+  </data>
+  <data name="Api_Error_EmptyCartSelection" xml:space="preserve">
+    <value>Vui lòng chọn ít nhất một sản phẩm trong giỏ.</value>
+  </data>
+  <data name="Cart_PageTitle" xml:space="preserve">
+    <value>Giỏ hàng của bạn</value>
+  </data>
+  <data name="Cart_PageSubtitle" xml:space="preserve">
+    <value>Tích chọn sản phẩm cần mua, điều chỉnh số lượng và áp dụng mã giảm giá</value>
+  </data>
+  <data name="Cart_ContinueShopping" xml:space="preserve">
+    <value>+ Mua thêm sản phẩm khác</value>
+  </data>
+  <data name="Cart_CheckAll" xml:space="preserve">
+    <value>Chọn tất cả sản phẩm trong giỏ</value>
+  </data>
+  <data name="Cart_TableHeader_Action" xml:space="preserve">
+    <value>Số lượng / Thành tiền / Xóa</value>
+  </data>
+  <data name="Cart_EmptyTitle" xml:space="preserve">
+    <value>Giỏ hàng của bạn đang trống</value>
+  </data>
+  <data name="Cart_EmptySubtitle" xml:space="preserve">
+    <value>Hãy chọn những sản phẩm mỹ phẩm yêu thích và thêm vào giỏ ngay nhé!</value>
+  </data>
+  <data name="Cart_SummaryTitle" xml:space="preserve">
+    <value>Tóm tắt giỏ hàng &amp; Mã giảm giá</value>
+  </data>
+  <data name="Cart_PromoSectionTitle" xml:space="preserve">
+    <value>Mã khuyến mãi (Nhập hoặc Chọn)</value>
+  </data>
+  <data name="Cart_RemovePromo" xml:space="preserve">
+    <value>Bỏ chọn / Xóa mã</value>
+  </data>
+  <data name="Cart_PromoPlaceholder" xml:space="preserve">
+    <value>Nhập mã khuyến mãi</value>
+  </data>
+  <data name="Cart_ApplyPromo" xml:space="preserve">
+    <value>Áp dụng</value>
+  </data>
+  <data name="Cart_AvailablePromosTitle" xml:space="preserve">
+    <value>Hoặc bấm chọn trực tiếp mã có sẵn:</value>
+  </data>
+  <data name="Cart_SelectedCount" xml:space="preserve">
+    <value>Sản phẩm đã tích chọn:</value>
+  </data>
+  <data name="Cart_Subtotal" xml:space="preserve">
+    <value>Tạm tính tiền hàng:</value>
+  </data>
+  <data name="Cart_Discount" xml:space="preserve">
+    <value>Giảm giá khuyến mãi:</value>
+  </data>
+  <data name="Cart_EstimatedTotal" xml:space="preserve">
+    <value>Tổng thanh toán dự kiến:</value>
+  </data>
+  <data name="Cart_ProceedToCheckout" xml:space="preserve">
+    <value>Tiến hành đặt hàng &amp; Thanh toán</value>
+  </data>
+  <data name="Cart_CheckoutDisabledNote" xml:space="preserve">
+    <value>Chức năng đặt hàng sẽ được kích hoạt ở Bước tiếp theo</value>
+  </data>
+  <data name="Cart_AddedSuccess" xml:space="preserve">
+    <value>Đã thêm sản phẩm vào giỏ hàng!</value>
+  </data>
+  <data name="Cart_UpdatedSuccess" xml:space="preserve">
+    <value>Đã cập nhật số lượng giỏ hàng!</value>
+  </data>
+  <data name="Cart_DeletedSuccess" xml:space="preserve">
+    <value>Đã xóa sản phẩm khỏi giỏ hàng!</value>
+  </data>
+  <data name="Cart_ConfirmDelete" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?</value>
+  </data>
+  <data name="Cart_ItemOutOfStockWarning" xml:space="preserve">
+    <value>Hết hàng</value>
+  </data>
+  <data name="Cart_ItemStoppedWarning" xml:space="preserve">
+    <value>Ngừng bán</value>
+  </data>
+  <data name="Cart_ItemExceedWarning" xml:space="preserve">
+    <value>Vượt tồn kho (Còn {0})</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>Chọn</value>
+  </data>
+  <data name="Product_RelatedSubtitle" xml:space="preserve">
+    <value>Gợi ý những sản phẩm phù hợp kết hợp cùng chu trình dưỡng da</value>
+  </data>
+  <data name="Product_NoResultsHint" xml:space="preserve">
+    <value>Vui lòng thử tìm kiếm bằng từ khóa khác hoặc xóa bớt các tiêu chí lọc để xem thêm sản phẩm.</value>
+  </data>
+  <data name="Product_NoRelatedProducts" xml:space="preserve">
+    <value>Không có sản phẩm liên quan nào khác trong danh mục này.</value>
+  </data>
+  <data name="Payment_Method_COD" xml:space="preserve">
+    <value>Thanh toán khi nhận hàng (COD)</value>
+  </data>
+  <data name="Payment_Method_Online" xml:space="preserve">
+    <value>Thanh toán trực tuyến</value>
+  </data>
+  <data name="Status_Payment_ChoHoan" xml:space="preserve">
+    <value>Chờ hoàn tiền</value>
+  </data>
+  <data name="Status_Payment_DaHoan" xml:space="preserve">
+    <value>Đã hoàn tiền</value>
+  </data>
+  <data name="Cart_MinOrder" xml:space="preserve">
+    <value>Đơn tối thiểu:</value>
+  </data>
+  <data name="Cart_UsesRemaining" xml:space="preserve">
+    <value>Còn {0} lượt</value>
+  </data>
 </root>

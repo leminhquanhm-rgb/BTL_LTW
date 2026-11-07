@@ -57,8 +57,12 @@ namespace WebsiteBanMyPham.ViewModels
                         GiaTu = 500001m;
                         GiaDen = null;
                         break;
+                    case "all":
+                        GiaTu = null;
+                        GiaDen = null;
+                        break;
                     default:
-                        // "all" hoặc không xác định
+                        // Không xác định
                         break;
                 }
             }

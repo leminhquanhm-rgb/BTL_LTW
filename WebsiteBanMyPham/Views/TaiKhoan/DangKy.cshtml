@@ -87,7 +87,7 @@
                     </span>
                     <input asp-for="MatKhau" type="password" id="reg-matkhau" autocomplete="new-password" placeholder="••••••••"
                            class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
-                    <button type="button" onclick="togglePassword('reg-matkhau', this)"
+                    <button type="button" data-target="reg-matkhau" onclick="togglePassword(this)"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
                         <i class="ph ph-eye text-base"></i>
                     </button>
@@ -104,7 +104,7 @@
                     </span>
                     <input asp-for="XacNhanMatKhau" type="password" id="reg-xacnhan-matkhau" autocomplete="new-password" placeholder="••••••••"
                            class="w-full pl-10 pr-10 py-2.5 bg-surface border border-borderLight rounded-btn text-sm text-charcoal placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition" />
-                    <button type="button" onclick="togglePassword('reg-xacnhan-matkhau', this)"
+                    <button type="button" data-target="reg-xacnhan-matkhau" onclick="togglePassword(this)"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal transition p-1">
                         <i class="ph ph-eye text-base"></i>
                     </button>
