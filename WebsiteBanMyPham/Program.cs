@@ -105,12 +105,16 @@ namespace WebsiteBanMyPham
             // Đăng ký Helper đa ngôn ngữ
             builder.Services.AddScoped<ILocalizationHelper, LocalizationHelper>();
 
+            // Đăng ký Dịch vụ chống đặt trùng (Singleton với máy trạng thái atomic)
+            builder.Services.AddSingleton<IOrderAntiDuplicateService, OrderAntiDuplicateService>();
+
             // Đăng ký Services nghiệp vụ
             builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
             builder.Services.AddScoped<ISanPhamService, SanPhamService>();
             builder.Services.AddScoped<IGioHangService, GioHangService>();
             builder.Services.AddScoped<IKhuyenMaiService, KhuyenMaiService>();
             builder.Services.AddScoped<IDonHangService, DonHangService>();
+            builder.Services.AddScoped<IDatHangService, DatHangService>();
 
             var app = builder.Build();
 

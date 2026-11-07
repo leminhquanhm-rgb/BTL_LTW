@@ -225,16 +225,13 @@
                     </div>
                 </div>
 
-                <!-- Nút Tiến hành đặt hàng & Thanh toán (Vô hiệu hóa ở Bước 5C theo yêu cầu) -->
-                <div class="space-y-1.5">
-                    <button type="button" id="btn-proceed-checkout" disabled
-                            class="w-full py-3.5 bg-primary text-white text-sm font-bold rounded-btn opacity-60 cursor-not-allowed flex items-center justify-center gap-2 shadow-soft">
+                <!-- Nút Tiến hành đặt hàng & Thanh toán (Kích hoạt ở Bước 5D) -->
+                <div>
+                    <button type="button" id="btn-proceed-checkout" onclick="proceedToCheckout()" disabled
+                            class="w-full py-3.5 bg-primary text-white text-sm font-bold rounded-btn opacity-60 cursor-not-allowed flex items-center justify-center gap-2 shadow-soft transition">
                         <span>@L["Cart_ProceedToCheckout"]</span>
                         <i class="ph-bold ph-arrow-right"></i>
                     </button>
-                    <p class="text-[11px] text-center text-muted italic">
-                        @L["Cart_CheckoutDisabledNote"]
-                    </p>
                 </div>
             </div>
         </div>
@@ -291,6 +288,7 @@
             var subtotalEl = document.getElementById("summary-subtotal");
             var discountEl = document.getElementById("summary-discount");
             var totalEl = document.getElementById("summary-total");
+            var checkoutBtn = document.getElementById("btn-proceed-checkout");
 
             if (countEl) countEl.innerText = selectedIds.length;
 
@@ -301,6 +299,12 @@
                 appliedDiscountAmount = 0;
                 setPromoFeedback("", false);
                 refreshAvailablePromos([]);
+
+                if (checkoutBtn) {
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.classList.add("opacity-60", "cursor-not-allowed");
+                    checkoutBtn.classList.remove("hover:bg-primaryHover", "cursor-pointer");
+                }
                 return;
             }
 
@@ -318,6 +322,13 @@
 
             if (subtotalEl) subtotalEl.innerText = formatCurrencyClient(subtotal);
 
+            // Bật nút đặt hàng khi có ít nhất 1 dòng được chọn
+            if (checkoutBtn) {
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove("opacity-60", "cursor-not-allowed");
+                checkoutBtn.classList.add("hover:bg-primaryHover", "cursor-pointer");
+            }
+
             // Tự động kiểm tra lại mã nếu đang có mã áp dụng
             if (appliedPromoCode) {
                 await verifyPromoCode(appliedPromoCode, selectedIds);
@@ -329,6 +340,16 @@
 
             // Cập nhật danh sách voucher khả dụng theo dòng đã chọn
             loadAvailablePromos(selectedIds);
+        }
+
+        function proceedToCheckout() {
+            var selectedIds = getSelectedCartItemIds();
+            if (selectedIds.length === 0) return;
+            var query = selectedIds.map(function (id) { return "maGH=" + id; }).join("&");
+            if (appliedPromoCode) {
+                query += "&code=" + encodeURIComponent(appliedPromoCode);
+            }
+            window.location.href = "/DatHang?" + query;
         }
 
         async function onChangeQuantityBtn(maGH, delta) {

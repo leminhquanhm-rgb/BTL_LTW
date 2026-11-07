@@ -1091,9 +1091,6 @@
   <data name="Cart_ProceedToCheckout" xml:space="preserve">
     <value>Proceed to checkout</value>
   </data>
-  <data name="Cart_CheckoutDisabledNote" xml:space="preserve">
-    <value>Checkout will be enabled in the next step</value>
-  </data>
   <data name="Cart_AddedSuccess" xml:space="preserve">
     <value>Product added to cart successfully!</value>
   </data>
@@ -1144,5 +1141,135 @@
   </data>
   <data name="Cart_UsesRemaining" xml:space="preserve">
     <value>{0} uses left</value>
+  </data>
+  <!-- Step 5D Checkout & Payment Keys -->
+  <data name="Checkout_PageTitle" xml:space="preserve">
+    <value>Checkout &amp; Payment</value>
+  </data>
+  <data name="Checkout_Breadcrumb" xml:space="preserve">
+    <value>Checkout</value>
+  </data>
+  <data name="Checkout_RecipientTitle" xml:space="preserve">
+    <value>1. Delivery Information</value>
+  </data>
+  <data name="Checkout_PaymentTitle" xml:space="preserve">
+    <value>2. Select Payment Method</value>
+  </data>
+  <data name="Checkout_OrderSummaryTitle" xml:space="preserve">
+    <value>3. Order Items &amp; Promotions</value>
+  </data>
+  <data name="Checkout_ModeCart" xml:space="preserve">
+    <value>From Cart</value>
+  </data>
+  <data name="Checkout_ModeBuyNow" xml:space="preserve">
+    <value>Buy Now</value>
+  </data>
+  <data name="Checkout_BuyNowBanner" xml:space="preserve">
+    <value>Direct purchase for single item (items not added to cart, current cart remains unchanged).</value>
+  </data>
+  <data name="Checkout_BackToCart" xml:space="preserve">
+    <value>Back to Cart</value>
+  </data>
+  <data name="Checkout_ConfirmOrder" xml:space="preserve">
+    <value>Confirm Order</value>
+  </data>
+  <data name="Checkout_StockWarning" xml:space="preserve">
+    <value>Some products exceed available stock or are discontinued. Please check again.</value>
+  </data>
+  <data name="Checkout_EmptySelection" xml:space="preserve">
+    <value>No products selected for checkout.</value>
+  </data>
+  <data name="Checkout_ProcessingOrDuplicate" xml:space="preserve">
+    <value>Your order is currently processing or duplicate request detected. Please check your orders.</value>
+  </data>
+  <data name="Checkout_SessionExpired" xml:space="preserve">
+    <value>Your checkout session has expired. Please review and place your order again.</value>
+  </data>
+  <data name="Checkout_Subtotal" xml:space="preserve">
+    <value>Subtotal:</value>
+  </data>
+  <data name="Checkout_Discount" xml:space="preserve">
+    <value>Discount:</value>
+  </data>
+  <data name="Checkout_Total" xml:space="preserve">
+    <value>Total payment:</value>
+  </data>
+  <data name="Payment_Method_COD_Desc" xml:space="preserve">
+    <value>Pay in cash upon delivery</value>
+  </data>
+  <data name="Payment_Method_Online_Desc" xml:space="preserve">
+    <value>Simulated online payment (Sandbox) - no real money deducted</value>
+  </data>
+  <data name="Payment_Method_Online_Badge" xml:space="preserve">
+    <value>Simulated</value>
+  </data>
+  <data name="OrderSuccess_PageTitle" xml:space="preserve">
+    <value>Order Placed Successfully</value>
+  </data>
+  <data name="OrderSuccess_Heading" xml:space="preserve">
+    <value>Order placed successfully!</value>
+  </data>
+  <data name="OrderSuccess_Subtitle" xml:space="preserve">
+    <value>Thank you for shopping at {0}. Your order has been recorded in our system.</value>
+  </data>
+  <data name="OrderSuccess_OrderCode" xml:space="preserve">
+    <value>Order Code:</value>
+  </data>
+  <data name="OrderSuccess_OrderDate" xml:space="preserve">
+    <value>Order Date:</value>
+  </data>
+  <data name="OrderSuccess_ContinueShopping" xml:space="preserve">
+    <value>Continue Shopping</value>
+  </data>
+  <data name="OrderSuccess_ViewMyOrders" xml:space="preserve">
+    <value>View My Orders</value>
+  </data>
+  <data name="PaymentSim_PageTitle" xml:space="preserve">
+    <value>Simulated Online Payment Gateway</value>
+  </data>
+  <data name="PaymentSim_Notice" xml:space="preserve">
+    <value>This is a simulated Sandbox online payment page, NO real money will be charged.</value>
+  </data>
+  <data name="PaymentSim_Amount" xml:space="preserve">
+    <value>Payment Amount:</value>
+  </data>
+  <data name="PaymentSim_OrderCode" xml:space="preserve">
+    <value>Order Code:</value>
+  </data>
+  <data name="PaymentSim_BtnSuccess" xml:space="preserve">
+    <value>Simulate: Payment SUCCESS</value>
+  </data>
+  <data name="PaymentSim_BtnFail" xml:space="preserve">
+    <value>Simulate: Payment FAILED</value>
+  </data>
+  <data name="PaymentSim_BtnBack" xml:space="preserve">
+    <value>Back to Order</value>
+  </data>
+  <data name="PaymentSim_FailedMessage" xml:space="preserve">
+    <value>Online payment failed. You can retry payment or choose another method.</value>
+  </data>
+  <data name="PaymentSim_SuccessMessage" xml:space="preserve">
+    <value>Online payment succeeded!</value>
+  </data>
+  <data name="PaymentSim_NotAllowed" xml:space="preserve">
+    <value>Simulated payment feature is currently disabled.</value>
+  </data>
+  <data name="Product_BuyNowAdminWarning" xml:space="preserve">
+    <value>Administrators cannot use shopping features.</value>
+  </data>
+  <data name="Msg_Order_CancelledCannotPay" xml:space="preserve">
+    <value>This order has been cancelled and cannot be paid.</value>
+  </data>
+  <data name="Label_TrangThai" xml:space="preserve">
+    <value>Order status</value>
+  </data>
+  <data name="Label_TrangThaiThanhToan" xml:space="preserve">
+    <value>Payment status</value>
+  </data>
+  <data name="Msg_Order_ProductNotFound" xml:space="preserve">
+    <value>Requested product not found.</value>
+  </data>
+  <data name="Msg_Order_OutOfStock" xml:space="preserve">
+    <value>Product is out of stock or insufficient quantity.</value>
   </data>
 </root>

@@ -91,5 +91,21 @@ namespace WebsiteBanMyPham.Helpers
             }
             return localized.Value;
         }
+
+        public string MaDonHang(int maDH)
+        {
+            return $"#DH{maDH}";
+        }
+
+        public string GetPaymentMethodLabel(string tenPT)
+        {
+            if (string.IsNullOrWhiteSpace(tenPT))
+            {
+                return string.Empty;
+            }
+
+            var localized = _localizer[$"Payment_Method_{tenPT}"];
+            return localized.ResourceNotFound ? tenPT : localized.Value;
+        }
     }
 }

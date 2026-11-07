@@ -383,3 +383,29 @@ async function themVaoGio(maSP, soLuong, btnOrTenSP, legacyBtn) {
         showToast(successMsg, true);
     }
 }
+
+// 11. Hàm Mua ngay dùng chung (ProductCard & ProductDetail)
+function muaNgay(maSP, soLuong, btn) {
+    var roleMeta = document.querySelector('meta[name="user-role"]');
+    var role = roleMeta ? roleMeta.content : "";
+    if (role === "QuanTriVien") {
+        var adminMsg = document.getElementById("msg-admin-buy")?.value || document.getElementById("msg-admin-cart")?.value || "Quản trị viên không sử dụng chức năng mua hàng.";
+        showToast(adminMsg, false);
+        return;
+    }
+
+    var qty = parseInt(soLuong, 10) || 1;
+    var targetUrl = "/DatHang?maSP=" + maSP + "&soLuong=" + qty;
+
+    if (!role || role === "") {
+        window.location.href = "/TaiKhoan/DangNhap?returnUrl=" + encodeURIComponent(targetUrl);
+        return;
+    }
+
+    window.location.href = targetUrl;
+}
+
+function muaNgayDetail(maSP, btn) {
+    var qty = typeof getDetailQty === "function" ? getDetailQty() : 1;
+    muaNgay(maSP, qty, btn);
+}

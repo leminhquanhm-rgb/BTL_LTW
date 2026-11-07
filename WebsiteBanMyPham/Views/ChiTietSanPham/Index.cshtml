@@ -131,6 +131,8 @@
                     </button>
 
                     <button type="button"
+                            onclick="muaNgayDetail(@Model.MaSP, this)"
+                            data-ten-sp="@Model.TenSP"
                             class="py-3 px-6 bg-primary hover:bg-primaryHover text-white text-xs sm:text-sm font-bold rounded-btn transition shadow-soft flex items-center justify-center gap-1.5">
                         <i class="ph-fill ph-lightning text-base"></i>
                         <span>@L["Product_BuyNow"]</span>

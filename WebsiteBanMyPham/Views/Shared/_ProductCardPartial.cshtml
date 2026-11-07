@@ -76,6 +76,8 @@
                     <span>@L["Product_AddToCart"]</span>
                 </button>
                 <button type="button"
+                        onclick="muaNgay(@Model.MaSP, 1, this)"
+                        data-ten-sp="@Model.TenSP"
                         class="py-2 bg-primary hover:bg-primaryHover text-white font-bold rounded-btn transition flex items-center justify-center gap-1 shadow-sm">
                     <i class="ph-fill ph-lightning"></i>
                     <span>@L["Product_BuyNow"]</span>

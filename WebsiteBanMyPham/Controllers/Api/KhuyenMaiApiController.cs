@@ -16,15 +16,18 @@ namespace WebsiteBanMyPham.Controllers.Api
     public class KhuyenMaiApiController : ControllerBase
     {
         private readonly IKhuyenMaiService _khuyenMaiService;
+        private readonly IDatHangService _datHangService;
         private readonly WebsiteBanMyPhamContext _context;
         private readonly IStringLocalizer<SharedResource> _localizer;
 
         public KhuyenMaiApiController(
             IKhuyenMaiService khuyenMaiService,
+            IDatHangService datHangService,
             WebsiteBanMyPhamContext context,
             IStringLocalizer<SharedResource> localizer)
         {
             _khuyenMaiService = khuyenMaiService;
+            _datHangService = datHangService;
             _context = context;
             _localizer = localizer;
         }
@@ -90,7 +93,7 @@ namespace WebsiteBanMyPham.Controllers.Api
                 });
             }
 
-            if (request == null || string.IsNullOrWhiteSpace(request.Code) || request.MaGHDaChon == null)
+            if (request == null || string.IsNullOrWhiteSpace(request.Code))
             {
                 return BadRequest(new ProblemDetails
                 {
@@ -113,50 +116,85 @@ namespace WebsiteBanMyPham.Controllers.Api
                 });
             }
 
-            var distinctIds = request.MaGHDaChon.Distinct().ToList();
-            if (distinctIds.Count == 0)
+            bool hasCart = request.MaGHDaChon != null && request.MaGHDaChon.Any();
+            bool hasBuyNow = request.MaSP.HasValue && request.MaSP.Value > 0 && request.SoLuong.HasValue && request.SoLuong.Value >= 1 && request.SoLuong.Value <= 99;
+
+            if ((hasCart && hasBuyNow) || (!hasCart && !hasBuyNow))
             {
                 return BadRequest(new ProblemDetails
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
-                    Detail = _localizer["Api_Error_EmptyCartSelection"].Value,
+                    Detail = _localizer["Msg_Order_SourceInvalid"].Value,
                     Instance = HttpContext.Request.Path
                 });
             }
 
-            if (distinctIds.Count > 100)
+            decimal tongTienHang = 0;
+
+            if (hasCart)
             {
-                return BadRequest(new ProblemDetails
+                var distinctIds = request.MaGHDaChon!.Distinct().ToList();
+                if (distinctIds.Count == 0)
                 {
-                    Status = StatusCodes.Status400BadRequest,
-                    Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
-                    Detail = _localizer["Validation_MaxLength", 100].Value,
-                    Instance = HttpContext.Request.Path
-                });
+                    return BadRequest(new ProblemDetails
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
+                        Detail = _localizer["Api_Error_EmptyCartSelection"].Value,
+                        Instance = HttpContext.Request.Path
+                    });
+                }
+
+                if (distinctIds.Count > 100)
+                {
+                    return BadRequest(new ProblemDetails
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Title = _localizer["Api_Error_InvalidPromoRequest"].Value,
+                        Detail = _localizer["Validation_MaxLength", 100].Value,
+                        Instance = HttpContext.Request.Path
+                    });
+                }
+
+                // Kiểm tra quyền sở hữu tất cả các dòng giỏ được chọn
+                var items = await _context.GioHang
+                    .AsNoTracking()
+                    .Where(g => g.MaTK == maTK.Value && distinctIds.Contains(g.MaGH))
+                    .Include(g => g.MaSPNavigation)
+                    .ToListAsync();
+
+                if (items.Count != distinctIds.Count)
+                {
+                    return NotFound(new ProblemDetails
+                    {
+                        Status = StatusCodes.Status404NotFound,
+                        Title = _localizer["Api_Error_NotFoundTitle"].Value,
+                        Detail = _localizer["Api_Error_CartItemNotFound"].Value,
+                        Instance = HttpContext.Request.Path
+                    });
+                }
+
+                // Tự động tính tổng tiền hàng từ các dòng giỏ hợp lệ thuộc khách hàng
+                var hopLeItems = items.Where(i => i.MaSPNavigation.TrangThai && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
+                tongTienHang = hopLeItems.Sum(i => i.MaSPNavigation.Gia * i.SoLuong);
             }
-
-            // Kiểm tra quyền sở hữu tất cả các dòng giỏ được chọn
-            var items = await _context.GioHang
-                .AsNoTracking()
-                .Where(g => g.MaTK == maTK.Value && distinctIds.Contains(g.MaGH))
-                .Include(g => g.MaSPNavigation)
-                .ToListAsync();
-
-            if (items.Count != distinctIds.Count)
+            else
             {
-                return NotFound(new ProblemDetails
+                // Toàn bộ logic nguồn Mua ngay xử lý trong Service theo Điều chỉnh 5
+                var buyNowCheck = await _datHangService.KiemTraNguonMuaNgayChoKhuyenMaiAsync(request.MaSP!.Value, request.SoLuong!.Value);
+                if (!buyNowCheck.HopLe)
                 {
-                    Status = StatusCodes.Status404NotFound,
-                    Title = _localizer["Api_Error_NotFoundTitle"].Value,
-                    Detail = _localizer["Api_Error_CartItemNotFound"].Value,
-                    Instance = HttpContext.Request.Path
-                });
+                    return StatusCode(buyNowCheck.StatusCode, new ProblemDetails
+                    {
+                        Status = buyNowCheck.StatusCode,
+                        Title = buyNowCheck.ErrorTitle,
+                        Detail = buyNowCheck.ErrorDetail,
+                        Instance = HttpContext.Request.Path
+                    });
+                }
+                tongTienHang = buyNowCheck.TongTienHang;
             }
-
-            // Tự động tính tổng tiền hàng từ các dòng giỏ hợp lệ thuộc khách hàng
-            var hopLeItems = items.Where(i => i.MaSPNavigation.TrangThai && i.MaSPNavigation.SoLuongTon >= i.SoLuong && i.SoLuong > 0).ToList();
-            decimal tongTienHang = hopLeItems.Sum(i => i.MaSPNavigation.Gia * i.SoLuong);
 
             var ketQua = await _khuyenMaiService.TinhGiamAsync(codeTrim, tongTienHang);
 

@@ -4,12 +4,24 @@ namespace WebsiteBanMyPham.ViewModels.Api
 {
     public class KiemTraKhuyenMaiRequestDto
     {
-        [Required(ErrorMessage = "Mã khuyến mãi không được để trống.")]
-        [MaxLength(30, ErrorMessage = "Mã khuyến mãi tối đa 30 ký tự.")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [MaxLength(30, ErrorMessage = "Validation_MaxLength")]
         public string Code { get; set; } = null!;
 
-        [Required(ErrorMessage = "Danh sách dòng giỏ không được để trống.")]
-        public List<int> MaGHDaChon { get; set; } = new();
+        /// <summary>
+        /// Nguồn từ giỏ hàng: danh sách mã dòng giỏ được chọn
+        /// </summary>
+        public List<int>? MaGHDaChon { get; set; }
+
+        /// <summary>
+        /// Nguồn Mua ngay: mã sản phẩm
+        /// </summary>
+        public int? MaSP { get; set; }
+
+        /// <summary>
+        /// Nguồn Mua ngay: số lượng đặt mua (1 đến 99)
+        /// </summary>
+        [Range(1, 99, ErrorMessage = "Validation_RangeMin")]
+        public int? SoLuong { get; set; }
     }
 }
-

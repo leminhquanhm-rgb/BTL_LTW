@@ -11,5 +11,7 @@ namespace WebsiteBanMyPham.Helpers
         string GetPaymentStatusLabel(string status);
         string GetRefundStatusLabel(string status);
         string TenDanhMuc(int maDM, string tenGoc);
+        string MaDonHang(int maDH);
+        string GetPaymentMethodLabel(string tenPT);
     }
 }

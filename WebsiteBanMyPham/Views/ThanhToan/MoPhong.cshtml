@@ -1,0 +1,93 @@
+@model WebsiteBanMyPham.ViewModels.DonHangKhachChiTietViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+@{
+    ViewData["Title"] = L["PaymentSim_PageTitle"];
+}
+
+<div class="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
+    <!-- Header cảnh báo cổng thanh toán mô phỏng -->
+    <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary text-2xl mb-1 shadow-soft">
+            <i class="ph-bold ph-shield-check"></i>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-serif font-bold text-charcoal">@L["PaymentSim_PageTitle"]</h1>
+        <p class="text-xs text-muted">@L["Payment_Method_Online_Desc"]</p>
+    </div>
+
+    <!-- Thông báo môi trường Sandbox không trừ tiền thật -->
+    <div class="p-4 rounded-card bg-statusWarning/10 border border-statusWarning/30 text-statusWarning text-xs flex items-start gap-3">
+        <i class="ph-fill ph-info text-base shrink-0 mt-0.5"></i>
+        <p class="leading-relaxed font-medium">@L["PaymentSim_Notice"]</p>
+    </div>
+
+    <!-- Thông báo lỗi khi thanh toán thất bại (Điều chỉnh 2: Dùng ModelState / ViewData) -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs space-y-1" role="alert">
+            <div class="flex items-center gap-2 font-bold">
+                <i class="ph-fill ph-x-circle text-base"></i>
+                <span>@L["Common_Error"]</span>
+            </div>
+            <div asp-validation-summary="All" class="pl-6 list-disc [&>ul]:list-disc"></div>
+        </div>
+    }
+
+    <!-- Thẻ thông tin thanh toán -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft p-6 space-y-4">
+        <div class="flex justify-between items-center text-xs border-b border-borderLight pb-3">
+            <span class="text-muted">@L["PaymentSim_OrderCode"]</span>
+            <span class="font-bold font-mono text-charcoal">@LocHelper.MaDonHang(Model.MaDH)</span>
+        </div>
+
+        <div class="flex justify-between items-center text-xs border-b border-borderLight pb-3">
+            <span class="text-muted">@L["Checkout_RecipientTitle"]</span>
+            <span class="font-bold text-charcoal">@Model.TenNguoiNhan (@Model.SdtNguoiNhan)</span>
+        </div>
+
+        <div class="flex justify-between items-center text-xs border-b border-borderLight pb-3">
+            <span class="text-muted">@L["Label_PhuongThucThanhToan"]</span>
+            <span class="font-bold text-charcoal">@LocHelper.GetPaymentMethodLabel(Model.ThanhToan?.TenPT ?? "Online")</span>
+        </div>
+
+        <div class="flex justify-between items-center pt-1">
+            <span class="text-xs font-bold text-charcoal">@L["PaymentSim_Amount"]</span>
+            <span class="text-2xl font-bold text-primary">@LocHelper.FormatCurrency(Model.TongThanhToan)</span>
+        </div>
+    </div>
+
+    <!-- Ba nút hành động: Thành công, Thất bại, Quay lại -->
+    <div class="space-y-3 pt-2">
+        <!-- Nút 1: Giả lập thành công -->
+        <form asp-controller="ThanhToan" asp-action="XuLy" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="maDH" value="@Model.MaDH" />
+            <input type="hidden" name="thanhCong" value="true" />
+            <button type="submit"
+                    class="w-full py-3 px-4 bg-statusSuccess hover:opacity-90 text-white font-bold text-xs sm:text-sm rounded-btn transition shadow-sm flex items-center justify-center gap-2">
+                <i class="ph-bold ph-check"></i>
+                <span>@L["PaymentSim_BtnSuccess"]</span>
+            </button>
+        </form>
+
+        <!-- Nút 2: Giả lập thất bại -->
+        <form asp-controller="ThanhToan" asp-action="XuLy" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="maDH" value="@Model.MaDH" />
+            <input type="hidden" name="thanhCong" value="false" />
+            <button type="submit"
+                    class="w-full py-3 px-4 bg-statusDanger hover:opacity-90 text-white font-bold text-xs sm:text-sm rounded-btn transition shadow-sm flex items-center justify-center gap-2">
+                <i class="ph-bold ph-x"></i>
+                <span>@L["PaymentSim_BtnFail"]</span>
+            </button>
+        </form>
+
+        <!-- Nút 3: Quay lại đơn hàng -->
+        <a asp-controller="DatHang" asp-action="ThanhCong" asp-route-maDH="@Model.MaDH"
+           class="w-full py-2.5 px-4 bg-cream hover:bg-pastel text-charcoal font-bold text-xs rounded-btn border border-borderLight transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-arrow-left"></i>
+            <span>@L["PaymentSim_BtnBack"]</span>
+        </a>
+    </div>
+</div>
+

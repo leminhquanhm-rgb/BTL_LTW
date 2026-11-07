@@ -1091,9 +1091,6 @@
   <data name="Cart_ProceedToCheckout" xml:space="preserve">
     <value>Tiến hành đặt hàng &amp; Thanh toán</value>
   </data>
-  <data name="Cart_CheckoutDisabledNote" xml:space="preserve">
-    <value>Chức năng đặt hàng sẽ được kích hoạt ở Bước tiếp theo</value>
-  </data>
   <data name="Cart_AddedSuccess" xml:space="preserve">
     <value>Đã thêm sản phẩm vào giỏ hàng!</value>
   </data>
@@ -1144,5 +1141,135 @@
   </data>
   <data name="Cart_UsesRemaining" xml:space="preserve">
     <value>Còn {0} lượt</value>
+  </data>
+  <!-- Step 5D Checkout & Payment Keys -->
+  <data name="Checkout_PageTitle" xml:space="preserve">
+    <value>Đặt Hàng &amp; Thanh Toán</value>
+  </data>
+  <data name="Checkout_Breadcrumb" xml:space="preserve">
+    <value>Đặt hàng</value>
+  </data>
+  <data name="Checkout_RecipientTitle" xml:space="preserve">
+    <value>1. Thông tin nhận hàng</value>
+  </data>
+  <data name="Checkout_PaymentTitle" xml:space="preserve">
+    <value>2. Chọn phương thức thanh toán</value>
+  </data>
+  <data name="Checkout_OrderSummaryTitle" xml:space="preserve">
+    <value>3. Sản phẩm đặt mua &amp; Mã khuyến mãi</value>
+  </data>
+  <data name="Checkout_ModeCart" xml:space="preserve">
+    <value>Từ Giỏ hàng</value>
+  </data>
+  <data name="Checkout_ModeBuyNow" xml:space="preserve">
+    <value>Mua ngay</value>
+  </data>
+  <data name="Checkout_BuyNowBanner" xml:space="preserve">
+    <value>Đang thanh toán trực tiếp một sản phẩm (không thêm vào giỏ hàng, giỏ hiện tại được giữ nguyên).</value>
+  </data>
+  <data name="Checkout_BackToCart" xml:space="preserve">
+    <value>Quay lại Giỏ hàng</value>
+  </data>
+  <data name="Checkout_ConfirmOrder" xml:space="preserve">
+    <value>Xác Nhận Đặt Hàng</value>
+  </data>
+  <data name="Checkout_StockWarning" xml:space="preserve">
+    <value>Một số sản phẩm không đủ tồn kho hoặc đã ngừng kinh doanh. Vui lòng kiểm tra lại.</value>
+  </data>
+  <data name="Checkout_EmptySelection" xml:space="preserve">
+    <value>Chưa có sản phẩm nào được chọn để đặt hàng.</value>
+  </data>
+  <data name="Checkout_ProcessingOrDuplicate" xml:space="preserve">
+    <value>Đơn hàng đang được xử lý hoặc yêu cầu bị trùng lặp. Vui lòng kiểm tra đơn hàng của bạn.</value>
+  </data>
+  <data name="Checkout_SessionExpired" xml:space="preserve">
+    <value>Phiên đặt hàng đã hết hạn, vui lòng kiểm tra lại và đặt hàng lần nữa.</value>
+  </data>
+  <data name="Checkout_Subtotal" xml:space="preserve">
+    <value>Tiền hàng:</value>
+  </data>
+  <data name="Checkout_Discount" xml:space="preserve">
+    <value>Giảm giá:</value>
+  </data>
+  <data name="Checkout_Total" xml:space="preserve">
+    <value>Tổng thanh toán:</value>
+  </data>
+  <data name="Payment_Method_COD_Desc" xml:space="preserve">
+    <value>Thanh toán tiền mặt khi nhận hàng</value>
+  </data>
+  <data name="Payment_Method_Online_Desc" xml:space="preserve">
+    <value>Thanh toán trực tuyến mô phỏng (Sandbox) - không trừ tiền thật</value>
+  </data>
+  <data name="Payment_Method_Online_Badge" xml:space="preserve">
+    <value>Mô phỏng</value>
+  </data>
+  <data name="OrderSuccess_PageTitle" xml:space="preserve">
+    <value>Đặt Hàng Thành Công</value>
+  </data>
+  <data name="OrderSuccess_Heading" xml:space="preserve">
+    <value>Đặt hàng thành công!</value>
+  </data>
+  <data name="OrderSuccess_Subtitle" xml:space="preserve">
+    <value>Cảm ơn bạn đã mua sắm tại {0}. Đơn hàng của bạn đã được ghi nhận vào hệ thống.</value>
+  </data>
+  <data name="OrderSuccess_OrderCode" xml:space="preserve">
+    <value>Mã đơn hàng:</value>
+  </data>
+  <data name="OrderSuccess_OrderDate" xml:space="preserve">
+    <value>Ngày đặt hàng:</value>
+  </data>
+  <data name="OrderSuccess_ContinueShopping" xml:space="preserve">
+    <value>Tiếp tục mua sắm</value>
+  </data>
+  <data name="OrderSuccess_ViewMyOrders" xml:space="preserve">
+    <value>Xem đơn hàng của tôi</value>
+  </data>
+  <data name="PaymentSim_PageTitle" xml:space="preserve">
+    <value>Cổng Thanh Toán Trực Tuyến Mô Phỏng</value>
+  </data>
+  <data name="PaymentSim_Notice" xml:space="preserve">
+    <value>Đây là trang mô phỏng môi trường thanh toán trực tuyến (Sandbox), hệ thống KHÔNG trừ tiền thật.</value>
+  </data>
+  <data name="PaymentSim_Amount" xml:space="preserve">
+    <value>Số tiền thanh toán:</value>
+  </data>
+  <data name="PaymentSim_OrderCode" xml:space="preserve">
+    <value>Mã đơn hàng:</value>
+  </data>
+  <data name="PaymentSim_BtnSuccess" xml:space="preserve">
+    <value>Xác nhận: Thanh toán THÀNH CÔNG</value>
+  </data>
+  <data name="PaymentSim_BtnFail" xml:space="preserve">
+    <value>Giả lập: Thanh toán THẤT BẠI</value>
+  </data>
+  <data name="PaymentSim_BtnBack" xml:space="preserve">
+    <value>Quay lại đơn hàng</value>
+  </data>
+  <data name="PaymentSim_FailedMessage" xml:space="preserve">
+    <value>Thanh toán trực tuyến thất bại. Bạn có thể thử thanh toán lại hoặc chọn phương thức khác.</value>
+  </data>
+  <data name="PaymentSim_SuccessMessage" xml:space="preserve">
+    <value>Thanh toán trực tuyến thành công!</value>
+  </data>
+  <data name="PaymentSim_NotAllowed" xml:space="preserve">
+    <value>Chức năng thanh toán mô phỏng hiện không được bật.</value>
+  </data>
+  <data name="Product_BuyNowAdminWarning" xml:space="preserve">
+    <value>Quản trị viên không sử dụng chức năng mua hàng.</value>
+  </data>
+  <data name="Msg_Order_CancelledCannotPay" xml:space="preserve">
+    <value>Đơn hàng này đã bị hủy, không thể tiếp tục thanh toán.</value>
+  </data>
+  <data name="Label_TrangThai" xml:space="preserve">
+    <value>Trạng thái đơn hàng</value>
+  </data>
+  <data name="Label_TrangThaiThanhToan" xml:space="preserve">
+    <value>Trạng thái thanh toán</value>
+  </data>
+  <data name="Msg_Order_ProductNotFound" xml:space="preserve">
+    <value>Không tìm thấy sản phẩm yêu cầu.</value>
+  </data>
+  <data name="Msg_Order_OutOfStock" xml:space="preserve">
+    <value>Sản phẩm đã hết hàng hoặc không đủ số lượng.</value>
   </data>
 </root>
