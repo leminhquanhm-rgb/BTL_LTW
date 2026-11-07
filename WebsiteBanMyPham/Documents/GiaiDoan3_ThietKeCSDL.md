@@ -62,6 +62,7 @@ Giai đoạn này thiết kế cơ sở dữ liệu WebsiteBanMyPham trên SQL S
 * Thanh toán có trạng thái ChuaThanhToan, DaThanhToan, ThatBai; trạng thái hoàn tiền được quản lý riêng.
 * Đánh giá gắn với một chi tiết đơn hàng; SoSao từ 1 đến 5; trạng thái ChoDuyet, DaDuyet hoặc TuChoi.
 * Ứng dụng phải kiểm tra đơn hàng thuộc khách hàng gửi khiếu nại và người xử lý khiếu nại có vai trò QuanTriVien.
+* Cột KhieuNai.MaDH cho phép NULL ở mức cơ sở dữ liệu để giữ tương thích với dữ liệu khiếu nại cũ. Với khiếu nại tạo mới, ứng dụng bắt buộc có MaDH; đơn phải ở trạng thái HoanThanh và thời điểm gửi không quá 10 ngày kể từ NgayGiaoThanhCong; MaSP (nếu có) phải thuộc ChiTietDonHang của đơn đó; NoiDung từ 10 đến 1000 ký tự. Các quy tắc này được kiểm tra ở tầng ứng dụng, không thay đổi cấu trúc bảng.
 
 ## 3.5. Dữ liệu mẫu
 

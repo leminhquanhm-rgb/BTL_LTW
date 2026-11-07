@@ -57,7 +57,7 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 | 16 | Quản lý đơn hàng cá nhân | Xem lịch sử, chi tiết và trạng thái đơn hàng. |
 | 17 | Hủy đơn hàng | Hủy đơn hàng khi đáp ứng điều kiện được phép hủy. |
 | 18 | Đánh giá sản phẩm | Gửi đánh giá và nhận xét về sản phẩm đã mua. |
-| 19 | Gửi khiếu nại | Gửi khiếu nại liên quan đến sản phẩm hoặc đơn hàng. |
+| 19 | Gửi khiếu nại | Gửi khiếu nại về một đơn hàng đã giao thành công (có thể chọn thêm sản phẩm trong đơn), trong thời hạn 10 ngày kể từ ngày giao hàng thành công. |
 | 20 | Theo dõi khiếu nại | Xem trạng thái và nội dung phản hồi khiếu nại. |
 | 21 | Xem khuyến mãi | Xem các chương trình và mã khuyến mãi đang được áp dụng. |
 
@@ -199,8 +199,13 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 
 ### 1.5.8. Quy tắc khiếu nại
 * Khách hàng đã đăng nhập mới được phép gửi khiếu nại.
-* Khiếu nại phải gắn với khách hàng và có thể liên quan đến đơn hàng hoặc sản phẩm.
-* Khách hàng được xem nội dung và trạng thái xử lý khiếu nại của mình.
+* Chỉ khách hàng đã mua và đã nhận hàng mới được khiếu nại. Mỗi khiếu nại bắt buộc gắn với một đơn hàng của chính khách hàng đó; khách hàng có thể chọn thêm một sản phẩm, khi đó sản phẩm phải nằm trong chính đơn hàng được chọn.
+* Đơn hàng được khiếu nại phải ở trạng thái Hoàn thành (đã giao hàng thành công). Đơn Chờ xác nhận, Đã xác nhận, Đang giao hoặc Đã hủy không được khiếu nại.
+* Thời hạn khiếu nại là 10 ngày kể từ ngày giao hàng thành công. Quá thời hạn này, hệ thống không cho phép gửi khiếu nại mới cho đơn hàng đó.
+* Trường hợp giao hàng trễ, khách hàng gửi khiếu nại sau khi nhận hàng, trong thời hạn 10 ngày nêu trên.
+* Nội dung khiếu nại có độ dài từ 10 đến 1000 ký tự.
+* Mỗi khách hàng có tối đa 10 khiếu nại đang mở (Chờ xử lý hoặc Đang xử lý) cùng lúc, nhằm hạn chế gửi khiếu nại hàng loạt.
+* Khách hàng được xem nội dung và trạng thái xử lý khiếu nại của mình; không xem được thông tin cá nhân của quản trị viên xử lý.
 * Admin có quyền tiếp nhận, phản hồi và cập nhật trạng thái khiếu nại.
 * **Các trạng thái khiếu nại:**
   * Chờ xử lý.

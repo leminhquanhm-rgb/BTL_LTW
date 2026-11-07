@@ -131,6 +131,7 @@ Màu trạng thái: thành công #4A9D7C; cảnh báo #D99B52; nguy hiểm #D96B
 * Chỉ hiện nút hủy khi đơn Chờ xác nhận; hủy hợp lệ hoàn tồn kho một lần.
 * Ngày giao thành công chỉ hiện khi Hoàn thành; ngày vận đơn hiển thị từ trạng thái Đang giao.
 * Chỉ đánh giá khi đơn Hoàn thành và sản phẩm chưa được đánh giá; đánh giá mới ở trạng thái Chờ duyệt.
+* Chỉ hiện nút Gửi khiếu nại khi đơn Hoàn thành và còn trong 10 ngày kể từ ngày giao thành công; form khiếu nại chỉ liệt kê các đơn đủ điều kiện, nếu không có đơn nào thì hiển thị thông báo giải thích điều kiện.
 * Admin chỉ chuyển sang trạng thái kế tiếp hợp lệ; hệ thống tự ghi ngày vận đơn và ngày giao thành công.
 * Tài khoản bị khóa không đăng nhập được; Admin thấy trạng thái khóa.
 * Thao tác xóa và hủy luôn có hộp thoại xác nhận.

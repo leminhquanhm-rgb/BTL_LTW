@@ -63,7 +63,7 @@ Giai đoạn này tập trung xác định các chức năng của hệ thống,
 | 14 | Đơn hàng | Xem chi tiết đơn hàng gồm sản phẩm, thanh toán, ngày đặt, ngày vận đơn. Đơn đã giao thành công thì hiển thị thêm ngày giao hàng thành công. |
 | 15 | Đơn hàng | Hủy đơn hàng khi đủ điều kiện. |
 | 16 | Đánh giá | Gửi đánh giá sản phẩm đã mua. |
-| 17 | Khiếu nại | Gửi khiếu nại. |
+| 17 | Khiếu nại | Gửi khiếu nại về đơn hàng đã Hoàn thành, trong 10 ngày kể từ ngày giao hàng thành công (có thể chọn thêm sản phẩm trong đơn). |
 | 18 | Khiếu nại | Theo dõi trạng thái và kết quả xử lý khiếu nại. |
 | 19 | Khuyến mãi | Xem chương trình khuyến mãi. |
 
@@ -135,7 +135,8 @@ Các luồng dưới đây mô tả trình tự xử lý ở mức nghiệp vụ
 `Khách hàng xem đơn hàng` → `Kiểm tra đơn hàng đã hoàn thành` → `Chọn sản phẩm đã mua` → `Nhập số sao và nhận xét` → `Gửi đánh giá` → `Chờ duyệt` → `Admin kiểm tra` → `Duyệt và hiển thị hoặc từ chối đánh giá`
 
 ### 2.5.5. Luồng xử lý khiếu nại
-`Khách hàng gửi khiếu nại` → `Hệ thống lưu khiếu nại` → `Chờ xử lý` → `Admin tiếp nhận` → `Đang xử lý` → `Đã giải quyết hoặc Từ chối` → `Khách hàng theo dõi kết quả`
+`Khách hàng xem đơn hàng` → `Kiểm tra đơn Hoàn thành và còn trong 10 ngày kể từ ngày giao thành công` → `Chọn sản phẩm trong đơn (không bắt buộc)` → `Nhập nội dung khiếu nại` → `Gửi khiếu nại` → `Hệ thống lưu khiếu nại` → `Chờ xử lý` → `Admin tiếp nhận` → `Đang xử lý` → `Đã giải quyết hoặc Từ chối` → `Khách hàng theo dõi kết quả`
+*(Nếu đơn chưa Hoàn thành, đã quá 10 ngày, không thuộc khách hàng, hoặc khách hàng đang có quá 10 khiếu nại chưa xử lý xong, hệ thống từ chối và thông báo lý do.)*
 
 ## 2.6. Phân loại mức độ ưu tiên chức năng
 
@@ -155,6 +156,7 @@ Như vậy, các nội dung phân tích, sơ đồ và đặc tả chức năng 
 Các nội dung đã được nhóm thống nhất và chốt phạm vi như sau:
 * **Quên mật khẩu:** Áp dụng cho cả Customer và Admin. Người dùng chưa đăng nhập có thể yêu cầu xác minh danh tính và đặt lại mật khẩu.
 * **Banner/slider:** Thuộc nhóm chức năng Mở rộng; chỉ triển khai sau khi các nghiệp vụ cốt lõi đã hoàn thiện.
+* **Khiếu nại:** Bắt buộc gắn với một đơn hàng của khách hàng ở trạng thái Hoàn thành và chỉ gửi được trong 10 ngày kể từ ngày giao hàng thành công; sản phẩm là tùy chọn và phải thuộc đơn đó. Nội dung từ 10 đến 1000 ký tự; tối đa 10 khiếu nại đang mở mỗi khách hàng. Trường hợp giao trễ được khiếu nại sau khi nhận hàng.
 
 ## 2.9. Sơ đồ Use Case
 Sơ đồ Use Case tổng quát thể hiện phạm vi chức năng của hệ thống và tương tác giữa ba Actor chính: Guest, Customer và Admin. Cổng thanh toán là tác nhân ngoài, chỉ tham gia khi triển khai thanh toán trực tuyến.
@@ -187,6 +189,7 @@ Sơ đồ Use Case tổng quát thể hiện phạm vi chức năng của hệ t
   * Đặt hàng \<\<include\>\> Nhập thông tin nhận hàng; Chọn phương thức thanh toán; Kiểm tra tồn kho; Tính tổng tiền; Lưu đơn hàng và chi tiết đơn. Đây là các bước luôn phải thực hiện khi đặt hàng.
   * Hủy đơn hàng \<\<include\>\> Hoàn lại tồn kho. Khi hủy hợp lệ, hệ thống luôn hoàn lại số lượng đã trừ, chỉ thực hiện một lần.
   * Gửi đánh giá \<\<include\>\> Kiểm tra đơn hoàn thành / sản phẩm đã mua.
+  * Gửi khiếu nại \<\<include\>\> Kiểm tra đơn hoàn thành trong thời hạn khiếu nại (10 ngày kể từ ngày giao hàng thành công).
 * **Quan hệ \<\<extend\>\> (tùy chọn):**
   * Áp mã khuyến mãi \<\<extend\>\> Đặt hàng, vì khách hàng có thể đặt hàng mà không cần mã giảm giá.
   * Thanh toán trực tuyến \<\<extend\>\> Đặt hàng, chỉ phát sinh khi Customer chọn thanh toán online và hệ thống triển khai phần mở rộng (có Cổng thanh toán tham gia).
@@ -268,6 +271,7 @@ Các đặc tả dưới đây mô tả Actor, điều kiện trước, luồng 
 | Áp mã khuyến mãi | Đặt hàng | \<\<extend\>\> | Chỉ phát sinh khi Customer tự nguyện nhập mã; có thể đặt hàng không dùng mã. |
 | Hủy đơn hàng | Xem chi tiết đơn hàng | \<\<extend\>\> | Chỉ được thực hiện khi đơn đang ở trạng thái Chờ xác nhận. |
 | Gửi đánh giá | Kiểm tra đơn hoàn thành / sản phẩm đã mua | \<\<include\>\> | Phải xác minh đơn đã Hoàn thành và sản phẩm thuộc đơn của Customer. |
+| Gửi khiếu nại | Kiểm tra đơn hoàn thành trong thời hạn khiếu nại | \<\<include\>\> | Phải xác minh đơn thuộc Customer, đã Hoàn thành và chưa quá 10 ngày kể từ ngày giao hàng thành công. |
 | Đặt hàng | Nhập thông tin nhận hàng | \<\<include\>\> | Luôn phải có thông tin người nhận và địa chỉ giao hàng. |
 | Đặt hàng | Chọn phương thức thanh toán | \<\<include\>\> | Luôn phải chọn phương thức thanh toán (COD là bắt buộc phải có). |
 | Mua ngay | Đặt hàng | \<\<extend\>\> | Đặt trực tiếp một sản phẩm, không dùng giỏ hàng; giỏ hàng giữ nguyên. |

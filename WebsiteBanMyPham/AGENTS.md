@@ -407,8 +407,8 @@ Giỏ hàng
 
 Khiếu nại
 
--   Gửi khiếu nại.
--   Liên kết đơn hàng hoặc sản phẩm nếu phù hợp.
+-   Gửi khiếu nại về đơn hàng đã Hoàn thành, trong 10 ngày kể từ NgayGiaoThanhCong (xem mục 6.14).
+-   Bắt buộc chọn đơn hàng; có thể chọn thêm sản phẩm thuộc đơn đó.
 -   Theo dõi trạng thái.
 -   Xem phản hồi.
 
@@ -811,10 +811,17 @@ Lấy thông tin qua VW_DanhGia.
 ### 6.14. Khiếu nại
 
 -   Khách phải đăng nhập.
--   Đơn hàng gắn kèm phải thuộc khách.
--   Kiểm tra sản phẩm gắn kèm theo nghiệp vụ.
--   Khách không xem khiếu nại của người khác.
+-   Chỉ khách đã mua và đã nhận hàng mới được khiếu nại.
+-   MaDH BẮT BUỘC; đơn phải thuộc khách và ở trạng thái HoanThanh.
+-   Chỉ được gửi khi DateTime.Now <= NgayGiaoThanhCong.AddDays(10). Số ngày khai báo tập trung trong Constants/ (ví dụ KhieuNaiConstant.SoNgayToiDaSauGiaoHang = 10), không viết số 10 rải rác.
+-   Đơn ChoXacNhan, DaXacNhan, DangGiao, DaHuy hoặc đã quá 10 ngày: không được khiếu nại. Giao trễ thì khách khiếu nại sau khi nhận hàng, trong thời hạn trên.
+-   MaSP tùy chọn; nếu có thì phải là một dòng hàng trong chính đơn MaDH.
+-   NoiDung Trim, từ 10 đến 1000 ký tự.
+-   Tối đa 10 khiếu nại đang mở (ChoXuLy hoặc DangXuLy) mỗi khách.
+-   Nút "Gửi khiếu nại" chỉ hiện khi đơn đủ điều kiện; server vẫn kiểm tra lại mọi điều kiện.
+-   Khách không xem khiếu nại của người khác; không hiển thị MaTKXuLy hay thông tin cá nhân của Admin xử lý.
 -   Chỉ Admin được xử lý.
+-   Database giữ nguyên: KhieuNai.MaDH vẫn cho phép NULL để tương thích dữ liệu cũ; quy tắc bắt buộc MaDH chỉ áp dụng ở ứng dụng khi tạo mới. Khiếu nại cũ trong dữ liệu mẫu vẫn hiển thị bình thường.
 
 Trạng thái:
 
