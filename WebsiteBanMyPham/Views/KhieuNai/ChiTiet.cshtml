@@ -1,0 +1,115 @@
+@model WebsiteBanMyPham.ViewModels.KhieuNaiChiTietViewModel
+@inject ILocalizationHelper LocHelper
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = $"{L["Complaint_Detail_PageTitle"]} #KN{Model.MaKN}";
+}
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="space-y-1">
+        <div class="flex items-center gap-2 text-xs text-muted">
+            <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+            <span>/</span>
+            <a asp-controller="KhieuNai" asp-action="Index" class="hover:text-primary transition">@L["Complaint_ListHeading"]</a>
+            <span>/</span>
+            <span class="text-charcoal font-semibold font-mono">#KN@(Model.MaKN)</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <h1 class="text-2xl font-serif font-bold text-charcoal flex items-center gap-2">
+                <span>@L["Complaint_Detail_PageTitle"]</span>
+                <span class="font-mono text-primary">#KN@(Model.MaKN)</span>
+            </h1>
+            <partial name="_StatusBadge" model='("KhieuNai", Model.TrangThai)' />
+        </div>
+        <p class="text-xs text-muted">
+            @L["Complaint_SentDate"]: <strong class="text-charcoal font-mono">@LocHelper.FormatDateTime(Model.NgayGui)</strong>
+        </p>
+    </div>
+
+    <!-- Thông tin đơn hàng và sản phẩm liên quan -->
+    @if (Model.MaDH.HasValue || !string.IsNullOrEmpty(Model.TenSP))
+    {
+        <div class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+            <h2 class="font-serif font-bold text-charcoal text-sm border-b border-borderLight pb-2">
+                @L["Complaint_TargetInfo"]
+            </h2>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="space-y-1">
+                    @if (Model.MaDH.HasValue)
+                    {
+                        <p>
+                            <span class="text-muted">@L["Complaint_RelatedOrder"]:</span>
+                            <a asp-controller="DonHang" asp-action="ChiTiet" asp-route-maDH="@Model.MaDH.Value"
+                               class="font-mono font-bold text-primary hover:underline">
+                                @LocHelper.MaDonHang(Model.MaDH.Value)
+                            </a>
+                        </p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.TenSP))
+                    {
+                        <p>
+                            <span class="text-muted">@L["Complaint_RelatedProduct"]:</span>
+                            <strong class="text-charcoal">@Model.TenSP</strong>
+                        </p>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(Model.DuongDanAnhSP))
+                {
+                    <img src="@Model.DuongDanAnhSP"
+                         alt="@Model.TenSP"
+                         onerror="this.src='/images/placeholder.svg'"
+                         class="w-14 h-14 rounded object-cover border border-borderLight shrink-0" />
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Nội dung khiếu nại của khách hàng -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+        <h2 class="font-serif font-bold text-charcoal text-sm border-b border-borderLight pb-2">
+            @L["Complaint_Content"]
+        </h2>
+        <div class="bg-cream/40 p-4 rounded-btn text-charcoal whitespace-pre-wrap leading-relaxed">
+            @Model.NoiDung
+        </div>
+    </div>
+
+    <!-- Phản hồi chính thức từ cửa hàng -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+        <div class="flex items-center justify-between border-b border-borderLight pb-2">
+            <h2 class="font-serif font-bold text-charcoal text-sm flex items-center gap-2">
+                <i class="ph-fill ph-chat-circle-dots text-primary text-base"></i>
+                <span>@L["Complaint_StoreReply"]</span>
+            </h2>
+            @if (Model.NgayPhanHoi.HasValue)
+            {
+                <span class="text-muted font-mono text-[11px]">
+                    @L["Complaint_ReplyDate"] @LocHelper.FormatDateTime(Model.NgayPhanHoi)
+                </span>
+            }
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.PhanHoi))
+        {
+            <div class="p-4 rounded-btn bg-[#E6F4EE]/60 border border-[#C6E7D9] text-charcoal whitespace-pre-wrap leading-relaxed font-medium">
+                @Model.PhanHoi
+            </div>
+        }
+        else
+        {
+            <div class="p-6 text-center text-muted italic bg-cream/30 rounded-btn border border-dashed border-borderLight">
+                @L["Complaint_NoReplyYet"]
+            </div>
+        }
+    </div>
+
+    <!-- Nút quay lại -->
+    <div class="pt-2">
+        <a asp-controller="KhieuNai" asp-action="Index"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-btn bg-cream hover:bg-pastel text-charcoal font-bold text-xs transition border border-borderLight">
+            ← @L["Common_Back"]
+        </a>
+    </div>
+</div>
+

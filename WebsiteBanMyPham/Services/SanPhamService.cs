@@ -100,7 +100,7 @@ namespace WebsiteBanMyPham.Services
             // Điểm sao trung bình gộp đúng 1 truy vấn SQL, làm tròn 1 chữ số trong bộ nhớ (Điều chỉnh 7)
             var rawRatings = await _context.VW_DanhGia
                 .AsNoTracking()
-                .Where(dg => productIds.Contains(dg.MaSP) && dg.TrangThai == "DaDuyet")
+                .Where(dg => productIds.Contains(dg.MaSP) && dg.TrangThai == TrangThaiDanhGiaConstant.DaDuyet)
                 .GroupBy(dg => dg.MaSP)
                 .Select(g => new
                 {
@@ -166,7 +166,7 @@ namespace WebsiteBanMyPham.Services
             // 10 đánh giá DaDuyet mới nhất kèm tên khách hàng che bớt
             var reviews = await _context.DanhGia
                 .AsNoTracking()
-                .Where(dg => dg.MaCTDHNavigation.MaSP == maSp && dg.TrangThai == "DaDuyet")
+                .Where(dg => dg.MaCTDHNavigation.MaSP == maSp && dg.TrangThai == TrangThaiDanhGiaConstant.DaDuyet)
                 .OrderByDescending(dg => dg.NgayTao)
                 .Take(10)
                 .Select(dg => new
@@ -182,7 +182,7 @@ namespace WebsiteBanMyPham.Services
             // Điểm sao trung bình sản phẩm
             var rawRating = await _context.VW_DanhGia
                 .AsNoTracking()
-                .Where(dg => dg.MaSP == maSp && dg.TrangThai == "DaDuyet")
+                .Where(dg => dg.MaSP == maSp && dg.TrangThai == TrangThaiDanhGiaConstant.DaDuyet)
                 .GroupBy(dg => dg.MaSP)
                 .Select(g => new
                 {
@@ -220,7 +220,7 @@ namespace WebsiteBanMyPham.Services
             var relatedIds = relatedProductsRaw.Select(r => r.MaSP).ToList();
             var rawRelatedRatings = await _context.VW_DanhGia
                 .AsNoTracking()
-                .Where(dg => relatedIds.Contains(dg.MaSP) && dg.TrangThai == "DaDuyet")
+                .Where(dg => relatedIds.Contains(dg.MaSP) && dg.TrangThai == TrangThaiDanhGiaConstant.DaDuyet)
                 .GroupBy(dg => dg.MaSP)
                 .Select(g => new
                 {
@@ -349,7 +349,7 @@ namespace WebsiteBanMyPham.Services
 
             var rawRatings = await _context.VW_DanhGia
                 .AsNoTracking()
-                .Where(dg => allIds.Contains(dg.MaSP) && dg.TrangThai == "DaDuyet")
+                .Where(dg => allIds.Contains(dg.MaSP) && dg.TrangThai == TrangThaiDanhGiaConstant.DaDuyet)
                 .GroupBy(dg => dg.MaSP)
                 .Select(g => new
                 {

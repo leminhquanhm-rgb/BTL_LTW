@@ -1272,4 +1272,275 @@
   <data name="Msg_Order_OutOfStock" xml:space="preserve">
     <value>Product is out of stock or insufficient quantity.</value>
   </data>
+  <!-- Step 5E: My Orders, Cancel Order, Review, Complaint -->
+  <data name="Status_Review_ChoDuyet" xml:space="preserve">
+    <value>Pending review</value>
+  </data>
+  <data name="Status_Review_DaDuyet" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="Status_Review_TuChoi" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="Status_Complaint_ChoXuLy" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Status_Complaint_DangXuLy" xml:space="preserve">
+    <value>In progress</value>
+  </data>
+  <data name="Status_Complaint_DaGiaiQuyet" xml:space="preserve">
+    <value>Resolved</value>
+  </data>
+  <data name="Status_Complaint_TuChoi" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="Order_PageTitle" xml:space="preserve">
+    <value>My orders</value>
+  </data>
+  <data name="Order_Filter_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Order_Empty" xml:space="preserve">
+    <value>You have no orders yet.</value>
+  </data>
+  <data name="Order_ViewDetail" xml:space="preserve">
+    <value>View details</value>
+  </data>
+  <data name="Order_CancelOrder" xml:space="preserve">
+    <value>Cancel order</value>
+  </data>
+  <data name="Order_CancelConfirm" xml:space="preserve">
+    <value>Are you sure you want to cancel this order?</value>
+  </data>
+  <data name="Order_Cancelling" xml:space="preserve">
+    <value>Cancelling...</value>
+  </data>
+  <data name="Order_CancelSuccess" xml:space="preserve">
+    <value>Order cancelled successfully!</value>
+  </data>
+  <data name="Order_PayNow" xml:space="preserve">
+    <value>Pay now</value>
+  </data>
+  <data name="Order_CannotCancelHint" xml:space="preserve">
+    <value>Past pending confirmation (cannot cancel)</value>
+  </data>
+  <data name="Order_CancelledBanner" xml:space="preserve">
+    <value>This order has been cancelled.</value>
+  </data>
+  <data name="Order_Step_ChoXacNhan" xml:space="preserve">
+    <value>1. Pending confirmation</value>
+  </data>
+  <data name="Order_Step_DaXacNhan" xml:space="preserve">
+    <value>2. Confirmed</value>
+  </data>
+  <data name="Order_Step_DangGiao" xml:space="preserve">
+    <value>3. Delivering</value>
+  </data>
+  <data name="Order_Step_HoanThanh" xml:space="preserve">
+    <value>4. Completed</value>
+  </data>
+  <data name="Order_Detail_PageTitle" xml:space="preserve">
+    <value>Order details</value>
+  </data>
+  <data name="Order_Detail_Breadcrumb" xml:space="preserve">
+    <value>Order details</value>
+  </data>
+  <data name="Order_Detail_DeliveryInfo" xml:space="preserve">
+    <value>Delivery information</value>
+  </data>
+  <data name="Order_Detail_Products" xml:space="preserve">
+    <value>Purchased products</value>
+  </data>
+  <data name="Order_Detail_PaymentSummary" xml:space="preserve">
+    <value>Payment summary</value>
+  </data>
+  <data name="Order_Detail_PaymentInfo" xml:space="preserve">
+    <value>Payment information</value>
+  </data>
+  <data name="Order_Detail_History" xml:space="preserve">
+    <value>Order status history</value>
+  </data>
+  <data name="Order_WaybillDate" xml:space="preserve">
+    <value>Waybill date:</value>
+  </data>
+  <data name="Order_DeliveredDate" xml:space="preserve">
+    <value>Delivery date:</value>
+  </data>
+  <data name="Order_WaybillCode" xml:space="preserve">
+    <value>Tracking code:</value>
+  </data>
+  <data name="Order_WaybillPending" xml:space="preserve">
+    <value>Not yet handed to carrier</value>
+  </data>
+  <data name="Order_WriteReview" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="Order_MakeComplaint" xml:space="preserve">
+    <value>Complain</value>
+  </data>
+  <data name="Order_RefundStatus" xml:space="preserve">
+    <value>Refund:</value>
+  </data>
+  <data name="Order_PaymentDate" xml:space="preserve">
+    <value>Payment date:</value>
+  </data>
+  <data name="Order_RefundDate" xml:space="preserve">
+    <value>Refund date:</value>
+  </data>
+  <data name="Order_History_Initial" xml:space="preserve">
+    <value>Order placed</value>
+  </data>
+  <data name="Review_PageTitle" xml:space="preserve">
+    <value>Product review</value>
+  </data>
+  <data name="Review_Heading" xml:space="preserve">
+    <value>Review purchased product</value>
+  </data>
+  <data name="Review_ConditionNotice" xml:space="preserve">
+    <value>Condition: Completed order. Submitted reviews will be pending approval.</value>
+  </data>
+  <data name="Review_OrderCode" xml:space="preserve">
+    <value>Order:</value>
+  </data>
+  <data name="Review_RatingStar" xml:space="preserve">
+    <value>Satisfaction rating (1 - 5 stars)</value>
+  </data>
+  <data name="Review_Star_5" xml:space="preserve">
+    <value>★★★★★ (5 stars - Excellent)</value>
+  </data>
+  <data name="Review_Star_4" xml:space="preserve">
+    <value>★★★★☆ (4 stars - Satisfied)</value>
+  </data>
+  <data name="Review_Star_3" xml:space="preserve">
+    <value>★★★☆☆ (3 stars - Average)</value>
+  </data>
+  <data name="Review_Star_2" xml:space="preserve">
+    <value>★★☆☆☆ (2 stars - Poor)</value>
+  </data>
+  <data name="Review_Star_1" xml:space="preserve">
+    <value>★☆☆☆☆ (1 star - Terrible)</value>
+  </data>
+  <data name="Review_Comment" xml:space="preserve">
+    <value>Detailed review (max 1000 chars)</value>
+  </data>
+  <data name="Review_CommentPlaceholder" xml:space="preserve">
+    <value>Share your experience about this product...</value>
+  </data>
+  <data name="Review_Submit" xml:space="preserve">
+    <value>Submit Review</value>
+  </data>
+  <data name="Review_SuccessSubmitted" xml:space="preserve">
+    <value>Your review has been submitted and is pending administrator approval!</value>
+  </data>
+  <data name="Review_Error_AlreadyReviewed" xml:space="preserve">
+    <value>This item in the order has already been reviewed.</value>
+  </data>
+  <data name="Review_Error_NotCompleted" xml:space="preserve">
+    <value>You can only review items once the order is Completed.</value>
+  </data>
+  <data name="Review_Error_InvalidStar" xml:space="preserve">
+    <value>Satisfaction rating must be between 1 and 5 stars.</value>
+  </data>
+  <data name="Review_Error_ContentTooLong" xml:space="preserve">
+    <value>Review comment cannot exceed 1000 characters.</value>
+  </data>
+  <data name="Review_Error_NotFoundOrNotOwned" xml:space="preserve">
+    <value>This item does not exist or does not belong to your orders.</value>
+  </data>
+  <data name="Complaint_PageTitle" xml:space="preserve">
+    <value>Complaints &amp; Support</value>
+  </data>
+  <data name="Complaint_ListHeading" xml:space="preserve">
+    <value>My complaints</value>
+  </data>
+  <data name="Complaint_CreateHeading" xml:space="preserve">
+    <value>Submit new complaint</value>
+  </data>
+  <data name="Complaint_Notice" xml:space="preserve">
+    <value>Processing stages: Pending → In progress → Resolved / Rejected</value>
+  </data>
+  <data name="Complaint_Code" xml:space="preserve">
+    <value>Complaint ID</value>
+  </data>
+  <data name="Complaint_RelatedOrder" xml:space="preserve">
+    <value>Related order</value>
+  </data>
+  <data name="Complaint_RelatedProduct" xml:space="preserve">
+    <value>Related product</value>
+  </data>
+  <data name="Complaint_SelectProductPrompt" xml:space="preserve">
+    <value>-- Select product (optional) --</value>
+  </data>
+  <data name="Complaint_Content" xml:space="preserve">
+    <value>Complaint details (10 to 1000 chars) *</value>
+  </data>
+  <data name="Complaint_ContentPlaceholder" xml:space="preserve">
+    <value>Describe the issue in detail (damaged, wrong item, delivery delay...)...</value>
+  </data>
+  <data name="Complaint_SentDate" xml:space="preserve">
+    <value>Submitted date</value>
+  </data>
+  <data name="Complaint_StoreReply" xml:space="preserve">
+    <value>Store reply</value>
+  </data>
+  <data name="Complaint_NoReplyYet" xml:space="preserve">
+    <value>No response from store yet</value>
+  </data>
+  <data name="Complaint_Submit" xml:space="preserve">
+    <value>Submit Complaint</value>
+  </data>
+  <data name="Complaint_Empty" xml:space="preserve">
+    <value>You have no complaints.</value>
+  </data>
+  <data name="Complaint_SuccessSubmitted" xml:space="preserve">
+    <value>Your complaint request has been received and is pending review!</value>
+  </data>
+  <data name="Complaint_Error_NoOrderSelected" xml:space="preserve">
+    <value>Please select an order to complain about.</value>
+  </data>
+  <data name="Complaint_Error_OrderNotOwned" xml:space="preserve">
+    <value>Order does not exist or does not belong to you.</value>
+  </data>
+  <data name="Complaint_Error_OrderNotCompleted" xml:space="preserve">
+    <value>Complaints can only be filed for Completed orders.</value>
+  </data>
+  <data name="Complaint_Error_OrderPastDeadline" xml:space="preserve">
+    <value>Order is past the 10-day deadline from delivery, complaints are no longer accepted.</value>
+  </data>
+  <data name="Complaint_Error_ProductNotInOrder" xml:space="preserve">
+    <value>The selected product is not part of the specified order.</value>
+  </data>
+  <data name="Complaint_Error_MaxOpenLimit" xml:space="preserve">
+    <value>You already have 10 open complaints. Please wait for resolution before submitting more.</value>
+  </data>
+  <data name="Complaint_Error_ContentLength" xml:space="preserve">
+    <value>Complaint content must be between 10 and 1000 characters.</value>
+  </data>
+  <data name="Complaint_Detail_PageTitle" xml:space="preserve">
+    <value>Complaint details</value>
+  </data>
+  <data name="Complaint_ReplyDate" xml:space="preserve">
+    <value>Response time:</value>
+  </data>
+  <data name="Api_Error_ConflictTitle" xml:space="preserve">
+    <value>Status conflict</value>
+  </data>
+  <data name="Api_Error_InternalServerErrorTitle" xml:space="preserve">
+    <value>Internal server error</value>
+  </data>
+  <data name="Api_Error_BadRequestTitle" xml:space="preserve">
+    <value>Bad request</value>
+  </data>
+  <data name="Order_TransactionCode" xml:space="preserve">
+    <value>Transaction code</value>
+  </data>
+  <data name="Complaint_NoEligibleOrder_Title" xml:space="preserve">
+    <value>No eligible orders to submit a complaint</value>
+  </data>
+  <data name="Complaint_NoEligibleOrder_Desc" xml:space="preserve">
+    <value>According to policy, complaints are only applicable for orders in {1} status within {0} days from successful delivery.</value>
+  </data>
+  <data name="Complaint_TargetInfo" xml:space="preserve">
+    <value>Complaint target information</value>
+  </data>
 </root>

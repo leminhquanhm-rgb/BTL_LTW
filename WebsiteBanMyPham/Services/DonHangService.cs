@@ -298,7 +298,7 @@ namespace WebsiteBanMyPham.Services
             }
         }
 
-        public async Task<(bool Success, string? ErrorMessage)> HuyDonAsync(int maTK, int maDH)
+        public async Task<(bool Success, string? ErrorMessage, LoaiLoiDonHang LoaiLoi)> HuyDonAsync(int maTK, int maDH)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -312,7 +312,14 @@ namespace WebsiteBanMyPham.Services
                 if (affected == 0)
                 {
                     await transaction.RollbackAsync();
-                    return (false, _localizer["Msg_Order_CannotCancel"].Value);
+
+                    var dh = await _context.DonHang.AsNoTracking().FirstOrDefaultAsync(d => d.MaDH == maDH && d.MaTK == maTK);
+                    if (dh == null)
+                    {
+                        return (false, _localizer["Msg_Order_NotFound"].Value, LoaiLoiDonHang.KhongTimThay);
+                    }
+
+                    return (false, _localizer["Msg_Order_CannotCancel"].Value, LoaiLoiDonHang.XungDotTrangThai);
                 }
 
                 // Thứ tự cập nhật tài nguyên: KhuyenMai trước, SanPham sau để thống nhất thứ tự khóa với TaoDonAsync, tránh deadlock
@@ -360,13 +367,13 @@ namespace WebsiteBanMyPham.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return (true, null);
+                return (true, null, LoaiLoiDonHang.KhongCoLoi);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Lỗi xảy ra khi hủy đơn hàng MaDH {MaDH} bởi MaTK {MaTK}", maDH, maTK);
-                return (false, _localizer["Msg_Order_CancelGeneralError"].Value);
+                return (false, _localizer["Msg_Order_CancelGeneralError"].Value, LoaiLoiDonHang.LoiHeThong);
             }
         }
 
@@ -677,6 +684,7 @@ namespace WebsiteBanMyPham.Services
                     TongThanhToan = d.TongThanhToan,
                     TrangThai = d.TrangThai,
                     TenPhuongThuc = d.ThanhToan != null ? d.ThanhToan.MaPTNavigation.TenPT : "",
+                    TrangThaiThanhToan = d.ThanhToan != null ? d.ThanhToan.TrangThai : null,
                     SoLuongSanPham = d.ChiTietDonHang.Sum(c => c.SoLuong),
                     SanPham = d.ChiTietDonHang.Select(c => new ChiTietSanPhamDonHangViewModel
                     {
@@ -687,7 +695,8 @@ namespace WebsiteBanMyPham.Services
                         SoLuong = c.SoLuong,
                         DuongDanAnh = c.MaSPNavigation.AnhSanPham.Where(a => a.LaAnhChinh).Select(a => a.DuongDan).FirstOrDefault()
                                       ?? c.MaSPNavigation.AnhSanPham.Select(a => a.DuongDan).FirstOrDefault(),
-                        DaDanhGia = c.DanhGia != null
+                        DaDanhGia = c.DanhGia != null,
+                        TrangThaiDanhGia = c.DanhGia != null ? c.DanhGia.TrangThai : null
                     }).ToList()
                 })
                 .ToListAsync();
@@ -759,7 +768,8 @@ namespace WebsiteBanMyPham.Services
                     SoLuong = c.SoLuong,
                     DuongDanAnh = c.MaSPNavigation.AnhSanPham.Where(a => a.LaAnhChinh).Select(a => a.DuongDan).FirstOrDefault()
                                   ?? c.MaSPNavigation.AnhSanPham.Select(a => a.DuongDan).FirstOrDefault(),
-                    DaDanhGia = c.DanhGia != null
+                    DaDanhGia = c.DanhGia != null,
+                    TrangThaiDanhGia = c.DanhGia != null ? c.DanhGia.TrangThai : null
                 }).ToList(),
                 LichSu = d.LichSuDonHang.OrderBy(ls => ls.NgayDoi).Select(ls => new LichSuDonHangItemViewModel
                 {
@@ -914,7 +924,8 @@ namespace WebsiteBanMyPham.Services
                     SoLuong = c.SoLuong,
                     DuongDanAnh = c.MaSPNavigation.AnhSanPham.Where(a => a.LaAnhChinh).Select(a => a.DuongDan).FirstOrDefault()
                                   ?? c.MaSPNavigation.AnhSanPham.Select(a => a.DuongDan).FirstOrDefault(),
-                    DaDanhGia = c.DanhGia != null
+                    DaDanhGia = c.DanhGia != null,
+                    TrangThaiDanhGia = c.DanhGia != null ? c.DanhGia.TrangThai : null
                 }).ToList(),
                 LichSu = d.LichSuDonHang.OrderBy(ls => ls.NgayDoi).Select(ls => new LichSuDonHangItemViewModel
                 {

@@ -10,6 +10,7 @@ namespace WebsiteBanMyPham.ViewModels
         public int SoLuong { get; set; }
         public decimal ThanhTien => DonGia * SoLuong;
         public bool DaDanhGia { get; set; }
+        public string? TrangThaiDanhGia { get; set; }
     }
 
     public class LichSuDonHangItemViewModel
@@ -43,6 +44,7 @@ namespace WebsiteBanMyPham.ViewModels
         public decimal TongThanhToan { get; set; }
         public string TrangThai { get; set; } = null!;
         public string TenPhuongThuc { get; set; } = null!;
+        public string? TrangThaiThanhToan { get; set; }
         public int SoLuongSanPham { get; set; }
         public List<ChiTietSanPhamDonHangViewModel> SanPham { get; set; } = new();
     }
@@ -54,6 +56,7 @@ namespace WebsiteBanMyPham.ViewModels
         public int PageIndex { get; set; } = 1;
         public int TotalPages { get; set; } = 1;
         public int TotalItems { get; set; }
+        public bool ChoPhepMoPhong { get; set; }
     }
 
     public class DonHangKhachChiTietViewModel
@@ -79,6 +82,7 @@ namespace WebsiteBanMyPham.ViewModels
         public List<LichSuDonHangItemViewModel> LichSu { get; set; } = new();
 
         public bool CoTheHuy => TrangThai == Constants.TrangThaiDonHangConstant.ChoXacNhan;
+        public bool ChoPhepMoPhong { get; set; }
     }
 
     public class DonHangAdminItemViewModel

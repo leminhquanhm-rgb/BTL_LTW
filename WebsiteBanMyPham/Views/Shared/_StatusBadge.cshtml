@@ -54,6 +54,29 @@
                 _ => "bg-cream text-charcoal"
             };
         }
+        else if (string.Equals(loai, "DanhGia", StringComparison.OrdinalIgnoreCase))
+        {
+            label = LocalizationHelper.GetReviewStatusLabel(trangThai);
+            cssClass = trangThai switch
+            {
+                TrangThaiDanhGiaConstant.ChoDuyet => "bg-[#FDF3E7] text-statusWarning",
+                TrangThaiDanhGiaConstant.DaDuyet => "bg-[#E6F4EE] text-statusSuccess",
+                TrangThaiDanhGiaConstant.TuChoi => "bg-[#FCEAEA] text-statusDanger",
+                _ => "bg-cream text-charcoal"
+            };
+        }
+        else if (string.Equals(loai, "KhieuNai", StringComparison.OrdinalIgnoreCase))
+        {
+            label = LocalizationHelper.GetComplaintStatusLabel(trangThai);
+            cssClass = trangThai switch
+            {
+                TrangThaiKhieuNaiConstant.ChoXuLy => "bg-[#FDF3E7] text-statusWarning",
+                TrangThaiKhieuNaiConstant.DangXuLy => "bg-[#EBF3F9] text-statusInfo",
+                TrangThaiKhieuNaiConstant.DaGiaiQuyet => "bg-[#E6F4EE] text-statusSuccess",
+                TrangThaiKhieuNaiConstant.TuChoi => "bg-[#FCEAEA] text-statusDanger",
+                _ => "bg-cream text-charcoal"
+            };
+        }
     }
 }
 

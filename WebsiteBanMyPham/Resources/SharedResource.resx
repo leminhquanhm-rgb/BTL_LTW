@@ -1272,4 +1272,275 @@
   <data name="Msg_Order_OutOfStock" xml:space="preserve">
     <value>Sản phẩm đã hết hàng hoặc không đủ số lượng.</value>
   </data>
+  <!-- Step 5E: Đơn hàng của tôi, Hủy đơn, Đánh giá, Khiếu nại -->
+  <data name="Status_Review_ChoDuyet" xml:space="preserve">
+    <value>Chờ duyệt</value>
+  </data>
+  <data name="Status_Review_DaDuyet" xml:space="preserve">
+    <value>Đã duyệt</value>
+  </data>
+  <data name="Status_Review_TuChoi" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="Status_Complaint_ChoXuLy" xml:space="preserve">
+    <value>Chờ xử lý</value>
+  </data>
+  <data name="Status_Complaint_DangXuLy" xml:space="preserve">
+    <value>Đang xử lý</value>
+  </data>
+  <data name="Status_Complaint_DaGiaiQuyet" xml:space="preserve">
+    <value>Đã giải quyết</value>
+  </data>
+  <data name="Status_Complaint_TuChoi" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="Order_PageTitle" xml:space="preserve">
+    <value>Đơn hàng của tôi</value>
+  </data>
+  <data name="Order_Filter_All" xml:space="preserve">
+    <value>Tất cả</value>
+  </data>
+  <data name="Order_Empty" xml:space="preserve">
+    <value>Bạn chưa có đơn hàng nào.</value>
+  </data>
+  <data name="Order_ViewDetail" xml:space="preserve">
+    <value>Xem chi tiết</value>
+  </data>
+  <data name="Order_CancelOrder" xml:space="preserve">
+    <value>Hủy đơn hàng</value>
+  </data>
+  <data name="Order_CancelConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn hủy đơn hàng này?</value>
+  </data>
+  <data name="Order_Cancelling" xml:space="preserve">
+    <value>Đang hủy...</value>
+  </data>
+  <data name="Order_CancelSuccess" xml:space="preserve">
+    <value>Đã hủy đơn hàng thành công!</value>
+  </data>
+  <data name="Order_PayNow" xml:space="preserve">
+    <value>Thanh toán ngay</value>
+  </data>
+  <data name="Order_CannotCancelHint" xml:space="preserve">
+    <value>Đã qua bước Chờ xác nhận (không thể hủy)</value>
+  </data>
+  <data name="Order_CancelledBanner" xml:space="preserve">
+    <value>Đơn hàng đã bị hủy.</value>
+  </data>
+  <data name="Order_Step_ChoXacNhan" xml:space="preserve">
+    <value>1. Chờ xác nhận</value>
+  </data>
+  <data name="Order_Step_DaXacNhan" xml:space="preserve">
+    <value>2. Đã xác nhận</value>
+  </data>
+  <data name="Order_Step_DangGiao" xml:space="preserve">
+    <value>3. Đang giao</value>
+  </data>
+  <data name="Order_Step_HoanThanh" xml:space="preserve">
+    <value>4. Hoàn thành</value>
+  </data>
+  <data name="Order_Detail_PageTitle" xml:space="preserve">
+    <value>Chi tiết đơn hàng</value>
+  </data>
+  <data name="Order_Detail_Breadcrumb" xml:space="preserve">
+    <value>Chi tiết đơn hàng</value>
+  </data>
+  <data name="Order_Detail_DeliveryInfo" xml:space="preserve">
+    <value>Thông tin nhận hàng</value>
+  </data>
+  <data name="Order_Detail_Products" xml:space="preserve">
+    <value>Danh sách sản phẩm</value>
+  </data>
+  <data name="Order_Detail_PaymentSummary" xml:space="preserve">
+    <value>Tóm tắt thanh toán</value>
+  </data>
+  <data name="Order_Detail_PaymentInfo" xml:space="preserve">
+    <value>Thông tin thanh toán</value>
+  </data>
+  <data name="Order_Detail_History" xml:space="preserve">
+    <value>Lịch sử trạng thái đơn hàng</value>
+  </data>
+  <data name="Order_WaybillDate" xml:space="preserve">
+    <value>Ngày vận đơn:</value>
+  </data>
+  <data name="Order_DeliveredDate" xml:space="preserve">
+    <value>Ngày giao thành công:</value>
+  </data>
+  <data name="Order_WaybillCode" xml:space="preserve">
+    <value>Mã vận đơn:</value>
+  </data>
+  <data name="Order_WaybillPending" xml:space="preserve">
+    <value>Chưa bàn giao ĐVVC</value>
+  </data>
+  <data name="Order_WriteReview" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="Order_MakeComplaint" xml:space="preserve">
+    <value>Khiếu nại</value>
+  </data>
+  <data name="Order_RefundStatus" xml:space="preserve">
+    <value>Hoàn tiền:</value>
+  </data>
+  <data name="Order_PaymentDate" xml:space="preserve">
+    <value>Ngày thanh toán:</value>
+  </data>
+  <data name="Order_RefundDate" xml:space="preserve">
+    <value>Ngày hoàn tiền:</value>
+  </data>
+  <data name="Order_History_Initial" xml:space="preserve">
+    <value>Tạo đơn hàng</value>
+  </data>
+  <data name="Review_PageTitle" xml:space="preserve">
+    <value>Đánh giá sản phẩm</value>
+  </data>
+  <data name="Review_Heading" xml:space="preserve">
+    <value>Đánh giá sản phẩm đã mua</value>
+  </data>
+  <data name="Review_ConditionNotice" xml:space="preserve">
+    <value>Điều kiện: Đơn hàng ở trạng thái Hoàn thành. Đánh giá gửi xong sẽ ở trạng thái Chờ duyệt.</value>
+  </data>
+  <data name="Review_OrderCode" xml:space="preserve">
+    <value>Đơn hàng:</value>
+  </data>
+  <data name="Review_RatingStar" xml:space="preserve">
+    <value>Mức độ hài lòng (1 - 5 sao)</value>
+  </data>
+  <data name="Review_Star_5" xml:space="preserve">
+    <value>★★★★★ (5 sao - Tuyệt vời)</value>
+  </data>
+  <data name="Review_Star_4" xml:space="preserve">
+    <value>★★★★☆ (4 sao - Hài lòng)</value>
+  </data>
+  <data name="Review_Star_3" xml:space="preserve">
+    <value>★★★☆☆ (3 sao - Bình thường)</value>
+  </data>
+  <data name="Review_Star_2" xml:space="preserve">
+    <value>★★☆☆☆ (2 sao - Kém)</value>
+  </data>
+  <data name="Review_Star_1" xml:space="preserve">
+    <value>★☆☆☆☆ (1 sao - Rất tệ)</value>
+  </data>
+  <data name="Review_Comment" xml:space="preserve">
+    <value>Nhận xét thực tế (tối đa 1000 ký tự)</value>
+  </data>
+  <data name="Review_CommentPlaceholder" xml:space="preserve">
+    <value>Chia sẻ cảm nhận của bạn về sản phẩm...</value>
+  </data>
+  <data name="Review_Submit" xml:space="preserve">
+    <value>Gửi Đánh Giá</value>
+  </data>
+  <data name="Review_SuccessSubmitted" xml:space="preserve">
+    <value>Đánh giá của bạn đã được gửi thành công và đang chờ ban quản trị duyệt!</value>
+  </data>
+  <data name="Review_Error_AlreadyReviewed" xml:space="preserve">
+    <value>Sản phẩm này trong đơn hàng đã được đánh giá trước đó.</value>
+  </data>
+  <data name="Review_Error_NotCompleted" xml:space="preserve">
+    <value>Chỉ có thể đánh giá sản phẩm khi đơn hàng đã Hoàn thành.</value>
+  </data>
+  <data name="Review_Error_InvalidStar" xml:space="preserve">
+    <value>Mức độ hài lòng phải từ 1 đến 5 sao.</value>
+  </data>
+  <data name="Review_Error_ContentTooLong" xml:space="preserve">
+    <value>Nhận xét không được vượt quá 1000 ký tự.</value>
+  </data>
+  <data name="Review_Error_NotFoundOrNotOwned" xml:space="preserve">
+    <value>Dòng sản phẩm không tồn tại hoặc không thuộc đơn hàng của quý khách.</value>
+  </data>
+  <data name="Complaint_PageTitle" xml:space="preserve">
+    <value>Khiếu nại &amp; CSKH</value>
+  </data>
+  <data name="Complaint_ListHeading" xml:space="preserve">
+    <value>Khiếu nại của tôi</value>
+  </data>
+  <data name="Complaint_CreateHeading" xml:space="preserve">
+    <value>Gửi yêu cầu khiếu nại mới</value>
+  </data>
+  <data name="Complaint_Notice" xml:space="preserve">
+    <value>Trạng thái tiếp nhận: Chờ xử lý → Đang xử lý → Đã giải quyết / Từ chối</value>
+  </data>
+  <data name="Complaint_Code" xml:space="preserve">
+    <value>Mã KN</value>
+  </data>
+  <data name="Complaint_RelatedOrder" xml:space="preserve">
+    <value>Đơn hàng liên quan</value>
+  </data>
+  <data name="Complaint_RelatedProduct" xml:space="preserve">
+    <value>Sản phẩm liên quan</value>
+  </data>
+  <data name="Complaint_SelectProductPrompt" xml:space="preserve">
+    <value>-- Chọn sản phẩm (tùy chọn) --</value>
+  </data>
+  <data name="Complaint_Content" xml:space="preserve">
+    <value>Nội dung khiếu nại (từ 10 đến 1000 ký tự) *</value>
+  </data>
+  <data name="Complaint_ContentPlaceholder" xml:space="preserve">
+    <value>Mô tả chi tiết vấn đề phát sinh (hư hỏng, sai hàng, trễ giao...)...</value>
+  </data>
+  <data name="Complaint_SentDate" xml:space="preserve">
+    <value>Ngày gửi</value>
+  </data>
+  <data name="Complaint_StoreReply" xml:space="preserve">
+    <value>Phản hồi từ cửa hàng</value>
+  </data>
+  <data name="Complaint_NoReplyYet" xml:space="preserve">
+    <value>Chưa có phản hồi từ cửa hàng</value>
+  </data>
+  <data name="Complaint_Submit" xml:space="preserve">
+    <value>Gửi Khiếu Nại</value>
+  </data>
+  <data name="Complaint_Empty" xml:space="preserve">
+    <value>Bạn chưa có khiếu nại nào.</value>
+  </data>
+  <data name="Complaint_SuccessSubmitted" xml:space="preserve">
+    <value>Yêu cầu khiếu nại của bạn đã được tiếp nhận ở trạng thái Chờ xử lý!</value>
+  </data>
+  <data name="Complaint_Error_NoOrderSelected" xml:space="preserve">
+    <value>Vui lòng chọn đơn hàng cần khiếu nại.</value>
+  </data>
+  <data name="Complaint_Error_OrderNotOwned" xml:space="preserve">
+    <value>Đơn hàng không tồn tại hoặc không thuộc quyền sở hữu của quý khách.</value>
+  </data>
+  <data name="Complaint_Error_OrderNotCompleted" xml:space="preserve">
+    <value>Chỉ có thể khiếu nại đơn hàng đã ở trạng thái Hoàn thành.</value>
+  </data>
+  <data name="Complaint_Error_OrderPastDeadline" xml:space="preserve">
+    <value>Đơn hàng đã quá hạn 10 ngày kể từ ngày giao thành công, không thể gửi khiếu nại.</value>
+  </data>
+  <data name="Complaint_Error_ProductNotInOrder" xml:space="preserve">
+    <value>Sản phẩm được chọn không nằm trong đơn hàng đã chỉ định.</value>
+  </data>
+  <data name="Complaint_Error_MaxOpenLimit" xml:space="preserve">
+    <value>Quý khách đang có 10 khiếu nại đang chờ xử lý. Vui lòng đợi cửa hàng giải quyết trước khi gửi thêm.</value>
+  </data>
+  <data name="Complaint_Error_ContentLength" xml:space="preserve">
+    <value>Nội dung khiếu nại phải từ 10 đến 1000 ký tự.</value>
+  </data>
+  <data name="Complaint_Detail_PageTitle" xml:space="preserve">
+    <value>Chi tiết khiếu nại</value>
+  </data>
+  <data name="Complaint_ReplyDate" xml:space="preserve">
+    <value>Thời gian phản hồi:</value>
+  </data>
+  <data name="Api_Error_ConflictTitle" xml:space="preserve">
+    <value>Xung đột trạng thái</value>
+  </data>
+  <data name="Api_Error_InternalServerErrorTitle" xml:space="preserve">
+    <value>Lỗi máy chủ nội bộ</value>
+  </data>
+  <data name="Api_Error_BadRequestTitle" xml:space="preserve">
+    <value>Yêu cầu không hợp lệ</value>
+  </data>
+  <data name="Order_TransactionCode" xml:space="preserve">
+    <value>Mã giao dịch</value>
+  </data>
+  <data name="Complaint_NoEligibleOrder_Title" xml:space="preserve">
+    <value>Chưa có đơn hàng nào đủ điều kiện gửi khiếu nại</value>
+  </data>
+  <data name="Complaint_NoEligibleOrder_Desc" xml:space="preserve">
+    <value>Theo quy định, yêu cầu khiếu nại chỉ áp dụng cho các đơn hàng ở trạng thái {1} trong vòng {0} ngày kể từ ngày giao hàng thành công.</value>
+  </data>
+  <data name="Complaint_TargetInfo" xml:space="preserve">
+    <value>Thông tin đối tượng khiếu nại</value>
+  </data>
 </root>

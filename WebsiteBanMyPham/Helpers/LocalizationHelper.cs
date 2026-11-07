@@ -107,5 +107,27 @@ namespace WebsiteBanMyPham.Helpers
             var localized = _localizer[$"Payment_Method_{tenPT}"];
             return localized.ResourceNotFound ? tenPT : localized.Value;
         }
+
+        public string GetReviewStatusLabel(string? trangThai)
+        {
+            if (string.IsNullOrWhiteSpace(trangThai))
+            {
+                return string.Empty;
+            }
+
+            var localized = _localizer[$"Status_Review_{trangThai}"];
+            return localized.ResourceNotFound ? trangThai : localized.Value;
+        }
+
+        public string GetComplaintStatusLabel(string? trangThai)
+        {
+            if (string.IsNullOrWhiteSpace(trangThai))
+            {
+                return string.Empty;
+            }
+
+            var localized = _localizer[$"Status_Complaint_{trangThai}"];
+            return localized.ResourceNotFound ? trangThai : localized.Value;
+        }
     }
 }

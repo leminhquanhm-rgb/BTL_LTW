@@ -115,6 +115,8 @@ namespace WebsiteBanMyPham
             builder.Services.AddScoped<IKhuyenMaiService, KhuyenMaiService>();
             builder.Services.AddScoped<IDonHangService, DonHangService>();
             builder.Services.AddScoped<IDatHangService, DatHangService>();
+            builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
+            builder.Services.AddScoped<IKhieuNaiService, KhieuNaiService>();
 
             var app = builder.Build();
 

@@ -1,0 +1,356 @@
+@model WebsiteBanMyPham.ViewModels.DonHangKhachChiTietViewModel
+@inject ILocalizationHelper LocHelper
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = $"{L["Order_Detail_PageTitle"]} {LocHelper.MaDonHang(Model.MaDH)}";
+    string orderCode = LocHelper.MaDonHang(Model.MaDH);
+    bool isCancelled = Model.TrangThai == WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaHuy;
+    bool isCompleted = Model.TrangThai == WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.HoanThanh;
+    bool isChoXacNhan = Model.TrangThai == WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.ChoXacNhan;
+    bool canComplain = isCompleted && Model.NgayGiaoThanhCong.HasValue && DateTime.Now <= Model.NgayGiaoThanhCong.Value.AddDays(WebsiteBanMyPham.Constants.KhieuNaiConstant.SoNgayToiDaSauGiaoHang);
+    bool canPayOnline = Model.ThanhToan?.TenPT == WebsiteBanMyPham.Constants.PhuongThucThanhToanConstant.Online
+                        && Model.ThanhToan.TrangThai != WebsiteBanMyPham.Constants.TrangThaiThanhToanConstant.DaThanhToan
+                        && !isCancelled
+                        && Model.ChoPhepMoPhong;
+}
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <!-- Breadcrumb & Header -->
+    <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs text-muted">
+            <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+            <span>/</span>
+            <a asp-controller="DonHang" asp-action="Index" class="hover:text-primary transition">@L["Order_PageTitle"]</a>
+            <span>/</span>
+            <span class="text-charcoal font-semibold font-mono">@orderCode</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+                <h1 class="text-2xl font-serif font-bold text-charcoal flex items-center gap-2">
+                    <span>@L["Order_Detail_PageTitle"]</span>
+                    <span class="font-mono text-primary">@orderCode</span>
+                </h1>
+                <p class="text-xs text-muted mt-0.5">
+                    @L["OrderSuccess_OrderDate"] <strong class="text-charcoal font-mono">@LocHelper.FormatDateTime(Model.NgayDat)</strong>
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                @if (isChoXacNhan)
+                {
+                    <button type="button"
+                            class="px-3.5 py-2 bg-surface border border-statusDanger text-statusDanger hover:bg-[#FCEAEA] text-xs font-bold rounded-btn transition"
+                            data-madh="@Model.MaDH"
+                            data-confirm="@L["Order_CancelConfirm"]"
+                            data-msg-cancelling="@L["Order_Cancelling"]"
+                            data-msg-success="@L["Order_CancelSuccess"]"
+                            data-msg-error="@L["Common_Error"]"
+                            onclick="onCancelOrderDetail(this)">
+                        @L["Order_CancelOrder"]
+                    </button>
+                }
+                @if (canPayOnline)
+                {
+                    <a asp-controller="ThanhToan" asp-action="MoPhong" asp-route-maDH="@Model.MaDH"
+                       class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                        @L["Order_PayNow"]
+                    </a>
+                }
+                <partial name="_StatusBadge" model='("DonHang", Model.TrangThai)' />
+            </div>
+        </div>
+    </div>
+
+    <!-- Thanh tiến trình 4 bước hoặc Khối thông báo hủy đơn -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft">
+        @if (isCancelled)
+        {
+            <div class="space-y-3">
+                <div class="p-3.5 rounded-btn bg-[#FCEAEA] text-statusDanger text-xs font-bold flex items-center gap-2">
+                    <i class="ph-fill ph-x-circle text-lg"></i>
+                    <span>@L["Order_CancelledBanner"]</span>
+                </div>
+                @if (Model.ThanhToan?.TenPT == WebsiteBanMyPham.Constants.PhuongThucThanhToanConstant.Online &&
+                    Model.ThanhToan.TrangThaiHoanTien != WebsiteBanMyPham.Constants.TrangThaiHoanTienConstant.KhongCan)
+                {
+                    <div class="flex items-center gap-2 text-xs text-charcoal bg-cream/60 p-3 rounded-btn border border-borderLight">
+                        <span class="text-muted font-medium">@L["Order_RefundStatus"]</span>
+                        <partial name="_StatusBadge" model='("HoanTien", Model.ThanhToan.TrangThaiHoanTien)' />
+                        @if (Model.ThanhToan.NgayHoanTien.HasValue)
+                        {
+                            <span class="text-muted text-[11px]">(@L["Order_RefundDate"] @LocHelper.FormatDateTime(Model.ThanhToan.NgayHoanTien))</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            var steps = new[]
+            {
+                WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.ChoXacNhan,
+                WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaXacNhan,
+                WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DangGiao,
+                WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.HoanThanh
+            };
+            int currentIdx = Array.IndexOf(steps, Model.TrangThai);
+            if (currentIdx < 0) currentIdx = 0;
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-4 gap-2">
+                    @for (int i = 0; i < steps.Length; i++)
+                    {
+                        bool isReached = i <= currentIdx;
+                        string stepKey = $"Order_Step_{steps[i]}";
+                        <div class="text-center">
+                            <div class="h-2 rounded-full @(isReached ? "bg-primary" : "bg-borderLight") mb-2 transition"></div>
+                            <span class="text-xs font-bold @(isReached ? "text-primary" : "text-muted")">
+                                @L[stepKey]
+                            </span>
+                        </div>
+                    }
+                </div>
+
+                <!-- Thông tin ngày vận đơn / giao thành công / mã vận đơn -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-borderLight text-xs">
+                    <div class="bg-cream/40 p-2.5 rounded-btn">
+                        <span class="text-muted">@L["OrderSuccess_OrderDate"]</span>
+                        <p class="font-bold text-charcoal font-mono mt-0.5">@LocHelper.FormatDateTime(Model.NgayDat)</p>
+                    </div>
+                    <div class="bg-cream/40 p-2.5 rounded-btn">
+                        <span class="text-muted">@L["Order_WaybillDate"]</span>
+                        <p class="font-bold text-charcoal font-mono mt-0.5">
+                            @(Model.NgayVanDon.HasValue ? LocHelper.FormatDateTime(Model.NgayVanDon) : L["Order_WaybillPending"].Value)
+                        </p>
+                    </div>
+                    <div class="bg-cream/40 p-2.5 rounded-btn">
+                        <span class="text-muted">@L["Order_DeliveredDate"]</span>
+                        <p class="font-bold text-charcoal font-mono mt-0.5">
+                            @(isCompleted && Model.NgayGiaoThanhCong.HasValue ? LocHelper.FormatDateTime(Model.NgayGiaoThanhCong) : "—")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Thông tin người nhận & Thông tin thanh toán (2 cột) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Thông tin nhận hàng -->
+        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+            <h2 class="font-serif font-bold text-charcoal text-base border-b border-borderLight pb-2">
+                @L["Order_Detail_DeliveryInfo"]
+            </h2>
+            <div class="space-y-1.5 leading-relaxed">
+                <p><span class="text-muted">@L["Label_TenNguoiNhan"]:</span> <strong class="text-charcoal font-semibold">@Model.TenNguoiNhan</strong></p>
+                <p><span class="text-muted">@L["Label_SDTNguoiNhan"]:</span> <strong class="text-charcoal font-mono">@Model.SdtNguoiNhan</strong></p>
+                <p><span class="text-muted">@L["Label_DiaChiGiao"]:</span> <span class="text-charcoal">@Model.DiaChiGiao</span></p>
+                @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+                {
+                    <p><span class="text-muted">@L["Label_GhiChu"]:</span> <span class="text-charcoal italic">@Model.GhiChu</span></p>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.MaVanDon))
+                {
+                    <p><span class="text-muted">@L["Order_WaybillCode"]:</span> <strong class="text-primary font-mono font-bold">@Model.MaVanDon</strong></p>
+                }
+            </div>
+        </div>
+
+        <!-- Thông tin thanh toán -->
+        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+            <h2 class="font-serif font-bold text-charcoal text-base border-b border-borderLight pb-2">
+                @L["Order_Detail_PaymentInfo"]
+            </h2>
+            @if (Model.ThanhToan != null)
+            {
+                <div class="space-y-1.5 leading-relaxed">
+                    <p class="flex items-center justify-between">
+                        <span class="text-muted">@L["Label_PhuongThucThanhToan"]:</span>
+                        <strong class="text-charcoal">@LocHelper.GetPaymentMethodLabel(Model.ThanhToan.TenPT)</strong>
+                    </p>
+                    <p class="flex items-center justify-between">
+                        <span class="text-muted">@L["Label_TrangThaiThanhToan"]:</span>
+                        <partial name="_StatusBadge" model='("ThanhToan", Model.ThanhToan.TrangThai)' />
+                    </p>
+                    @if (Model.ThanhToan.TrangThaiHoanTien != WebsiteBanMyPham.Constants.TrangThaiHoanTienConstant.KhongCan)
+                    {
+                        <p class="flex items-center justify-between">
+                            <span class="text-muted">@L["Order_RefundStatus"]</span>
+                            <partial name="_StatusBadge" model='("HoanTien", Model.ThanhToan.TrangThaiHoanTien)' />
+                        </p>
+                    }
+                    @if (Model.ThanhToan.NgayThanhToan.HasValue)
+                    {
+                        <p class="flex items-center justify-between">
+                            <span class="text-muted">@L["Order_PaymentDate"]</span>
+                            <span class="text-charcoal font-mono">@LocHelper.FormatDateTime(Model.ThanhToan.NgayThanhToan)</span>
+                        </p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.ThanhToan.MaGiaoDich))
+                    {
+                        <p class="flex items-center justify-between">
+                            <span class="text-muted">@L["Order_TransactionCode"]:</span>
+                            <span class="text-charcoal font-mono font-bold">@Model.ThanhToan.MaGiaoDich</span>
+                        </p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm trong đơn -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4 text-xs">
+        <div class="flex items-center justify-between border-b border-borderLight pb-3">
+            <h2 class="font-serif font-bold text-charcoal text-base">
+                @L["Order_Detail_Products"] (@Model.ChiTiet.Count)
+            </h2>
+            @if (canComplain)
+            {
+                <a asp-controller="KhieuNai" asp-action="Tao" asp-route-maDH="@Model.MaDH"
+                   class="px-3 py-1.5 bg-cream hover:bg-pastel text-charcoal font-bold rounded-btn transition border border-borderLight flex items-center gap-1.5">
+                    <i class="ph ph-chat-circle-dots text-primary"></i>
+                    <span>@L["Complaint_CreateHeading"]</span>
+                </a>
+            }
+        </div>
+
+        <div class="divide-y divide-borderLight">
+            @foreach (var item in Model.ChiTiet)
+            {
+                <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img src="@(string.IsNullOrEmpty(item.DuongDanAnh) ? "/images/placeholder.svg" : item.DuongDanAnh)"
+                             alt="@item.TenSP"
+                             onerror="this.src='/images/placeholder.svg'"
+                             class="w-14 h-14 rounded object-cover border border-borderLight shrink-0" />
+                        <div class="min-w-0 space-y-1">
+                            <a asp-controller="ChiTietSanPham" asp-action="Index" asp-route-id="@item.MaSP"
+                               class="font-bold text-charcoal text-sm hover:text-primary transition line-clamp-1">
+                                @item.TenSP
+                            </a>
+                            <p class="text-muted">
+                                @LocHelper.FormatCurrency(item.DonGia) × @item.SoLuong
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center sm:justify-end gap-3 shrink-0">
+                        <span class="font-bold text-charcoal text-sm">
+                            @LocHelper.FormatCurrency(item.ThanhTien)
+                        </span>
+
+                        @if (isCompleted)
+                        {
+                            @if (!item.DaDanhGia)
+                            {
+                                <a asp-controller="DanhGia" asp-action="Tao" asp-route-maCTDH="@item.MaCTDH"
+                                   class="px-3 py-1.5 bg-primary hover:bg-primaryHover text-white font-bold rounded-btn transition shadow-sm flex items-center gap-1">
+                                    <i class="ph-fill ph-star text-amber-300"></i>
+                                    <span>@L["Order_WriteReview"]</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-muted text-[11px]">@L["Order_WriteReview"]:</span>
+                                    <partial name="_StatusBadge" model='("DanhGia", item.TrangThaiDanhGia)' />
+                                </div>
+                            }
+
+                            @if (canComplain)
+                            {
+                                <a asp-controller="KhieuNai" asp-action="Tao" asp-route-maDH="@Model.MaDH" asp-route-maSP="@item.MaSP"
+                                   class="px-2.5 py-1.5 bg-cream hover:bg-pastel text-charcoal font-medium rounded-btn transition border border-borderLight"
+                                   title="@L["Order_MakeComplaint"]">
+                                    <i class="ph ph-chat-centered-dots"></i>
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Bảng tính tiền đơn hàng -->
+        <div class="pt-4 border-t border-borderLight flex justify-end">
+            <div class="w-full sm:w-72 space-y-2 text-xs">
+                <div class="flex justify-between text-muted">
+                    <span>@L["Checkout_Subtotal"]</span>
+                    <span class="text-charcoal font-medium">@LocHelper.FormatCurrency(Model.TongTienHang)</span>
+                </div>
+                @if (Model.TienGiam > 0)
+                {
+                    <div class="flex justify-between text-statusSuccess">
+                        <span>@L["Checkout_Discount"] @(!string.IsNullOrWhiteSpace(Model.CodeKM) ? $"({Model.CodeKM})" : "")</span>
+                        <span>-@LocHelper.FormatCurrency(Model.TienGiam)</span>
+                    </div>
+                }
+                <div class="flex justify-between pt-2 border-t border-borderLight font-bold text-base text-primary">
+                    <span>@L["Checkout_Total"]</span>
+                    <span>@LocHelper.FormatCurrency(Model.TongThanhToan)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lịch sử trạng thái đơn hàng (tuyệt đối không hiển thị tên / email Admin) -->
+    @if (Model.LichSu.Any())
+    {
+        <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+            <h2 class="font-serif font-bold text-charcoal text-base border-b border-borderLight pb-2">
+                @L["Order_Detail_History"]
+            </h2>
+            <div class="space-y-3">
+                @foreach (var ls in Model.LichSu)
+                {
+                    <div class="flex items-start gap-3">
+                        <div class="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0"></div>
+                        <div class="min-w-0 space-y-0.5">
+                            <p class="font-bold text-charcoal">
+                                @(string.IsNullOrEmpty(ls.TrangThaiCu) ? L["Order_History_Initial"].Value : $"{LocHelper.GetOrderStatusLabel(ls.TrangThaiCu)} → {LocHelper.GetOrderStatusLabel(ls.TrangThaiMoi)}")
+                            </p>
+                            <p class="text-muted text-[11px] font-mono">
+                                @LocHelper.FormatDateTime(ls.NgayDoi)
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        async function onCancelOrderDetail(btn) {
+            var maDH = btn.dataset.madh;
+            var confirmMsg = btn.dataset.confirm;
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            var originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerText = btn.dataset.msgCancelling;
+
+            try {
+                var res = await apiFetch('/api/v1/don-hang/' + maDH + '/huy', {
+                    method: 'POST'
+                });
+                if (res && res.ok) {
+                    showToast((res.data && res.data.thongBao) || btn.dataset.msgSuccess, true);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 600);
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                showToast(btn.dataset.msgError, false);
+            }
+        }
+    </script>
+}
+

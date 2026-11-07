@@ -1,9 +1,9 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using WebsiteBanMyPham.Constants;
+using WebsiteBanMyPham.Helpers;
 using WebsiteBanMyPham.Services;
 using WebsiteBanMyPham.ViewModels;
 
@@ -26,12 +26,6 @@ namespace WebsiteBanMyPham.Controllers
             _localizer = localizer;
         }
 
-        private int LayMaTaiKhoanHienTai()
-        {
-            var str = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.TryParse(str, out int maTK) ? maTK : 0;
-        }
-
         [HttpGet("ThanhToan/MoPhong/{maDH:int}")]
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public async Task<IActionResult> MoPhong(int maDH)
@@ -42,10 +36,11 @@ namespace WebsiteBanMyPham.Controllers
                 return NotFound();
             }
 
-            int maTK = LayMaTaiKhoanHienTai();
-            if (maTK <= 0) return RedirectToAction("DangNhap", "TaiKhoan");
+            // Lấy MaTK từ Claims bằng extension dùng chung (Helpers/ClaimsPrincipalExtensions)
+            var maTK = User.LayMaTK();
+            if (!maTK.HasValue || maTK.Value <= 0) return RedirectToAction("DangNhap", "TaiKhoan");
 
-            var donHang = await _donHangService.LayChiTietDonHangKhachAsync(maTK, maDH);
+            var donHang = await _donHangService.LayChiTietDonHangKhachAsync(maTK.Value, maDH);
             if (donHang == null)
             {
                 return NotFound();
@@ -79,10 +74,10 @@ namespace WebsiteBanMyPham.Controllers
                 return NotFound();
             }
 
-            int maTK = LayMaTaiKhoanHienTai();
-            if (maTK <= 0) return RedirectToAction("DangNhap", "TaiKhoan");
+            var maTK = User.LayMaTK();
+            if (!maTK.HasValue || maTK.Value <= 0) return RedirectToAction("DangNhap", "TaiKhoan");
 
-            var (success, errorMsg) = await _donHangService.GhiNhanThanhToanOnlineMoPhongAsync(maTK, maDH, thanhCong);
+            var (success, errorMsg) = await _donHangService.GhiNhanThanhToanOnlineMoPhongAsync(maTK.Value, maDH, thanhCong);
 
             if (success)
             {
@@ -93,7 +88,7 @@ namespace WebsiteBanMyPham.Controllers
                 }
 
                 // Điều chỉnh 2: Thanh toán thất bại -> hiển thị lại trang MoPhong dùng ModelState.AddModelError, KHÔNG dùng TempData
-                var donHangFail = await _donHangService.LayChiTietDonHangKhachAsync(maTK, maDH);
+                var donHangFail = await _donHangService.LayChiTietDonHangKhachAsync(maTK.Value, maDH);
                 if (donHangFail == null) return NotFound();
 
                 ModelState.AddModelError(string.Empty, _localizer["PaymentSim_FailedMessage"].Value);
@@ -101,7 +96,7 @@ namespace WebsiteBanMyPham.Controllers
             }
 
             // Ghi nhận thanh toán thất bại từ service
-            var donHang = await _donHangService.LayChiTietDonHangKhachAsync(maTK, maDH);
+            var donHang = await _donHangService.LayChiTietDonHangKhachAsync(maTK.Value, maDH);
             if (donHang == null) return NotFound();
 
             ModelState.AddModelError(string.Empty, errorMsg ?? _localizer["Common_Error"].Value);
@@ -109,4 +104,3 @@ namespace WebsiteBanMyPham.Controllers
         }
     }
 }
-

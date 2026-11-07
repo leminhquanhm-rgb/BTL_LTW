@@ -13,5 +13,7 @@ namespace WebsiteBanMyPham.Helpers
         string TenDanhMuc(int maDM, string tenGoc);
         string MaDonHang(int maDH);
         string GetPaymentMethodLabel(string tenPT);
+        string GetReviewStatusLabel(string? trangThai);
+        string GetComplaintStatusLabel(string? trangThai);
     }
 }

@@ -1,0 +1,113 @@
+@model WebsiteBanMyPham.ViewModels.TaoDanhGiaViewModel
+@inject ILocalizationHelper LocHelper
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = L["Review_PageTitle"];
+    string orderCode = LocHelper.MaDonHang(Model.MaDH);
+}
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="space-y-1">
+        <div class="flex items-center gap-2 text-xs text-muted">
+            <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+            <span>/</span>
+            <a asp-controller="DonHang" asp-action="Index" class="hover:text-primary transition">@L["Order_PageTitle"]</a>
+            <span>/</span>
+            <a asp-controller="DonHang" asp-action="ChiTiet" asp-route-maDH="@Model.MaDH" class="hover:text-primary transition font-mono">@orderCode</a>
+            <span>/</span>
+            <span class="text-charcoal font-semibold">@L["Review_PageTitle"]</span>
+        </div>
+        <h1 class="text-2xl font-serif font-bold text-charcoal">@L["Review_Heading"]</h1>
+        <p class="text-xs text-muted">@L["Review_ConditionNotice"]</p>
+    </div>
+
+    <!-- Khối xem trước sản phẩm được đánh giá -->
+    <div class="bg-surface p-4 sm:p-5 rounded-card border border-borderLight shadow-soft flex items-center gap-4">
+        <img src="@(string.IsNullOrEmpty(Model.DuongDanAnh) ? "/images/placeholder.svg" : Model.DuongDanAnh)"
+             alt="@Model.TenSP"
+             onerror="this.src='/images/placeholder.svg'"
+             class="w-16 h-16 rounded object-cover border border-borderLight shrink-0" />
+        <div class="min-w-0 space-y-1 text-xs">
+            <span class="text-[11px] font-mono font-bold text-primary bg-pastel px-2 py-0.5 rounded">
+                @L["Review_OrderCode"] @orderCode
+            </span>
+            <p class="font-bold text-charcoal text-sm line-clamp-1">@Model.TenSP</p>
+        </div>
+    </div>
+
+    <!-- Form gửi đánh giá -->
+    <form asp-controller="DanhGia" asp-action="Tao" method="post" class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-5 text-xs">
+        <input type="hidden" asp-for="MaCTDH" />
+        <input type="hidden" asp-for="MaDH" />
+        <input type="hidden" asp-for="MaSP" />
+        <input type="hidden" asp-for="TenSP" />
+        <input type="hidden" asp-for="DuongDanAnh" />
+
+        <div asp-validation-summary="ModelOnly" class="p-3 rounded-btn bg-[#FCEAEA] text-statusDanger font-medium"></div>
+
+        <!-- Mức độ hài lòng (1 - 5 sao) -->
+        <div class="space-y-2">
+            <label class="block font-bold text-charcoal text-sm">
+                @L["Review_RatingStar"] <span class="text-statusDanger">*</span>
+            </label>
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap" role="radiogroup" aria-label="@L["Review_RatingStar"]">
+                @for (byte s = 5; s >= 1; s--)
+                {
+                    string starLabelKey = $"Review_Star_{s}";
+                    <label class="flex items-center gap-1.5 px-3 py-2 rounded-btn border border-borderLight cursor-pointer hover:bg-cream transition has-[:checked]:bg-cream has-[:checked]:border-primary has-[:checked]:text-primary font-bold">
+                        <input type="radio" asp-for="SoSao" value="@s" class="accent-primary" />
+                        <span class="text-amber-500">@L[starLabelKey]</span>
+                    </label>
+                }
+            </div>
+            <span asp-validation-for="SoSao" class="text-statusDanger"></span>
+        </div>
+
+        <!-- Nhận xét chi tiết -->
+        <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+                <label asp-for="NoiDung" class="font-bold text-charcoal">
+                    @L["Review_Comment"]
+                </label>
+                <span id="review-char-count" class="text-muted text-[11px]">0/1000</span>
+            </div>
+            <textarea asp-for="NoiDung"
+                      id="review-comment-input"
+                      rows="4"
+                      maxlength="1000"
+                      placeholder="@L["Review_CommentPlaceholder"]"
+                      class="w-full px-3.5 py-2.5 rounded-btn bg-cream/50 border border-borderLight focus:bg-surface focus:border-primary focus:outline-none transition text-charcoal text-xs"></textarea>
+            <span asp-validation-for="NoiDung" class="text-statusDanger"></span>
+        </div>
+
+        <!-- Nút gửi -->
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-borderLight">
+            <a asp-controller="DonHang" asp-action="ChiTiet" asp-route-maDH="@Model.MaDH"
+               class="px-5 py-2.5 rounded-btn bg-cream hover:bg-pastel text-charcoal font-bold transition">
+                @L["Common_Back"]
+            </a>
+            <button type="submit"
+                    class="px-6 py-2.5 rounded-btn bg-primary hover:bg-primaryHover text-white font-bold transition shadow-sm">
+                @L["Review_Submit"]
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var commentInput = document.getElementById('review-comment-input');
+        var charCountSpan = document.getElementById('review-char-count');
+        if (commentInput && charCountSpan) {
+            function updateCharCount() {
+                var len = commentInput.value ? commentInput.value.length : 0;
+                charCountSpan.textContent = len + '/1000';
+            }
+            commentInput.addEventListener('input', updateCharCount);
+            updateCharCount();
+        }
+    </script>
+}
+

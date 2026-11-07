@@ -1,3 +1,4 @@
+using WebsiteBanMyPham.Constants;
 using WebsiteBanMyPham.ViewModels;
 
 namespace WebsiteBanMyPham.Services
@@ -8,7 +9,7 @@ namespace WebsiteBanMyPham.Services
         Task<(bool Success, string? ErrorMessage, int? MaDH)> TaoDonAsync(int maTK, DatHangRequestViewModel request);
 
         // Hủy đơn hàng (Khách hàng)
-        Task<(bool Success, string? ErrorMessage)> HuyDonAsync(int maTK, int maDH);
+        Task<(bool Success, string? ErrorMessage, LoaiLoiDonHang LoaiLoi)> HuyDonAsync(int maTK, int maDH);
 
         /// <summary>
         /// Cập nhật trạng thái đơn hàng theo luồng hợp lệ. Chỉ gọi từ khu vực Admin có [Authorize(Roles = "QuanTriVien")].

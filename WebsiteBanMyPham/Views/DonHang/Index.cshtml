@@ -1,0 +1,263 @@
+@model WebsiteBanMyPham.ViewModels.DonHangKhachListViewModel
+@inject ILocalizationHelper LocHelper
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = L["Order_PageTitle"];
+    string currentStatus = Model.CurrentTrangThai ?? "";
+    var statusTabs = new (string Key, string Label)[]
+    {
+        ("", L["Order_Filter_All"].Value),
+        (WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.ChoXacNhan, LocHelper.GetOrderStatusLabel(WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.ChoXacNhan)),
+        (WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaXacNhan, LocHelper.GetOrderStatusLabel(WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaXacNhan)),
+        (WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DangGiao, LocHelper.GetOrderStatusLabel(WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DangGiao)),
+        (WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.HoanThanh, LocHelper.GetOrderStatusLabel(WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.HoanThanh)),
+        (WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaHuy, LocHelper.GetOrderStatusLabel(WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaHuy))
+    };
+}
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="space-y-1">
+        <div class="flex items-center gap-2 text-xs text-muted">
+            <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+            <span>/</span>
+            <span class="text-charcoal font-semibold">@L["Order_PageTitle"]</span>
+        </div>
+        <h1 class="text-2xl font-serif font-bold text-charcoal">@L["Order_PageTitle"]</h1>
+    </div>
+
+    <!-- Tabs trạng thái -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-borderLight no-scrollbar text-xs sm:text-sm">
+        @foreach (var tab in statusTabs)
+        {
+            bool isActive = string.Equals(currentStatus, tab.Key, StringComparison.OrdinalIgnoreCase);
+            <a asp-controller="DonHang" asp-action="Index" asp-route-trangThai="@tab.Key"
+               class="px-4 py-2 rounded-btn font-bold transition whitespace-nowrap @(isActive ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+                @tab.Label
+            </a>
+        }
+    </div>
+
+    @if (!Model.DonHangs.Any())
+    {
+        <!-- Trạng thái danh sách trống -->
+        <div class="p-12 text-center bg-surface rounded-card border border-borderLight shadow-soft space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-full bg-cream flex items-center justify-center text-muted text-2xl">
+                <i class="ph ph-package"></i>
+            </div>
+            <div class="space-y-1">
+                <p class="font-bold text-charcoal">@L["Order_Empty"]</p>
+            </div>
+            <a asp-controller="SanPham" asp-action="Index" class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                <i class="ph-bold ph-shopping-bag"></i>
+                <span>@L["OrderSuccess_ContinueShopping"]</span>
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Danh sách thẻ đơn hàng -->
+        <div class="space-y-4">
+            @foreach (var o in Model.DonHangs)
+            {
+                string orderCode = LocHelper.MaDonHang(o.MaDH);
+                bool isCancelled = o.TrangThai == WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaHuy;
+                bool isCompleted = o.TrangThai == WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.HoanThanh;
+                bool isChoXacNhan = o.TrangThai == WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.ChoXacNhan;
+                bool canPayOnline = o.TenPhuongThuc == WebsiteBanMyPham.Constants.PhuongThucThanhToanConstant.Online
+                                    && o.TrangThaiThanhToan != WebsiteBanMyPham.Constants.TrangThaiThanhToanConstant.DaThanhToan
+                                    && !isCancelled
+                                    && Model.ChoPhepMoPhong;
+
+                <div class="p-5 sm:p-6 rounded-card bg-surface border border-borderLight shadow-soft space-y-4">
+                    <!-- Header thẻ đơn -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-borderLight pb-3 text-xs">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="font-mono font-bold text-base text-charcoal">@orderCode</span>
+                            <span class="text-muted">
+                                @L["Label_PhuongThucThanhToan"]: <strong class="text-charcoal">@LocHelper.GetPaymentMethodLabel(o.TenPhuongThuc)</strong>
+                            </span>
+                            @if (!string.IsNullOrEmpty(o.TrangThaiThanhToan))
+                            {
+                                <partial name="_StatusBadge" model='("ThanhToan", o.TrangThaiThanhToan)' />
+                            }
+                        </div>
+                        <partial name="_StatusBadge" model='("DonHang", o.TrangThai)' />
+                    </div>
+
+                    <!-- Thanh tiến trình 4 bước hoặc Khối đã hủy -->
+                    @if (isCancelled)
+                    {
+                        <div class="p-3 rounded-btn bg-[#FCEAEA] text-statusDanger text-xs font-bold flex items-center gap-2">
+                            <i class="ph-fill ph-x-circle text-base"></i>
+                            <span>@L["Order_CancelledBanner"]</span>
+                        </div>
+                    }
+                    else
+                    {
+                        var steps = new[]
+                        {
+                            WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.ChoXacNhan,
+                            WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DaXacNhan,
+                            WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.DangGiao,
+                            WebsiteBanMyPham.Constants.TrangThaiDonHangConstant.HoanThanh
+                        };
+                        int currentIdx = Array.IndexOf(steps, o.TrangThai);
+                        if (currentIdx < 0) currentIdx = 0;
+
+                        <div class="grid grid-cols-4 gap-2 pt-1 pb-2">
+                            @for (int i = 0; i < steps.Length; i++)
+                            {
+                                bool isReached = i <= currentIdx;
+                                string stepLabelKey = $"Order_Step_{steps[i]}";
+                                <div class="text-center">
+                                    <div class="h-1.5 rounded-full @(isReached ? "bg-primary" : "bg-borderLight") mb-1.5 transition"></div>
+                                    <span class="text-[11px] font-bold @(isReached ? "text-primary" : "text-muted")">
+                                        @L[stepLabelKey]
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <!-- Thân thẻ đơn: hình ảnh sản phẩm & tóm tắt -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center text-xs pt-1">
+                        <!-- Danh sách ảnh SP và tên tóm tắt -->
+                        <div class="md:col-span-5 flex items-center gap-3">
+                            <div class="flex -space-x-2 overflow-hidden shrink-0">
+                                @foreach (var sp in o.SanPham.Take(3))
+                                {
+                                    <img src="@(string.IsNullOrEmpty(sp.DuongDanAnh) ? "/images/placeholder.svg" : sp.DuongDanAnh)"
+                                         alt="@sp.TenSP"
+                                         onerror="this.src='/images/placeholder.svg'"
+                                         class="inline-block w-12 h-12 rounded object-cover border-2 border-surface shadow-sm" />
+                                }
+                            </div>
+                            <div class="min-w-0 space-y-0.5">
+                                <p class="font-bold text-charcoal line-clamp-1">
+                                    @string.Join(", ", o.SanPham.Select(s => s.TenSP))
+                                </p>
+                                <p class="text-muted text-[11px]">
+                                    @o.SoLuongSanPham @L["Product_TotalResults"] · @L["OrderSuccess_OrderDate"] @LocHelper.FormatDateTime(o.NgayDat)
+                                </p>
+                                <p class="text-primary font-bold text-sm">
+                                    @L["Checkout_Total"] @LocHelper.FormatCurrency(o.TongThanhToan)
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Cột thời gian vận đơn/giao hàng -->
+                        <div class="md:col-span-4 bg-cream/60 p-3 rounded-btn border border-borderLight space-y-1 text-[11px]">
+                            <p class="flex justify-between">
+                                <span class="text-muted">@L["OrderSuccess_OrderDate"]</span>
+                                <strong class="text-charcoal font-mono">@LocHelper.FormatDateTime(o.NgayDat)</strong>
+                            </p>
+                            @if (o.TenPhuongThuc == WebsiteBanMyPham.Constants.PhuongThucThanhToanConstant.Online)
+                            {
+                                <p class="flex justify-between">
+                                    <span class="text-muted">@L["Label_TrangThaiThanhToan"]:</span>
+                                    <strong class="text-charcoal">@LocHelper.GetPaymentStatusLabel(o.TrangThaiThanhToan ?? "")</strong>
+                                </p>
+                            }
+                        </div>
+
+                        <!-- Nút thao tác -->
+                        <div class="md:col-span-3 flex flex-wrap md:justify-end items-center gap-2">
+                            <a asp-controller="DonHang" asp-action="ChiTiet" asp-route-maDH="@o.MaDH"
+                               class="px-3.5 py-2 bg-cream hover:bg-pastel text-charcoal font-bold rounded-btn transition border border-borderLight">
+                                @L["Order_ViewDetail"]
+                            </a>
+
+                            @if (isChoXacNhan)
+                            {
+                                <button type="button"
+                                        class="btn-cancel-order px-3.5 py-2 bg-surface border border-statusDanger text-statusDanger hover:bg-[#FCEAEA] font-bold rounded-btn transition"
+                                        data-madh="@o.MaDH"
+                                        data-confirm="@L["Order_CancelConfirm"]"
+                                        data-msg-cancelling="@L["Order_Cancelling"]"
+                                        data-msg-success="@L["Order_CancelSuccess"]"
+                                        data-msg-error="@L["Common_Error"]"
+                                        onclick="onCancelOrder(this)">
+                                    @L["Order_CancelOrder"]
+                                </button>
+                            }
+
+                            @if (canPayOnline)
+                            {
+                                <a asp-controller="ThanhToan" asp-action="MoPhong" asp-route-maDH="@o.MaDH"
+                                   class="px-3.5 py-2 bg-primary hover:bg-primaryHover text-white font-bold rounded-btn transition shadow-sm">
+                                    @L["Order_PayNow"]
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Phân trang -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="flex justify-center items-center gap-2 pt-4 text-xs font-bold">
+                @if (Model.PageIndex > 1)
+                {
+                    <a asp-controller="DonHang" asp-action="Index"
+                       asp-route-trangThai="@currentStatus"
+                       asp-route-pageIndex="@(Model.PageIndex - 1)"
+                       class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-cream transition">
+                        ← @L["Pagination_Previous"]
+                    </a>
+                }
+
+                <span class="px-3 py-1.5 text-muted">
+                    @Model.PageIndex / @Model.TotalPages
+                </span>
+
+                @if (Model.PageIndex < Model.TotalPages)
+                {
+                    <a asp-controller="DonHang" asp-action="Index"
+                       asp-route-trangThai="@currentStatus"
+                       asp-route-pageIndex="@(Model.PageIndex + 1)"
+                       class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-cream transition">
+                        @L["Pagination_Next"] →
+                    </a>
+                }
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        async function onCancelOrder(btn) {
+            var maDH = btn.dataset.madh;
+            var confirmMsg = btn.dataset.confirm;
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            var originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerText = btn.dataset.msgCancelling;
+
+            try {
+                var res = await apiFetch('/api/v1/don-hang/' + maDH + '/huy', {
+                    method: 'POST'
+                });
+                if (res && res.ok) {
+                    showToast((res.data && res.data.thongBao) || btn.dataset.msgSuccess, true);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 600);
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                showToast(btn.dataset.msgError, false);
+            }
+        }
+    </script>
+}

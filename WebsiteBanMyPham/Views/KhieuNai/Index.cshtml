@@ -1,0 +1,151 @@
+@model WebsiteBanMyPham.ViewModels.KhieuNaiListViewModel
+@inject ILocalizationHelper LocHelper
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = L["Complaint_PageTitle"];
+}
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="space-y-1">
+            <div class="flex items-center gap-2 text-xs text-muted">
+                <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+                <span>/</span>
+                <span class="text-charcoal font-semibold">@L["Complaint_PageTitle"]</span>
+            </div>
+            <h1 class="text-2xl font-serif font-bold text-charcoal">@L["Complaint_ListHeading"]</h1>
+            <p class="text-xs text-muted">@L["Complaint_Notice"]</p>
+        </div>
+
+        <a asp-controller="KhieuNai" asp-action="Tao"
+           class="px-5 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+            <i class="ph-bold ph-plus"></i>
+            <span>@L["Complaint_CreateHeading"]</span>
+        </a>
+    </div>
+
+    @if (!Model.Items.Any())
+    {
+        <!-- Trạng thái chưa có khiếu nại -->
+        <div class="p-12 text-center bg-surface rounded-card border border-borderLight shadow-soft space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-full bg-cream flex items-center justify-center text-muted text-2xl">
+                <i class="ph ph-chat-circle-dots"></i>
+            </div>
+            <p class="font-bold text-charcoal text-sm">@L["Complaint_Empty"]</p>
+            <a asp-controller="KhieuNai" asp-action="Tao"
+               class="inline-flex items-center gap-1.5 px-5 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                <i class="ph-bold ph-plus"></i>
+                <span>@L["Complaint_CreateHeading"]</span>
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Bảng danh sách khiếu nại (bám sát Prototype.html) -->
+        <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-cream border-b border-borderLight font-bold text-charcoal">
+                            <th class="p-3.5">@L["Complaint_Code"]</th>
+                            <th class="p-3.5">@L["Complaint_RelatedOrder"]</th>
+                            <th class="p-3.5">@L["Complaint_RelatedProduct"]</th>
+                            <th class="p-3.5">@L["Complaint_Content"]</th>
+                            <th class="p-3.5">@L["Complaint_SentDate"]</th>
+                            <th class="p-3.5">@L["Label_TrangThai"]</th>
+                            <th class="p-3.5">@L["Complaint_StoreReply"]</th>
+                            <th class="p-3.5 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var kn in Model.Items)
+                        {
+                            <tr class="hover:bg-cream/40 transition">
+                                <td class="p-3.5 font-mono font-bold text-charcoal">
+                                    #KN@(kn.MaKN)
+                                </td>
+                                <td class="p-3.5">
+                                    @if (kn.MaDH.HasValue)
+                                    {
+                                        <a asp-controller="DonHang" asp-action="ChiTiet" asp-route-maDH="@kn.MaDH.Value"
+                                           class="font-mono font-bold text-primary hover:underline">
+                                            @LocHelper.MaDonHang(kn.MaDH.Value)
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 max-w-[180px]">
+                                    @if (!string.IsNullOrEmpty(kn.TenSP))
+                                    {
+                                        <span class="font-medium text-charcoal line-clamp-1" title="@kn.TenSP">@kn.TenSP</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 max-w-[240px]">
+                                    <p class="text-charcoal line-clamp-2" title="@kn.NoiDung">@kn.NoiDung</p>
+                                </td>
+                                <td class="p-3.5 text-muted whitespace-nowrap font-mono text-[11px]">
+                                    @LocHelper.FormatDateTime(kn.NgayGui)
+                                </td>
+                                <td class="p-3.5 whitespace-nowrap">
+                                    <partial name="_StatusBadge" model='("KhieuNai", kn.TrangThai)' />
+                                </td>
+                                <td class="p-3.5 max-w-[200px]">
+                                    @if (!string.IsNullOrWhiteSpace(kn.PhanHoi))
+                                    {
+                                        <p class="text-charcoal font-medium line-clamp-2" title="@kn.PhanHoi">@kn.PhanHoi</p>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted italic text-[11px]">@L["Complaint_NoReplyYet"]</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-right whitespace-nowrap">
+                                    <a asp-controller="KhieuNai" asp-action="ChiTiet" asp-route-maKN="@kn.MaKN"
+                                       class="px-3 py-1.5 bg-cream hover:bg-pastel text-charcoal font-bold rounded-btn transition border border-borderLight">
+                                        @L["Order_ViewDetail"]
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Phân trang -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="flex justify-center items-center gap-2 pt-4 text-xs font-bold">
+                @if (Model.PageIndex > 1)
+                {
+                    <a asp-controller="KhieuNai" asp-action="Index"
+                       asp-route-pageIndex="@(Model.PageIndex - 1)"
+                       class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-cream transition">
+                        ← @L["Pagination_Previous"]
+                    </a>
+                }
+
+                <span class="px-3 py-1.5 text-muted">
+                    @Model.PageIndex / @Model.TotalPages
+                </span>
+
+                @if (Model.PageIndex < Model.TotalPages)
+                {
+                    <a asp-controller="KhieuNai" asp-action="Index"
+                       asp-route-pageIndex="@(Model.PageIndex + 1)"
+                       class="px-3 py-1.5 rounded-btn bg-surface border border-borderLight text-charcoal hover:bg-cream transition">
+                        @L["Pagination_Next"] →
+                    </a>
+                }
+            </div>
+        }
+    }
+</div>
