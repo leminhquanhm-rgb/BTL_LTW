@@ -1,0 +1,378 @@
+@model WebsiteBanMyPham.ViewModels.PaginatedList<WebsiteBanMyPham.ViewModels.Admin.SanPhamAdminListItemViewModel>
+@{
+    ViewData["Title"] = L["Admin_Product_Title"].Value;
+    var filter = ViewBag.Filter as WebsiteBanMyPham.ViewModels.Admin.SanPhamAdminFilterViewModel ?? new WebsiteBanMyPham.ViewModels.Admin.SanPhamAdminFilterViewModel();
+    var danhMucs = ViewBag.DanhMucs as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+    var thuongHieus = ViewBag.ThuongHieus as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Header quản lý & nút Thêm mới -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-5 rounded-card border border-borderLight shadow-soft">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Product_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_Product_List"] (@Model.TotalItems)</p>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <a asp-area="Admin" asp-controller="TonKho" asp-action="Index" 
+               class="px-4 py-2 bg-surface hover:bg-cream text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition flex items-center gap-1.5 shadow-sm">
+                <i class="ph-bold ph-warning-octagon text-statusWarning"></i> @L["Admin_Nav_Inventory"]
+            </a>
+            <a asp-area="Admin" asp-controller="SanPham" asp-action="Them" 
+               class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition flex items-center gap-1.5 shadow-sm">
+                <i class="ph-bold ph-plus"></i> @L["Admin_Product_Add"]
+            </a>
+        </div>
+    </div>
+
+    <!-- Bộ lọc & Tìm kiếm -->
+    <div class="bg-surface p-4 rounded-card border border-borderLight shadow-soft">
+        <form method="get" asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+            <div class="lg:col-span-2">
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Common_Search"]</label>
+                <input type="text" name="keyword" value="@filter.Keyword" 
+                       placeholder="@L["Admin_Product_SearchPlaceholder"]" 
+                       class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Admin_Product_Category"]</label>
+                <select name="maDM" class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                    <option value="">@L["Product_AllCategories"]</option>
+                    @foreach (var dm in danhMucs)
+                    {
+                        <option value="@dm.Value" selected="@(filter.MaDM.HasValue && filter.MaDM.Value.ToString() == dm.Value)">@dm.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Admin_Product_Brand"]</label>
+                <select name="maTH" class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                    <option value="">@L["Product_AllBrands"]</option>
+                    @foreach (var th in thuongHieus)
+                    {
+                        <option value="@th.Value" selected="@(filter.MaTH.HasValue && filter.MaTH.Value.ToString() == th.Value)">@th.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Admin_Product_Status"]</label>
+                <select name="trangThai" class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                    <option value="" selected="@(!filter.TrangThai.HasValue)">@L["Admin_Filter_AllStatus"]</option>
+                    <option value="true" selected="@(filter.TrangThai == true)">@L["Admin_Product_Status_OnSale"]</option>
+                    <option value="false" selected="@(filter.TrangThai == false)">@L["Admin_Product_Status_Stopped"]</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Admin_Product_Stock"]</label>
+                <select name="tinhTrangTon" class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                    <option value="tatCa" selected="@(string.IsNullOrEmpty(filter.TinhTrangTon) || filter.TinhTrangTon == "tatCa")">@L["Admin_Product_Filter_Stock_All"]</option>
+                    <option value="sapHet" selected="@(filter.TinhTrangTon == "sapHet")">@L["Admin_Product_Filter_Stock_Low"]</option>
+                    <option value="hetHang" selected="@(filter.TinhTrangTon == "hetHang")">@L["Admin_Product_Filter_Stock_Out"]</option>
+                </select>
+            </div>
+
+            <div class="sm:col-span-2 lg:col-span-6 flex items-center justify-end gap-2 pt-1 border-t border-borderLight/60">
+                @if (!string.IsNullOrWhiteSpace(filter.Keyword) || filter.MaDM.HasValue || filter.MaTH.HasValue || filter.TrangThai.HasValue || (!string.IsNullOrEmpty(filter.TinhTrangTon) && filter.TinhTrangTon != "tatCa"))
+                {
+                    <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" 
+                       class="px-3.5 py-2 bg-cream hover:bg-pastel/40 text-muted text-xs font-semibold rounded-btn border border-borderLight transition">
+                        @L["Common_Cancel"]
+                    </a>
+                }
+                <button type="submit" class="px-4 py-2 bg-charcoal hover:bg-charcoal/90 text-white text-xs font-bold rounded-btn transition flex items-center gap-1.5 shadow-sm">
+                    <i class="ph-bold ph-magnifying-glass"></i> @L["Common_Search"]
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bảng danh sách Sản phẩm -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs divide-y divide-borderLight">
+                <thead>
+                    <tr class="bg-cream text-charcoal font-bold uppercase tracking-wider text-[11px]">
+                        <th class="p-3.5 w-14">ID</th>
+                        <th class="p-3.5 w-16 text-center">@L["Admin_Product_Images"]</th>
+                        <th class="p-3.5">@L["Admin_Product_Name"]</th>
+                        <th class="p-3.5">@L["Admin_Product_Category"]</th>
+                        <th class="p-3.5">@L["Admin_Product_Brand"]</th>
+                        <th class="p-3.5 text-right">@L["Admin_Product_Price"]</th>
+                        <th class="p-3.5 text-center">@L["Admin_Product_Stock"]</th>
+                        <th class="p-3.5 text-center">@L["Admin_Product_WarningThreshold"]</th>
+                        <th class="p-3.5 text-center">@L["Admin_Product_DisplayStatus"]</th>
+                        <th class="p-3.5 text-right w-44">@L["Admin_Category_Actions"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-borderLight">
+                    @if (Model.Items.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="10" class="p-8 text-center text-muted">
+                                <i class="ph ph-package text-3xl mb-1 block"></i>
+                                @L["Admin_Product_Images_Empty"]
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="hover:bg-cream/40 transition">
+                                <td class="p-3.5 font-mono text-muted">#@item.MaSP</td>
+                                <td class="p-3.5 text-center">
+                                    <img src="@item.AnhChinh" alt="@item.TenSP" 
+                                         onerror="this.src='/images/placeholder.svg'"
+                                         class="w-10 h-10 object-cover rounded-btn border border-borderLight mx-auto" />
+                                </td>
+                                <td class="p-3.5 font-bold text-charcoal max-w-[200px]">
+                                    <a asp-area="Admin" asp-controller="SanPham" asp-action="Sua" asp-route-id="@item.MaSP" class="hover:text-primary transition line-clamp-2">
+                                        @item.TenSP
+                                    </a>
+                                </td>
+                                <td class="p-3.5 text-charcoal/80">
+                                    <span class="inline-block px-2 py-0.5 rounded bg-cream border border-borderLight/80 text-[11px]">
+                                        @item.TenDanhMuc
+                                    </span>
+                                </td>
+                                <td class="p-3.5 text-charcoal/80">
+                                    <span class="inline-block px-2 py-0.5 rounded bg-cream border border-borderLight/80 text-[11px]">
+                                        @item.TenThuongHieu
+                                    </span>
+                                </td>
+                                <td class="p-3.5 text-right font-semibold whitespace-nowrap">
+                                    <div class="text-charcoal">@LocalizationHelper.FormatCurrency(item.Gia)</div>
+                                    @if (item.GiaGoc.HasValue && item.GiaGoc.Value > item.Gia)
+                                    {
+                                        <div class="text-[10px] text-muted line-through">@LocalizationHelper.FormatCurrency(item.GiaGoc.Value)</div>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-center font-bold">
+                                    @if (item.SoLuongTon <= 0)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-statusDanger/15 text-statusDanger text-[11px]">
+                                            0 (@L["Admin_Inventory_OutOfStock_Badge"])
+                                        </span>
+                                    }
+                                    else if (item.SoLuongTon <= item.NguongCanhBao)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-statusWarning/15 text-statusWarning text-[11px]">
+                                            @item.SoLuongTon (@L["Admin_Inventory_LowStock_Badge"])
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="px-2 py-0.5 rounded-full bg-cream border border-borderLight text-charcoal text-[11px]">
+                                            @item.SoLuongTon
+                                        </span>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-center font-mono text-muted text-xs">
+                                    @item.NguongCanhBao
+                                </td>
+                                <td class="p-3.5 text-center">
+                                    @if (item.IsDangBan)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-statusSuccess/15 text-statusSuccess font-bold text-[11px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-statusSuccess"></span>
+                                            @L[item.TrangThaiHienThiKey]
+                                        </span>
+                                    }
+                                    else if (!item.TrangThai)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-statusDanger/15 text-statusDanger font-bold text-[11px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-statusDanger"></span>
+                                            @L[item.TrangThaiHienThiKey]
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-statusWarning/15 text-statusWarning font-bold text-[11px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-statusWarning"></span>
+                                            @L[item.TrangThaiHienThiKey]
+                                        </span>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <!-- Nút Sửa -->
+                                        <a asp-area="Admin" asp-controller="SanPham" asp-action="Sua" asp-route-id="@item.MaSP" 
+                                           class="px-2.5 py-1 text-primary hover:bg-pastel/40 rounded font-semibold transition" title="@L["Common_Edit"]">
+                                            @L["Common_Edit"]
+                                        </a>
+
+                                        <!-- Nút Bật / Tắt kinh doanh -->
+                                        <form method="post" asp-area="Admin" asp-controller="SanPham" asp-action="BatTat" asp-route-id="@item.MaSP" class="inline-block toggle-form">
+                                            @Html.AntiForgeryToken()
+                                            @if (item.TrangThai)
+                                            {
+                                                <button type="button" 
+                                                        class="px-2 py-1 text-statusWarning hover:bg-statusWarning/10 rounded font-semibold transition btn-toggle"
+                                                        data-message="@L["Admin_Product_StopSale_Confirm"].Value">
+                                                    @L["Admin_Product_StopSale"]
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" 
+                                                        class="px-2 py-1 text-statusSuccess hover:bg-statusSuccess/10 rounded font-semibold transition btn-toggle"
+                                                        data-message="@L["Admin_Product_ResumeSale_Confirm"].Value">
+                                                    @L["Admin_Product_ResumeSale"]
+                                                </button>
+                                            }
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phân trang -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3">
+                <span class="text-xs text-muted">
+                    Trang @Model.PageIndex / @Model.TotalPages (@Model.TotalItems @L["Admin_Nav_Products"].Value.ToLower())
+                </span>
+                <div class="flex items-center gap-1.5">
+                    @if (Model.PageIndex > 1)
+                    {
+                        <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" 
+                           asp-route-trang="@(Model.PageIndex - 1)" 
+                           asp-route-keyword="@filter.Keyword" 
+                           asp-route-maDM="@filter.MaDM"
+                           asp-route-maTH="@filter.MaTH"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-tinhTrangTon="@filter.TinhTrangTon"
+                           class="px-3 py-1.5 bg-cream hover:bg-pastel/50 rounded-btn text-xs font-semibold border border-borderLight text-charcoal transition">
+                            ←
+                        </a>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == Model.PageIndex)
+                        {
+                            <span class="px-3 py-1.5 bg-primary text-white rounded-btn text-xs font-bold">@i</span>
+                        }
+                        else if (i == 1 || i == Model.TotalPages || (i >= Model.PageIndex - 2 && i <= Model.PageIndex + 2))
+                        {
+                            <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" 
+                               asp-route-trang="@i" 
+                               asp-route-keyword="@filter.Keyword" 
+                               asp-route-maDM="@filter.MaDM"
+                               asp-route-maTH="@filter.MaTH"
+                               asp-route-trangThai="@filter.TrangThai"
+                               asp-route-tinhTrangTon="@filter.TinhTrangTon"
+                               class="px-3 py-1.5 bg-cream hover:bg-pastel/50 rounded-btn text-xs font-semibold border border-borderLight text-charcoal transition">
+                                @i
+                            </a>
+                        }
+                        else if (i == Model.PageIndex - 3 || i == Model.PageIndex + 3)
+                        {
+                            <span class="px-1 text-xs text-muted">...</span>
+                        }
+                    }
+                    @if (Model.PageIndex < Model.TotalPages)
+                    {
+                        <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" 
+                           asp-route-trang="@(Model.PageIndex + 1)" 
+                           asp-route-keyword="@filter.Keyword" 
+                           asp-route-maDM="@filter.MaDM"
+                           asp-route-maTH="@filter.MaTH"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-tinhTrangTon="@filter.TinhTrangTon"
+                           class="px-3 py-1.5 bg-cream hover:bg-pastel/50 rounded-btn text-xs font-semibold border border-borderLight text-charcoal transition">
+                            →
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal Xác nhận Bật / Tắt trạng thái kinh doanh -->
+<div id="confirmModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-statusWarning/15 text-statusWarning flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-warning text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="modalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+            <button type="button" id="btnModalCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Cancel"]
+            </button>
+            <button type="button" id="btnModalConfirm" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                @L["Common_Save"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var modal = document.getElementById('confirmModal');
+            var modalMessage = document.getElementById('modalMessage');
+            var btnCancel = document.getElementById('btnModalCancel');
+            var btnConfirm = document.getElementById('btnModalConfirm');
+            var currentForm = null;
+
+            function openModal(message, form) {
+                currentForm = form;
+                modalMessage.textContent = message;
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+                currentForm = null;
+            }
+
+            btnCancel.addEventListener('click', closeModal);
+
+            btnConfirm.addEventListener('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+
+            document.querySelectorAll('.btn-toggle').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var msg = this.dataset.message || '';
+                    var form = this.closest('form');
+                    openModal(msg, form);
+                });
+            });
+        })();
+    </script>
+}
+

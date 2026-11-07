@@ -39,15 +39,26 @@
 
         <!-- Thẻ 3: Số Lượng Sản Phẩm -->
         <div class="bg-[#E8F3EE] p-5 rounded-card border border-borderLight shadow-soft space-y-1">
-            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Products_Total"]</span>
-            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongSanPham @L["Admin_Dashboard_Unit_Product"]</p>
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Products_Total"]</span>
+                <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="text-xs text-primary font-bold hover:underline" title="@L["Admin_Nav_Products"]">
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+            </div>
+            <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="block hover:opacity-80 transition">
+                <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongSanPham @L["Admin_Dashboard_Unit_Product"]</p>
+            </a>
             @if (Model.SoLuongSanPhamSapHet > 0)
             {
-                <p class="text-xs text-statusDanger font-semibold">@string.Format(L["Admin_Dashboard_Products_LowStockCount"].Value, Model.SoLuongSanPhamSapHet)</p>
+                <a asp-area="Admin" asp-controller="TonKho" asp-action="Index" asp-route-tinhTrangTon="sapHet" class="block text-xs text-statusDanger font-semibold hover:underline">
+                    @string.Format(L["Admin_Dashboard_Products_LowStockCount"].Value, Model.SoLuongSanPhamSapHet)
+                </a>
             }
             else
             {
-                <p class="text-xs text-statusSuccess font-semibold">@L["Admin_Dashboard_LowStock_Empty"]</p>
+                <a asp-area="Admin" asp-controller="TonKho" asp-action="Index" class="block text-xs text-statusSuccess font-semibold hover:underline">
+                    @L["Admin_Dashboard_LowStock_Empty"]
+                </a>
             }
         </div>
 

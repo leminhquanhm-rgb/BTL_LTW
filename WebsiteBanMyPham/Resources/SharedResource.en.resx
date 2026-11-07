@@ -1934,4 +1934,211 @@
   <data name="Admin_Confirm_Title" xml:space="preserve">
     <value>Confirm Action</value>
   </data>
+  <!-- Bước 6B-2: Quản lý Sản phẩm Admin -->
+  <data name="Admin_Product_Title" xml:space="preserve">
+    <value>Product Management</value>
+  </data>
+  <data name="Admin_Product_List" xml:space="preserve">
+    <value>Product List</value>
+  </data>
+  <data name="Admin_Product_Add" xml:space="preserve">
+    <value>Add Product</value>
+  </data>
+  <data name="Admin_Product_Edit" xml:space="preserve">
+    <value>Edit Product</value>
+  </data>
+  <data name="Admin_Product_Name" xml:space="preserve">
+    <value>Product Name</value>
+  </data>
+  <data name="Admin_Product_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Admin_Product_Brand" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="Admin_Product_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Admin_Product_OriginalPrice" xml:space="preserve">
+    <value>Original Price</value>
+  </data>
+  <data name="Admin_Product_OriginalPrice_Hint" xml:space="preserve">
+    <value>Original price must be greater than or equal to selling price (shown with strikethrough).</value>
+  </data>
+  <data name="Admin_Product_Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="Admin_Product_InitialStock" xml:space="preserve">
+    <value>Initial Stock</value>
+  </data>
+  <data name="Admin_Product_InitialStock_Notice" xml:space="preserve">
+    <value>Stock can only be adjusted on the Inventory page after the product is created.</value>
+  </data>
+  <data name="Admin_Product_WarningThreshold" xml:space="preserve">
+    <value>Warning Threshold</value>
+  </data>
+  <data name="Admin_Product_WarningThreshold_Hint" xml:space="preserve">
+    <value>Default is 5. Low stock warning when inventory is at or below this threshold.</value>
+  </data>
+  <data name="Admin_Product_Status" xml:space="preserve">
+    <value>Business Status</value>
+  </data>
+  <data name="Admin_Product_DisplayStatus" xml:space="preserve">
+    <value>Customer Display Status</value>
+  </data>
+  <data name="Admin_Product_Status_OnSale" xml:space="preserve">
+    <value>On Sale</value>
+  </data>
+  <data name="Admin_Product_Status_Stopped" xml:space="preserve">
+    <value>Discontinued</value>
+  </data>
+  <data name="Admin_Product_Status_HiddenCategory" xml:space="preserve">
+    <value>Hidden (Category inactive)</value>
+  </data>
+  <data name="Admin_Product_Status_HiddenBrand" xml:space="preserve">
+    <value>Hidden (Brand inactive)</value>
+  </data>
+  <data name="Admin_Product_Description" xml:space="preserve">
+    <value>Detailed Description</value>
+  </data>
+  <data name="Admin_Product_Description_Hint" xml:space="preserve">
+    <value>Rich text formatting (Quill). Image insertion not supported. Maximum 20,000 characters.</value>
+  </data>
+  <data name="Admin_Product_Images" xml:space="preserve">
+    <value>Product Images</value>
+  </data>
+  <data name="Admin_Product_Images_Hint" xml:space="preserve">
+    <value>Max 8 images. JPG, PNG, WebP (≤ 2MB/image).</value>
+  </data>
+  <data name="Admin_Product_Images_Upload" xml:space="preserve">
+    <value>Upload Images</value>
+  </data>
+  <data name="Admin_Product_Images_Primary" xml:space="preserve">
+    <value>Main Image</value>
+  </data>
+  <data name="Admin_Product_Images_SetPrimary" xml:space="preserve">
+    <value>Set as Main</value>
+  </data>
+  <data name="Admin_Product_Images_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete this image?</value>
+  </data>
+  <data name="Admin_Product_Images_MaxExceeded" xml:space="preserve">
+    <value>Maximum 8 images per product.</value>
+  </data>
+  <data name="Admin_Product_Images_Empty" xml:space="preserve">
+    <value>No images yet.</value>
+  </data>
+  <data name="Admin_Product_Images_AddSuccess" xml:space="preserve">
+    <value>Image uploaded successfully.</value>
+  </data>
+  <data name="Admin_Product_Images_SetPrimarySuccess" xml:space="preserve">
+    <value>Main image set successfully.</value>
+  </data>
+  <data name="Admin_Product_Images_DeleteSuccess" xml:space="preserve">
+    <value>Image deleted successfully.</value>
+  </data>
+  <data name="Admin_Product_StopSale" xml:space="preserve">
+    <value>Stop Selling</value>
+  </data>
+  <data name="Admin_Product_ResumeSale" xml:space="preserve">
+    <value>Resume Selling</value>
+  </data>
+  <data name="Admin_Product_StopSale_Confirm" xml:space="preserve">
+    <value>Are you sure you want to stop selling this product?</value>
+  </data>
+  <data name="Admin_Product_ResumeSale_Confirm" xml:space="preserve">
+    <value>Are you sure you want to resume selling this product?</value>
+  </data>
+  <data name="Admin_Product_CreateSuccess" xml:space="preserve">
+    <value>Product created successfully.</value>
+  </data>
+  <data name="Admin_Product_UpdateSuccess" xml:space="preserve">
+    <value>Product updated successfully.</value>
+  </data>
+  <data name="Admin_Product_ToggleSuccess" xml:space="preserve">
+    <value>Product status updated successfully.</value>
+  </data>
+  <data name="Admin_Product_PriceEdit_Notice" xml:space="preserve">
+    <value>Changing name or price here will not affect previously placed orders.</value>
+  </data>
+  <data name="Admin_Product_SearchPlaceholder" xml:space="preserve">
+    <value>Search by product name...</value>
+  </data>
+  <data name="Admin_Product_Filter_Stock_All" xml:space="preserve">
+    <value>All stock statuses</value>
+  </data>
+  <data name="Admin_Product_Filter_Stock_Low" xml:space="preserve">
+    <value>Low stock</value>
+  </data>
+  <data name="Admin_Product_Filter_Stock_Out" xml:space="preserve">
+    <value>Out of stock</value>
+  </data>
+  <data name="Admin_Product_Validation_OriginalPrice" xml:space="preserve">
+    <value>Original price must be greater than or equal to selling price.</value>
+  </data>
+  <data name="Admin_Product_Validation_DescTooLong" xml:space="preserve">
+    <value>Product description must not exceed 20,000 characters.</value>
+  </data>
+  <data name="Admin_Product_Validation_CategoryInactive" xml:space="preserve">
+    <value>Selected category is inactive.</value>
+  </data>
+  <data name="Admin_Product_Validation_BrandInactive" xml:space="preserve">
+    <value>Selected brand is inactive.</value>
+  </data>
+  <data name="Admin_Product_Validation_InvalidImage" xml:space="preserve">
+    <value>Image file '{0}' is invalid: {1}</value>
+  </data>
+
+  <!-- Bước 6B-2: Quản lý Tồn kho Admin -->
+  <data name="Admin_Inventory_Title" xml:space="preserve">
+    <value>Inventory Management</value>
+  </data>
+  <data name="Admin_Inventory_List" xml:space="preserve">
+    <value>Inventory List</value>
+  </data>
+  <data name="Admin_Inventory_Adjust" xml:space="preserve">
+    <value>Adjust Stock</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Placeholder" xml:space="preserve">
+    <value>Enter change (+n or -n)</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Hint" xml:space="preserve">
+    <value>Example: +10 to add, -5 to deduct.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Success" xml:space="preserve">
+    <value>Stock adjusted successfully.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Failed" xml:space="preserve">
+    <value>Current stock is insufficient for the requested deduction.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_NotFound" xml:space="preserve">
+    <value>Requested product not found in inventory.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_InvalidDelta" xml:space="preserve">
+    <value>Stock delta must be non-zero and not exceed 100,000.</value>
+  </data>
+  <data name="Admin_Inventory_UpdateThreshold_Success" xml:space="preserve">
+    <value>Warning threshold updated successfully.</value>
+  </data>
+  <data name="Admin_Inventory_Threshold" xml:space="preserve">
+    <value>Warning Threshold</value>
+  </data>
+  <data name="Admin_Inventory_Export" xml:space="preserve">
+    <value>Export Products &amp; Stock</value>
+  </data>
+  <data name="Admin_Inventory_LowStock_Badge" xml:space="preserve">
+    <value>Low stock</value>
+  </data>
+  <data name="Admin_Inventory_OutOfStock_Badge" xml:space="preserve">
+    <value>Out of stock</value>
+  </data>
+  <data name="Admin_Inventory_InStock_Badge" xml:space="preserve">
+    <value>In stock</value>
+  </data>
+  <data name="Admin_Inventory_SearchPlaceholder" xml:space="preserve">
+    <value>Search product in inventory...</value>
+  </data>
+  <data name="Product_DescriptionUpdating" xml:space="preserve">
+    <value>Product description is being updated.</value>
+  </data>
 </root>

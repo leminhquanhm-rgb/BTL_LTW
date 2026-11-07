@@ -1,5 +1,6 @@
 @model WebsiteBanMyPham.ViewModels.SanPhamChiTietViewModel
 @inject WebsiteBanMyPham.Helpers.ILocalizationHelper LocHelper
+@inject WebsiteBanMyPham.Services.IHtmlSanitizerService HtmlSanitizer
 
 @{
     ViewData["Title"] = Model.TenSP;
@@ -147,11 +148,18 @@
                 }
             </div>
 
-            <!-- Khối mô tả sản phẩm (Hiển thị văn bản mã hóa an toàn, không Html.Raw theo quy chuẩn 5B) -->
+            <!-- Khối mô tả sản phẩm (Làm sạch HTML an toàn qua IHtmlSanitizerService) -->
             <div class="pt-4 border-t border-borderLight space-y-3">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-charcoal">@L["Product_TabDescription"]</h3>
-                <div class="text-xs sm:text-sm text-charcoal/80 leading-relaxed whitespace-pre-line bg-cream/40 p-4 rounded-btn border border-borderLight/60">
-                    @(string.IsNullOrWhiteSpace(Model.MoTa) ? "Mô tả sản phẩm đang được cập nhật." : Model.MoTa)
+                <div class="prose max-w-none text-xs sm:text-sm text-charcoal/80 leading-relaxed bg-cream/40 p-4 rounded-btn border border-borderLight/60 product-rich-text">
+                    @if (string.IsNullOrWhiteSpace(Model.MoTa))
+                    {
+                        <p>@L["Product_DescriptionUpdating"]</p>
+                    }
+                    else
+                    {
+                        @Html.Raw(HtmlSanitizer.Sanitize(Model.MoTa))
+                    }
                 </div>
             </div>
         </div>
@@ -220,6 +228,19 @@
         </div>
     </div>
 </div>
+
+<style>
+    .product-rich-text h2 { font-size: 1.15rem; font-weight: 700; color: #65545A; margin-top: 0.75rem; margin-bottom: 0.35rem; }
+    .product-rich-text h3 { font-size: 1rem; font-weight: 600; color: #65545A; margin-top: 0.6rem; margin-bottom: 0.25rem; }
+    .product-rich-text p { margin-bottom: 0.5rem; }
+    .product-rich-text ul { list-style-type: disc; margin-left: 1.25rem; margin-bottom: 0.5rem; }
+    .product-rich-text ol { list-style-type: decimal; margin-left: 1.25rem; margin-bottom: 0.5rem; }
+    .product-rich-text li { margin-bottom: 0.25rem; }
+    .product-rich-text blockquote { border-left: 3px solid #C87991; padding-left: 0.75rem; color: #9A8B90; font-style: italic; margin: 0.5rem 0; }
+    .product-rich-text a { color: #C87991; text-decoration: underline; }
+    .product-rich-text a:hover { color: #B3627A; }
+    .product-rich-text strong { font-weight: 700; color: #65545A; }
+</style>
 
 @section Scripts {
     <script>

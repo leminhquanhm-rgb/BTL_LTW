@@ -1,0 +1,288 @@
+@model WebsiteBanMyPham.ViewModels.Admin.SanPhamCreateViewModel
+@{
+    ViewData["Title"] = L["Admin_Product_Add"].Value;
+    var danhMucs = ViewBag.DanhMucs as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+    var thuongHieus = ViewBag.ThuongHieus as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+}
+
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <style>
+        .ql-toolbar.ql-snow {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            border-color: #F0E4E8;
+            background-color: #FFF9F5;
+        }
+        .ql-container.ql-snow {
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            border-color: #F0E4E8;
+            background-color: #FFFFFF;
+            font-family: inherit;
+            font-size: 13px;
+            height: auto !important;
+        }
+        .ql-editor {
+            min-height: 240px;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+    </style>
+}
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="flex items-center justify-between">
+        <div>
+            <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="text-xs text-muted hover:text-primary transition flex items-center gap-1 mb-1">
+                <i class="ph ph-arrow-left"></i> @L["Common_Back"]
+            </a>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Product_Add"]</h1>
+        </div>
+    </div>
+
+    <!-- Form tạo mới -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft">
+        <form method="post" asp-area="Admin" asp-controller="SanPham" asp-action="Them" enctype="multipart/form-data" id="formThemSanPham" class="space-y-6">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="p-3 bg-statusDanger/10 border border-statusDanger/30 rounded-btn text-statusDanger text-xs"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Cột trái: Tên, Danh mục, Thương hiệu -->
+                <div class="space-y-4 md:col-span-2">
+                    <div class="space-y-1.5">
+                        <label asp-for="TenSP" class="block text-xs font-bold text-charcoal">
+                            @L["Admin_Product_Name"] <span class="text-statusDanger">*</span>
+                        </label>
+                        <input asp-for="TenSP" maxlength="200"
+                               placeholder="@L["Admin_Product_Name"]" 
+                               class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+                        <span asp-validation-for="TenSP" class="text-statusDanger text-[11px] block"></span>
+                    </div>
+                </div>
+
+                <!-- Danh mục -->
+                <div class="space-y-1.5">
+                    <label asp-for="MaDM" class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_Category"] <span class="text-statusDanger">*</span>
+                    </label>
+                    <select asp-for="MaDM" class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                        <option value="">-- @L["Admin_Product_Category"] --</option>
+                        @foreach (var dm in danhMucs)
+                        {
+                            <option value="@dm.Value">@dm.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="MaDM" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Thương hiệu -->
+                <div class="space-y-1.5">
+                    <label asp-for="MaTH" class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_Brand"] <span class="text-statusDanger">*</span>
+                    </label>
+                    <select asp-for="MaTH" class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary">
+                        <option value="">-- @L["Admin_Product_Brand"] --</option>
+                        @foreach (var th in thuongHieus)
+                        {
+                            <option value="@th.Value">@th.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="MaTH" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Giá bán -->
+                <div class="space-y-1.5">
+                    <label asp-for="Gia" class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_Price"] (VNĐ) <span class="text-statusDanger">*</span>
+                    </label>
+                    <input asp-for="Gia" type="number" min="0" step="1000"
+                           class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+                    <span asp-validation-for="Gia" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Giá gốc -->
+                <div class="space-y-1.5">
+                    <label asp-for="GiaGoc" class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_OriginalPrice"] (VNĐ)
+                    </label>
+                    <input asp-for="GiaGoc" type="number" min="0" step="1000"
+                           class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+                    <span class="text-[11px] text-muted block">@L["Admin_Product_OriginalPrice_Hint"]</span>
+                    <span asp-validation-for="GiaGoc" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Số lượng tồn ban đầu -->
+                <div class="space-y-1.5">
+                    <label asp-for="SoLuongTon" class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_InitialStock"] <span class="text-statusDanger">*</span>
+                    </label>
+                    <input asp-for="SoLuongTon" type="number" min="0" max="1000000"
+                           class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+                    <span class="text-[11px] text-muted block">@L["Admin_Product_InitialStock_Notice"]</span>
+                    <span asp-validation-for="SoLuongTon" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Ngưỡng cảnh báo -->
+                <div class="space-y-1.5">
+                    <label asp-for="NguongCanhBao" class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_WarningThreshold"] <span class="text-statusDanger">*</span>
+                    </label>
+                    <input asp-for="NguongCanhBao" type="number" min="0" max="100000"
+                           class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+                    <span class="text-[11px] text-muted block">@L["Admin_Product_WarningThreshold_Hint"]</span>
+                    <span asp-validation-for="NguongCanhBao" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Trạng thái kinh doanh -->
+                <div class="md:col-span-2 pt-1">
+                    <label class="flex items-center gap-2.5 cursor-pointer">
+                        <input asp-for="TrangThai" type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-borderLight" />
+                        <span class="text-xs font-semibold text-charcoal">@L["Admin_Product_Status_OnSale"]</span>
+                    </label>
+                </div>
+
+                <!-- Mô tả chi tiết (Rich text Quill) -->
+                <div class="space-y-1.5 md:col-span-2">
+                    <label class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_Description"]
+                    </label>
+                    <input type="hidden" asp-for="MoTa" id="MoTa" />
+                    <div id="quill-editor"></div>
+                    <span class="text-[11px] text-muted block">@L["Admin_Product_Description_Hint"]</span>
+                    <span asp-validation-for="MoTa" class="text-statusDanger text-[11px] block"></span>
+                </div>
+
+                <!-- Upload Hình ảnh sản phẩm (Tối đa 8 ảnh) -->
+                <div class="space-y-2 md:col-span-2 pt-4 mt-2 border-t border-borderLight clear-both">
+                    <label class="block text-xs font-bold text-charcoal">
+                        @L["Admin_Product_Images"]
+                    </label>
+                    <input type="file" name="AnhFiles" id="AnhFiles" multiple accept=".jpg,.jpeg,.png,.webp"
+                           class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal file:mr-3 file:py-1.5 file:px-3 file:rounded-btn file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-primaryHover cursor-pointer" />
+                    <span class="text-[11px] text-muted block">@L["Admin_Product_Images_Hint"]</span>
+                    
+                    <!-- Khung preview danh sách ảnh đã chọn -->
+                    <div id="imagePreviewContainer" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2 hidden">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="flex items-center justify-end gap-3 pt-5 border-t border-borderLight">
+                <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                    @L["Common_Cancel"]
+                </a>
+                <button type="submit" id="btnSubmit" class="px-5 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                    @L["Common_Save"]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Khởi tạo Quill editor
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                placeholder: 'Nhập mô tả chi tiết sản phẩm...',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'header': 2 }, { 'header': 3 }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['blockquote', 'link'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // Nếu đã có giá trị ban đầu trong trường ẩn (khi validation fail quay lại)
+            var initialContent = document.getElementById('MoTa').value;
+            if (initialContent) {
+                quill.clipboard.dangerouslyPasteHTML(initialContent);
+            }
+
+            // Chặn kéo thả và dán ảnh vào Quill editor
+            var editorElement = document.querySelector('#quill-editor .ql-editor');
+            if (editorElement) {
+                editorElement.addEventListener('paste', function (e) {
+                    if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+                        e.preventDefault();
+                        alert('Không hỗ trợ dán ảnh trực tiếp vào nội dung mô tả.');
+                    }
+                });
+
+                editorElement.addEventListener('drop', function (e) {
+                    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        e.preventDefault();
+                        alert('Không hỗ trợ kéo thả ảnh vào nội dung mô tả.');
+                    }
+                });
+            }
+
+            // Đồng bộ dữ liệu sang hidden input khi submit form kèm xử lý &nbsp; bug Quill 2.0
+            var form = document.getElementById('formThemSanPham');
+            form.addEventListener('submit', function () {
+                var html = quill.getSemanticHTML();
+                if (html) {
+                    html = html.replace(/&nbsp;/g, ' ');
+                }
+                if (quill.getText().trim().length === 0) {
+                    html = '';
+                }
+                document.getElementById('MoTa').value = html;
+            });
+
+            // Preview ảnh khi chọn file
+            var fileInput = document.getElementById('AnhFiles');
+            var previewContainer = document.getElementById('imagePreviewContainer');
+
+            fileInput.addEventListener('change', function () {
+                previewContainer.innerHTML = '';
+                if (!this.files || this.files.length === 0) {
+                    previewContainer.classList.add('hidden');
+                    return;
+                }
+
+                if (this.files.length > 8) {
+                    alert('Chỉ được chọn tối đa 8 ảnh. Vui lòng chọn lại.');
+                    this.value = '';
+                    previewContainer.classList.add('hidden');
+                    return;
+                }
+
+                previewContainer.classList.remove('hidden');
+
+                Array.from(this.files).forEach(function (file, index) {
+                    if (!file.type.match('image.*')) return;
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var card = document.createElement('div');
+                        card.className = 'relative rounded-btn border border-borderLight overflow-hidden bg-cream aspect-square group';
+
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'w-full h-full object-cover';
+
+                        var badge = document.createElement('span');
+                        badge.className = 'absolute top-1 left-1 text-[9px] font-bold px-1.5 py-0.5 rounded ' + 
+                            (index === 0 ? 'bg-primary text-white shadow-sm' : 'bg-charcoal/70 text-white');
+                        badge.textContent = index === 0 ? 'Ảnh chính' : '#' + (index + 1);
+
+                        card.appendChild(img);
+                        card.appendChild(badge);
+                        previewContainer.appendChild(card);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        });
+    </script>
+}
+

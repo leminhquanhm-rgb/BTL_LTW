@@ -1934,4 +1934,211 @@
   <data name="Admin_Confirm_Title" xml:space="preserve">
     <value>Xác nhận thao tác</value>
   </data>
+  <!-- Bước 6B-2: Quản lý Sản phẩm Admin -->
+  <data name="Admin_Product_Title" xml:space="preserve">
+    <value>Quản lý sản phẩm</value>
+  </data>
+  <data name="Admin_Product_List" xml:space="preserve">
+    <value>Danh sách sản phẩm</value>
+  </data>
+  <data name="Admin_Product_Add" xml:space="preserve">
+    <value>Thêm sản phẩm</value>
+  </data>
+  <data name="Admin_Product_Edit" xml:space="preserve">
+    <value>Chỉnh sửa sản phẩm</value>
+  </data>
+  <data name="Admin_Product_Name" xml:space="preserve">
+    <value>Tên sản phẩm</value>
+  </data>
+  <data name="Admin_Product_Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="Admin_Product_Brand" xml:space="preserve">
+    <value>Thương hiệu</value>
+  </data>
+  <data name="Admin_Product_Price" xml:space="preserve">
+    <value>Giá bán</value>
+  </data>
+  <data name="Admin_Product_OriginalPrice" xml:space="preserve">
+    <value>Giá gốc</value>
+  </data>
+  <data name="Admin_Product_OriginalPrice_Hint" xml:space="preserve">
+    <value>Giá gốc phải lớn hơn hoặc bằng giá bán (hiển thị gạch ngang).</value>
+  </data>
+  <data name="Admin_Product_Stock" xml:space="preserve">
+    <value>Tồn kho</value>
+  </data>
+  <data name="Admin_Product_InitialStock" xml:space="preserve">
+    <value>Số lượng tồn ban đầu</value>
+  </data>
+  <data name="Admin_Product_InitialStock_Notice" xml:space="preserve">
+    <value>Số lượng tồn chỉ có thể điều chỉnh tại trang Tồn kho sau khi sản phẩm được tạo.</value>
+  </data>
+  <data name="Admin_Product_WarningThreshold" xml:space="preserve">
+    <value>Ngưỡng cảnh báo</value>
+  </data>
+  <data name="Admin_Product_WarningThreshold_Hint" xml:space="preserve">
+    <value>Mặc định là 5. Cảnh báo khi tồn kho nhỏ hơn hoặc bằng ngưỡng này.</value>
+  </data>
+  <data name="Admin_Product_Status" xml:space="preserve">
+    <value>Trạng thái kinh doanh</value>
+  </data>
+  <data name="Admin_Product_DisplayStatus" xml:space="preserve">
+    <value>Trạng thái hiển thị khách</value>
+  </data>
+  <data name="Admin_Product_Status_OnSale" xml:space="preserve">
+    <value>Đang bán</value>
+  </data>
+  <data name="Admin_Product_Status_Stopped" xml:space="preserve">
+    <value>Ngừng kinh doanh</value>
+  </data>
+  <data name="Admin_Product_Status_HiddenCategory" xml:space="preserve">
+    <value>Ẩn do danh mục ngừng</value>
+  </data>
+  <data name="Admin_Product_Status_HiddenBrand" xml:space="preserve">
+    <value>Ẩn do thương hiệu ngừng</value>
+  </data>
+  <data name="Admin_Product_Description" xml:space="preserve">
+    <value>Mô tả chi tiết</value>
+  </data>
+  <data name="Admin_Product_Description_Hint" xml:space="preserve">
+    <value>Soạn thảo văn bản rich text (Quill). Không hỗ trợ chèn ảnh. Tối đa 20.000 ký tự.</value>
+  </data>
+  <data name="Admin_Product_Images" xml:space="preserve">
+    <value>Hình ảnh sản phẩm</value>
+  </data>
+  <data name="Admin_Product_Images_Hint" xml:space="preserve">
+    <value>Tối đa 8 ảnh. Định dạng JPG, PNG, WebP (≤ 2MB/ảnh).</value>
+  </data>
+  <data name="Admin_Product_Images_Upload" xml:space="preserve">
+    <value>Tải ảnh lên</value>
+  </data>
+  <data name="Admin_Product_Images_Primary" xml:space="preserve">
+    <value>Ảnh chính</value>
+  </data>
+  <data name="Admin_Product_Images_SetPrimary" xml:space="preserve">
+    <value>Đặt làm ảnh chính</value>
+  </data>
+  <data name="Admin_Product_Images_DeleteConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa hình ảnh này?</value>
+  </data>
+  <data name="Admin_Product_Images_MaxExceeded" xml:space="preserve">
+    <value>Mỗi sản phẩm chỉ có tối đa 8 hình ảnh.</value>
+  </data>
+  <data name="Admin_Product_Images_Empty" xml:space="preserve">
+    <value>Chưa có hình ảnh nào.</value>
+  </data>
+  <data name="Admin_Product_Images_AddSuccess" xml:space="preserve">
+    <value>Tải ảnh lên thành công.</value>
+  </data>
+  <data name="Admin_Product_Images_SetPrimarySuccess" xml:space="preserve">
+    <value>Đặt ảnh chính thành công.</value>
+  </data>
+  <data name="Admin_Product_Images_DeleteSuccess" xml:space="preserve">
+    <value>Xóa hình ảnh thành công.</value>
+  </data>
+  <data name="Admin_Product_StopSale" xml:space="preserve">
+    <value>Ngừng bán</value>
+  </data>
+  <data name="Admin_Product_ResumeSale" xml:space="preserve">
+    <value>Mở bán lại</value>
+  </data>
+  <data name="Admin_Product_StopSale_Confirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn ngừng kinh doanh sản phẩm này?</value>
+  </data>
+  <data name="Admin_Product_ResumeSale_Confirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn mở bán lại sản phẩm này?</value>
+  </data>
+  <data name="Admin_Product_CreateSuccess" xml:space="preserve">
+    <value>Thêm sản phẩm mới thành công.</value>
+  </data>
+  <data name="Admin_Product_UpdateSuccess" xml:space="preserve">
+    <value>Cập nhật sản phẩm thành công.</value>
+  </data>
+  <data name="Admin_Product_ToggleSuccess" xml:space="preserve">
+    <value>Cập nhật trạng thái kinh doanh thành công.</value>
+  </data>
+  <data name="Admin_Product_PriceEdit_Notice" xml:space="preserve">
+    <value>Thay đổi tên hoặc giá tại đây không làm thay đổi các đơn hàng đã đặt trước đó.</value>
+  </data>
+  <data name="Admin_Product_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm theo tên sản phẩm...</value>
+  </data>
+  <data name="Admin_Product_Filter_Stock_All" xml:space="preserve">
+    <value>Tất cả tình trạng tồn</value>
+  </data>
+  <data name="Admin_Product_Filter_Stock_Low" xml:space="preserve">
+    <value>Sắp hết hàng</value>
+  </data>
+  <data name="Admin_Product_Filter_Stock_Out" xml:space="preserve">
+    <value>Hết hàng</value>
+  </data>
+  <data name="Admin_Product_Validation_OriginalPrice" xml:space="preserve">
+    <value>Giá gốc phải lớn hơn hoặc bằng giá bán.</value>
+  </data>
+  <data name="Admin_Product_Validation_DescTooLong" xml:space="preserve">
+    <value>Mô tả sản phẩm không được vượt quá 20.000 ký tự.</value>
+  </data>
+  <data name="Admin_Product_Validation_CategoryInactive" xml:space="preserve">
+    <value>Danh mục đã chọn đang ngừng hoạt động.</value>
+  </data>
+  <data name="Admin_Product_Validation_BrandInactive" xml:space="preserve">
+    <value>Thương hiệu đã chọn đang ngừng hoạt động.</value>
+  </data>
+  <data name="Admin_Product_Validation_InvalidImage" xml:space="preserve">
+    <value>Tệp ảnh '{0}' không hợp lệ: {1}</value>
+  </data>
+
+  <!-- Bước 6B-2: Quản lý Tồn kho Admin -->
+  <data name="Admin_Inventory_Title" xml:space="preserve">
+    <value>Quản lý tồn kho</value>
+  </data>
+  <data name="Admin_Inventory_List" xml:space="preserve">
+    <value>Danh sách kho hàng</value>
+  </data>
+  <data name="Admin_Inventory_Adjust" xml:space="preserve">
+    <value>Điều chỉnh tồn kho</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Placeholder" xml:space="preserve">
+    <value>Nhập số thay đổi (+n hoặc -n)</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Hint" xml:space="preserve">
+    <value>Ví dụ: +10 để nhập thêm, -5 để xuất kho.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Success" xml:space="preserve">
+    <value>Điều chỉnh tồn kho thành công.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_Failed" xml:space="preserve">
+    <value>Tồn kho hiện tại không đủ để giảm số lượng yêu cầu.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_NotFound" xml:space="preserve">
+    <value>Không tìm thấy sản phẩm yêu cầu trong kho.</value>
+  </data>
+  <data name="Admin_Inventory_Adjust_InvalidDelta" xml:space="preserve">
+    <value>Số thay đổi tồn kho phải khác 0 và không vượt quá 100.000.</value>
+  </data>
+  <data name="Admin_Inventory_UpdateThreshold_Success" xml:space="preserve">
+    <value>Cập nhật ngưỡng cảnh báo thành công.</value>
+  </data>
+  <data name="Admin_Inventory_Threshold" xml:space="preserve">
+    <value>Ngưỡng cảnh báo</value>
+  </data>
+  <data name="Admin_Inventory_Export" xml:space="preserve">
+    <value>Xuất sản phẩm &amp; tồn kho</value>
+  </data>
+  <data name="Admin_Inventory_LowStock_Badge" xml:space="preserve">
+    <value>Sắp hết hàng</value>
+  </data>
+  <data name="Admin_Inventory_OutOfStock_Badge" xml:space="preserve">
+    <value>Hết hàng</value>
+  </data>
+  <data name="Admin_Inventory_InStock_Badge" xml:space="preserve">
+    <value>Còn hàng</value>
+  </data>
+  <data name="Admin_Inventory_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm sản phẩm trong kho...</value>
+  </data>
+  <data name="Product_DescriptionUpdating" xml:space="preserve">
+    <value>Mô tả sản phẩm đang được cập nhật.</value>
+  </data>
 </root>
