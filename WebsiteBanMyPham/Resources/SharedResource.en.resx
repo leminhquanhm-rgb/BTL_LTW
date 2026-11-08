@@ -536,13 +536,13 @@
     <value>Order Management</value>
   </data>
   <data name="Admin_Nav_Payments" xml:space="preserve">
-    <value>Payments &amp; Refunds</value>
+    <value>Payments</value>
   </data>
   <data name="Admin_Nav_Promotions" xml:space="preserve">
     <value>Promotions &amp; Banners</value>
   </data>
   <data name="Admin_Nav_Accounts" xml:space="preserve">
-    <value>Accounts (Customers &amp; Admins)</value>
+    <value>Customer Accounts</value>
   </data>
   <data name="Admin_Nav_Reviews" xml:space="preserve">
     <value>Reviews</value>
@@ -2997,5 +2997,20 @@
   </data>
   <data name="Product_RecentlyViewed_Subtitle" xml:space="preserve">
     <value>Products you recently viewed during this session</value>
+  </data>
+  <data name="Admin_Sidebar_Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Admin_Sidebar_Categories" xml:space="preserve">
+    <value>Categories &amp; Brands</value>
+  </data>
+  <data name="Admin_Sidebar_Inventory" xml:space="preserve">
+    <value>Inventory</value>
+  </data>
+  <data name="Admin_Sidebar_Orders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="Admin_Sidebar_Promotions" xml:space="preserve">
+    <value>Promotions &amp; Banners</value>
   </data>
 </root>

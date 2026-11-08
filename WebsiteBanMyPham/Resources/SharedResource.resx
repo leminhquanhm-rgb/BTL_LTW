@@ -536,13 +536,13 @@
     <value>Quản lý Đơn hàng</value>
   </data>
   <data name="Admin_Nav_Payments" xml:space="preserve">
-    <value>Thanh toán &amp; Hoàn tiền</value>
+    <value>Quản lý thanh toán</value>
   </data>
   <data name="Admin_Nav_Promotions" xml:space="preserve">
     <value>Khuyến mãi &amp; Banner</value>
   </data>
   <data name="Admin_Nav_Accounts" xml:space="preserve">
-    <value>TK Khách &amp; TK Admin</value>
+    <value>Quản lý tài khoản khách hàng</value>
   </data>
   <data name="Admin_Nav_Reviews" xml:space="preserve">
     <value>Quản lý đánh giá</value>
@@ -2997,5 +2997,20 @@
   </data>
   <data name="Product_RecentlyViewed_Subtitle" xml:space="preserve">
     <value>Các sản phẩm bạn vừa xem gần đây trong phiên làm việc</value>
+  </data>
+  <data name="Admin_Sidebar_Products" xml:space="preserve">
+    <value>Quản lý sản phẩm</value>
+  </data>
+  <data name="Admin_Sidebar_Categories" xml:space="preserve">
+    <value>Quản lý danh mục &amp; thương hiệu</value>
+  </data>
+  <data name="Admin_Sidebar_Inventory" xml:space="preserve">
+    <value>Quản lý tồn kho</value>
+  </data>
+  <data name="Admin_Sidebar_Orders" xml:space="preserve">
+    <value>Quản lý đơn hàng</value>
+  </data>
+  <data name="Admin_Sidebar_Promotions" xml:space="preserve">
+    <value>Quản lý khuyến mãi &amp; banner</value>
   </data>
 </root>

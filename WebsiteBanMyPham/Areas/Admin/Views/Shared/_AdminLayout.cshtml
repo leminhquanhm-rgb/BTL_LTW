@@ -104,45 +104,55 @@
                 <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-1 font-bold">
                     @L["Admin_Group_Dashboard"]
                 </p>
-                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDashboardActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-squares-four text-base text-primary"></i> @L["Admin_Nav_Dashboard"]
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isDashboardActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-squares-four text-base text-primary shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Nav_Dashboard"]</span>
                 </a>
 
                 <!-- Nhóm 2: Quản lý Dữ liệu & Kho -->
                 <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-2.5 font-bold">
                     @L["Admin_Group_Data"]
                 </p>
-                <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isSanPhamActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-package text-base"></i> @L["Admin_Nav_Products"]
+                <a asp-area="Admin" asp-controller="SanPham" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isSanPhamActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-package text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Sidebar_Products"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="DanhMuc" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDanhMucActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-folders text-base"></i> @L["Admin_Nav_Categories"]
+                <a asp-area="Admin" asp-controller="DanhMuc" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isDanhMucActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-folders text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Sidebar_Categories"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="TonKho" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isTonKhoActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-warning-octagon text-base"></i> @L["Admin_Nav_Inventory"]
+                <a asp-area="Admin" asp-controller="TonKho" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isTonKhoActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-warning-octagon text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Sidebar_Inventory"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="DonHang" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDonHangActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-truck text-base"></i> @L["Admin_Nav_Orders"]
+                <a asp-area="Admin" asp-controller="DonHang" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isDonHangActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-truck text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Sidebar_Orders"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isThanhToanActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-credit-card text-base"></i> @L["Admin_Nav_Payments"]
+                <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isThanhToanActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-credit-card text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Nav_Payments"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isKhuyenMaiActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-ticket text-base"></i> @L["Admin_Nav_Promotions"]
+                <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isKhuyenMaiActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-ticket text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Sidebar_Promotions"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isTaiKhoanActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-users-three text-base"></i> @L["Admin_Nav_Accounts"]
+                <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isTaiKhoanActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-users-three text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Nav_Accounts"]</span>
                 </a>
 
                 <!-- Nhóm 3: Quản lý Tương tác -->
                 <p class="text-[10px] uppercase tracking-wider text-charcoal/65 px-2 pt-2.5 font-bold">
                     @L["Admin_Group_Interaction"]
                 </p>
-                <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDanhGiaActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-chat-centered-text text-base"></i> @L["Admin_Nav_Reviews"]
+                <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isDanhGiaActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-chat-centered-text text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Nav_Reviews"]</span>
                 </a>
-                <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isKhieuNaiActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
-                    <i class="ph-fill ph-warning-circle text-base"></i> @L["Admin_Nav_Complaints"]
+                <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index" class="w-full flex items-start gap-2.5 px-3 py-2 rounded-btn transition @(isKhieuNaiActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-warning-circle text-base shrink-0 mt-0.5"></i>
+                    <span class="leading-snug break-words">@L["Admin_Nav_Complaints"]</span>
                 </a>
             </div>
         </div>
