@@ -113,6 +113,14 @@ namespace WebsiteBanMyPham.ViewModels
         public int PageIndex { get; set; } = 1;
         public int TotalPages { get; set; } = 1;
         public int TotalItems { get; set; }
+
+        // Đếm số lượng đơn theo 5 trạng thái cho các thẻ lọc (tính theo tuNgay, denNgay, keyword hiện tại)
+        public int SoDonChoXacNhan { get; set; }
+        public int SoDonDaXacNhan { get; set; }
+        public int SoDonDangGiao { get; set; }
+        public int SoDonHoanThanh { get; set; }
+        public int SoDonDaHuy { get; set; }
+        public int TongSoDon { get; set; }
     }
 
     public class DonHangAdminChiTietViewModel

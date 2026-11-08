@@ -1,0 +1,358 @@
+@model WebsiteBanMyPham.ViewModels.PaginatedList<WebsiteBanMyPham.ViewModels.Admin.ThanhToanAdminListItemViewModel>
+@{
+    ViewData["Title"] = L["Admin_Payment_Title"].Value;
+    var overview = ViewBag.Overview as WebsiteBanMyPham.ViewModels.Admin.ThanhToanAdminOverviewViewModel;
+    var phuongThucs = ViewBag.PhuongThucs as List<WebsiteBanMyPham.ViewModels.Admin.PhuongThucThanhToanAdminViewModel> ?? new();
+    var filter = ViewBag.Filter as WebsiteBanMyPham.ViewModels.Admin.ThanhToanAdminFilterViewModel ?? new();
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Tab điều hướng phụ (Giao dịch thanh toán / Phương thức thanh toán) -->
+    <div class="flex items-center gap-2 border-b border-borderLight pb-3">
+        <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition bg-surface text-charcoal shadow-sm border border-borderLight flex items-center gap-2">
+            <i class="ph-bold ph-receipt text-base text-primary"></i>
+            <span>@L["Admin_Tab_Payments"]</span>
+        </a>
+        <a asp-area="Admin" asp-controller="PhuongThucThanhToan" asp-action="Index"
+           class="px-4 py-2 text-xs font-semibold rounded-btn transition text-muted hover:text-charcoal hover:bg-surface/60 flex items-center gap-2">
+            <i class="ph-bold ph-credit-card text-base"></i>
+            <span>@L["Admin_Tab_PaymentMethods"]</span>
+        </a>
+    </div>
+
+    <!-- 4 Thẻ tổng quan giao dịch thanh toán -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Chờ hoàn tiền (nổi bật cảnh báo/nguy cấp) -->
+        <div class="p-4 rounded-card border bg-[#FCEAEA]/60 border-statusDanger/30 flex items-center justify-between">
+            <div>
+                <span class="text-xs font-semibold text-statusDanger block">@L["Admin_Payment_Overview_PendingRefund"]</span>
+                <span class="text-2xl font-bold text-statusDanger mt-1 block">@(overview?.SoGiaoDichChoHoan ?? 0)</span>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-arrow-counter-clockwise text-xl"></i>
+            </div>
+        </div>
+
+        <!-- Tổng số giao dịch -->
+        <div class="p-4 rounded-card border bg-surface border-borderLight flex items-center justify-between">
+            <div>
+                <span class="text-xs font-semibold text-muted block">@L["Admin_Payment_Overview_Total"]</span>
+                <span class="text-2xl font-bold text-charcoal mt-1 block">@(overview?.TongSoGiaoDich ?? 0)</span>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-cream text-charcoal flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-receipt text-xl"></i>
+            </div>
+        </div>
+
+        <!-- Đã thanh toán -->
+        <div class="p-4 rounded-card border bg-surface border-borderLight flex items-center justify-between">
+            <div>
+                <span class="text-xs font-semibold text-statusSuccess block">@L["Admin_Payment_Overview_Paid"]</span>
+                <span class="text-2xl font-bold text-statusSuccess mt-1 block">@(overview?.SoGiaoDichDaThanhToan ?? 0)</span>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-[#E6F4EE] text-statusSuccess flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-check-circle text-xl"></i>
+            </div>
+        </div>
+
+        <!-- Chưa thanh toán -->
+        <div class="p-4 rounded-card border bg-surface border-borderLight flex items-center justify-between">
+            <div>
+                <span class="text-xs font-semibold text-statusWarning block">@L["Admin_Payment_Overview_Unpaid"]</span>
+                <span class="text-2xl font-bold text-statusWarning mt-1 block">@(overview?.SoGiaoDichChuaThanhToan ?? 0)</span>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-[#FDF3E7] text-statusWarning flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-hourglass-simple text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Khối Bộ lọc -->
+    <form method="get" asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+          class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- Phương thức thanh toán -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Admin_Payment_Filter_Method"]</label>
+                <select name="maPT" class="w-full text-xs px-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition">
+                    <option value="">@L["Admin_Payment_Filter_AllMethods"]</option>
+                    @foreach (var pt in phuongThucs)
+                    {
+                        <option value="@pt.MaPT" selected="@(filter.MaPT == pt.MaPT)">@LocalizationHelper.GetPaymentMethodLabel(pt.TenPT)</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Trạng thái thanh toán -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Admin_Payment_Filter_Status"]</label>
+                <select name="trangThai" class="w-full text-xs px-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition">
+                    <option value="">@L["Admin_Filter_AllStatus"]</option>
+                    <option value="@TrangThaiThanhToanConstant.ChuaThanhToan" selected="@(filter.TrangThai == TrangThaiThanhToanConstant.ChuaThanhToan)">@LocalizationHelper.GetPaymentStatusLabel(TrangThaiThanhToanConstant.ChuaThanhToan)</option>
+                    <option value="@TrangThaiThanhToanConstant.DaThanhToan" selected="@(filter.TrangThai == TrangThaiThanhToanConstant.DaThanhToan)">@LocalizationHelper.GetPaymentStatusLabel(TrangThaiThanhToanConstant.DaThanhToan)</option>
+                    <option value="@TrangThaiThanhToanConstant.ThatBai" selected="@(filter.TrangThai == TrangThaiThanhToanConstant.ThatBai)">@LocalizationHelper.GetPaymentStatusLabel(TrangThaiThanhToanConstant.ThatBai)</option>
+                </select>
+            </div>
+
+            <!-- Trạng thái hoàn tiền -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Admin_Payment_Filter_Refund"]</label>
+                <select name="trangThaiHoanTien" class="w-full text-xs px-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition">
+                    <option value="">@L["Admin_Payment_Filter_AllRefunds"]</option>
+                    <option value="@TrangThaiHoanTienConstant.KhongCan" selected="@(filter.TrangThaiHoanTien == TrangThaiHoanTienConstant.KhongCan)">@LocalizationHelper.GetRefundStatusLabel(TrangThaiHoanTienConstant.KhongCan)</option>
+                    <option value="@TrangThaiHoanTienConstant.ChoHoan" selected="@(filter.TrangThaiHoanTien == TrangThaiHoanTienConstant.ChoHoan)">@LocalizationHelper.GetRefundStatusLabel(TrangThaiHoanTienConstant.ChoHoan)</option>
+                    <option value="@TrangThaiHoanTienConstant.DaHoan" selected="@(filter.TrangThaiHoanTien == TrangThaiHoanTienConstant.DaHoan)">@LocalizationHelper.GetRefundStatusLabel(TrangThaiHoanTienConstant.DaHoan)</option>
+                </select>
+            </div>
+
+            <!-- Từ khóa tìm kiếm -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Search"]</label>
+                <div class="relative">
+                    <input type="text" name="keyword" value="@filter.Keyword"
+                           placeholder="@L["Admin_Payment_SearchPlaceholder"]"
+                           class="w-full text-xs pl-8 pr-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                    <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-1">
+            @if (!string.IsNullOrWhiteSpace(filter.Keyword) || filter.MaPT.HasValue || !string.IsNullOrWhiteSpace(filter.TrangThai) || !string.IsNullOrWhiteSpace(filter.TrangThaiHoanTien))
+            {
+                <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+                   class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                    @L["Admin_Filter_Reset"]
+                </a>
+            }
+            <button type="submit" class="px-5 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                <i class="ph-bold ph-funnel text-sm"></i> @L["Common_Filter"]
+            </button>
+        </div>
+    </form>
+
+    <!-- Bảng danh sách giao dịch -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        <div class="p-4 border-b border-borderLight flex items-center justify-between">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-charcoal">
+                @L["Admin_Payment_List"] (@Model.TotalItems)
+            </h2>
+        </div>
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="p-12 text-center text-muted text-xs">
+                <i class="ph ph-credit-card text-4xl block mb-2 opacity-40"></i>
+                <span>@L["Admin_Payment_Empty"]</span>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs divide-y divide-borderLight">
+                    <thead class="bg-cream font-bold text-charcoal uppercase tracking-wider text-[11px]">
+                        <tr>
+                            <th class="p-3">@L["Admin_Payment_Col_PaymentId"]</th>
+                            <th class="p-3">@L["Admin_Payment_Col_TransactionCode"]</th>
+                            <th class="p-3">@L["Admin_Payment_Col_OrderId"]</th>
+                            <th class="p-3">@L["Admin_Payment_Col_Customer"]</th>
+                            <th class="p-3">@L["Admin_Payment_Col_Method"]</th>
+                            <th class="p-3 text-right">@L["Admin_Payment_Col_Amount"]</th>
+                            <th class="p-3 text-center">@L["Admin_Payment_Col_Status"]</th>
+                            <th class="p-3">@L["Admin_Payment_Col_PaidDate"]</th>
+                            <th class="p-3 text-center">@L["Admin_Payment_Col_RefundStatus"]</th>
+                            <th class="p-3">@L["Admin_Payment_Col_RefundDate"]</th>
+                            <th class="p-3 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var item in Model.Items)
+                        {
+                            string orderCode = LocalizationHelper.MaDonHang(item.MaDH);
+                            string paymentCode = $"#TT{item.MaTT:D4}";
+                            <tr class="hover:bg-cream/40 transition">
+                                <td class="p-3 font-mono text-[11px] font-semibold text-charcoal">@paymentCode</td>
+                                <td class="p-3 font-mono text-[11px] text-charcoal">
+                                    @(!string.IsNullOrWhiteSpace(item.MaGiaoDich) ? item.MaGiaoDich : "—")
+                                </td>
+                                <td class="p-3">
+                                    <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@item.MaDH"
+                                       class="font-mono font-bold text-primary hover:underline">
+                                        @orderCode
+                                    </a>
+                                </td>
+                                <td class="p-3">
+                                    <div class="font-semibold text-charcoal">@item.TenKhachHang</div>
+                                    <div class="text-[11px] text-muted">@item.EmailKhachHang</div>
+                                </td>
+                                <td class="p-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold @(item.TenPT == PhuongThucThanhToanConstant.COD ? "bg-cream border border-borderLight text-charcoal" : "bg-pastel text-primary")">
+                                        @LocalizationHelper.GetPaymentMethodLabel(item.TenPT)
+                                    </span>
+                                </td>
+                                <td class="p-3 text-right font-bold text-primary">
+                                    @LocalizationHelper.FormatCurrency(item.SoTien)
+                                </td>
+                                <td class="p-3 text-center">
+                                    <partial name="_StatusBadge" model='("ThanhToan", item.TrangThai)' />
+                                </td>
+                                <td class="p-3 text-muted">
+                                    @LocalizationHelper.FormatDateTime(item.NgayThanhToan)
+                                </td>
+                                <td class="p-3 text-center">
+                                    <partial name="_StatusBadge" model='("HoanTien", item.TrangThaiHoanTien)' />
+                                </td>
+                                <td class="p-3 text-muted">
+                                    @LocalizationHelper.FormatDateTime(item.NgayHoanTien)
+                                </td>
+                                <td class="p-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@item.MaDH"
+                                           class="px-2.5 py-1 text-primary hover:bg-pastel/40 rounded font-semibold transition" title="@L["Admin_Payment_Action_ViewOrder"]">
+                                            @L["Admin_Payment_Action_ViewOrder"]
+                                        </a>
+                                        @if (item.CoTheXacNhanHoanTien)
+                                        {
+                                            <form asp-area="Admin" asp-controller="ThanhToan" asp-action="XacNhanHoanTien" method="post" class="inline">
+                                                <input type="hidden" name="maDH" value="@item.MaDH" />
+                                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                                <button type="button"
+                                                        class="btn-refund-action px-3 py-1 bg-primary hover:bg-primaryHover text-white text-[11px] font-bold rounded-btn transition shadow-sm whitespace-nowrap"
+                                                        data-message="@L["Admin_Payment_Action_ConfirmRefund_Modal"].Value">
+                                                    @L["Admin_Payment_Action_ConfirmRefund"]
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3">
+                    <span class="text-xs text-muted">
+                        @L["Admin_Order_Pagination_Showing", Model.PageIndex, Model.TotalPages, Model.TotalItems]
+                    </span>
+                    <div class="flex items-center gap-1.5">
+                        <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex - 1)"
+                           asp-route-maPT="@filter.MaPT"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-trangThaiHoanTien="@filter.TrangThaiHoanTien"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight text-xs font-semibold transition @(!Model.HasPreviousPage ? "opacity-40 pointer-events-none bg-cream text-muted" : "bg-surface hover:bg-cream text-charcoal")">
+                            @L["Pagination_Previous"]
+                        </a>
+
+                        @for (int p = 1; p <= Model.TotalPages; p++)
+                        {
+                            if (p == 1 || p == Model.TotalPages || (p >= Model.PageIndex - 2 && p <= Model.PageIndex + 2))
+                            {
+                                <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+                                   asp-route-trang="@p"
+                                   asp-route-maPT="@filter.MaPT"
+                                   asp-route-trangThai="@filter.TrangThai"
+                                   asp-route-trangThaiHoanTien="@filter.TrangThaiHoanTien"
+                                   asp-route-keyword="@filter.Keyword"
+                                   class="px-3 py-1.5 rounded-btn border text-xs font-bold transition @(p == Model.PageIndex ? "bg-primary text-white border-primary shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+                                    @p
+                                </a>
+                            }
+                            else if (p == Model.PageIndex - 3 || p == Model.PageIndex + 3)
+                            {
+                                <span class="px-2 text-xs text-muted">...</span>
+                            }
+                        }
+
+                        <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex + 1)"
+                           asp-route-maPT="@filter.MaPT"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-trangThaiHoanTien="@filter.TrangThaiHoanTien"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight text-xs font-semibold transition @(!Model.HasNextPage ? "opacity-40 pointer-events-none bg-cream text-muted" : "bg-surface hover:bg-cream text-charcoal")">
+                            @L["Pagination_Next"]
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Modal xác nhận hoàn tiền -->
+<div id="refundModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-arrow-counter-clockwise text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="refundModalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+            <button type="button" id="btnRefundCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Cancel"]
+            </button>
+            <button type="button" id="btnRefundConfirm" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                @L["Common_Save"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = document.getElementById('refundModal');
+            var msgEl = document.getElementById('refundModalMessage');
+            var btnCancel = document.getElementById('btnRefundCancel');
+            var btnConfirm = document.getElementById('btnRefundConfirm');
+            var currentForm = null;
+
+            document.querySelectorAll('.btn-refund-action').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var msg = this.dataset.message || '';
+                    currentForm = this.closest('form');
+                    msgEl.textContent = msg;
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            btnCancel.addEventListener('click', function () {
+                modal.classList.add('hidden');
+                currentForm = null;
+            });
+
+            btnConfirm.addEventListener('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+        });
+    </script>
+}

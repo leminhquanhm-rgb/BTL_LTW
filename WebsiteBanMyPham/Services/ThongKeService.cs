@@ -402,33 +402,8 @@ namespace WebsiteBanMyPham.Services
                     .ThenInclude(t => t!.MaPTNavigation)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(trangThai))
-            {
-                query = query.Where(d => d.TrangThai == trangThai.Trim());
-            }
-
-            if (tuNgay.HasValue)
-            {
-                var fromDate = tuNgay.Value.Date;
-                query = query.Where(d => d.NgayDat >= fromDate);
-            }
-
-            if (denNgay.HasValue)
-            {
-                var toDate = denNgay.Value.Date.AddDays(1);
-                query = query.Where(d => d.NgayDat < toDate);
-            }
-
-            if (!string.IsNullOrWhiteSpace(keyword))
-            {
-                var kw = keyword.Trim();
-                bool isInt = int.TryParse(kw, out int parsedMaDH);
-                query = query.Where(d =>
-                    (isInt && d.MaDH == parsedMaDH) ||
-                    d.TenNguoiNhan.Contains(kw) ||
-                    d.SdtNguoiNhan.Contains(kw) ||
-                    (d.MaTKNavigation != null && d.MaTKNavigation.HoTen.Contains(kw)));
-            }
+            // Sử dụng hàm lọc dùng chung theo Điều chỉnh 1
+            query = query.LocDonHangAdmin(trangThai, tuNgay, denNgay, keyword);
 
             var orders = await query
                 .OrderByDescending(d => d.NgayDat)

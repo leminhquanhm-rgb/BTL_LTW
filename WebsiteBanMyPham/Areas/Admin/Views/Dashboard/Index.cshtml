@@ -32,9 +32,16 @@
 
         <!-- Thẻ 2: Tổng Đơn Hàng -->
         <div class="bg-[#EFECE6] p-5 rounded-card border border-borderLight shadow-soft space-y-1">
-            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Orders_Total"]</span>
-            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongDonHang @L["Admin_Dashboard_Unit_Order"]</p>
-            <p class="text-xs text-charcoal/70 font-medium">@L["Admin_Dashboard_Orders_ViewAction"]</p>
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Orders_Total"]</span>
+                <a asp-area="Admin" asp-controller="DonHang" asp-action="Index" class="text-xs text-primary font-bold hover:underline" title="@L["Admin_Nav_Orders"]">
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+            </div>
+            <a asp-area="Admin" asp-controller="DonHang" asp-action="Index" class="block hover:opacity-80 transition">
+                <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongDonHang @L["Admin_Dashboard_Unit_Order"]</p>
+                <p class="text-xs text-charcoal/70 font-medium">@L["Admin_Dashboard_Orders_ViewAction"]</p>
+            </a>
         </div>
 
         <!-- Thẻ 3: Số Lượng Sản Phẩm -->

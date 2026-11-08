@@ -153,6 +153,7 @@ namespace WebsiteBanMyPham
             builder.Services.AddScoped<IFileUploadService, FileUploadService>();
             builder.Services.AddSingleton<IHtmlSanitizerService, HtmlSanitizerService>();
             builder.Services.AddScoped<ISanPhamAdminService, SanPhamAdminService>();
+            builder.Services.AddScoped<IThanhToanAdminService, ThanhToanAdminService>();
 
             var app = builder.Build();
 

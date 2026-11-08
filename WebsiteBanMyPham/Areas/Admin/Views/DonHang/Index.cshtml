@@ -1,0 +1,320 @@
+@model WebsiteBanMyPham.ViewModels.DonHangAdminListViewModel
+@{
+    ViewData["Title"] = L["Admin_Order_Title"].Value;
+    var currentStatus = Model.TrangThai ?? "";
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Header quản lý & Nút Xuất Excel -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-5 rounded-card border border-borderLight shadow-soft">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Order_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_Order_List"] (@Model.TotalItems)</p>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="XuatDanhSachDonHang"
+               asp-route-trangThai="@Model.TrangThai"
+               asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+               asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+               asp-route-keyword="@Model.Keyword"
+               class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition flex items-center gap-1.5 shadow-sm">
+                <i class="ph-bold ph-file-xls text-statusSuccess text-base"></i> @L["Admin_Excel_Export_Orders"]
+            </a>
+        </div>
+    </div>
+
+    <!-- 5 Thẻ đếm trạng thái đơn hàng (Điều chỉnh 2: Tính theo bộ lọc ngày & từ khóa, bỏ qua trạng thái) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <!-- Tất cả -->
+        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+           asp-route-trangThai=""
+           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-keyword="@Model.Keyword"
+           class="p-3.5 rounded-card border transition text-left flex flex-col justify-between @(string.IsNullOrEmpty(currentStatus) ? "bg-primary text-white border-primary shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+            <span class="text-[11px] font-bold uppercase tracking-wider @(string.IsNullOrEmpty(currentStatus) ? "text-white/80" : "text-muted")">@L["Admin_Order_Filter_All"]</span>
+            <span class="text-xl font-bold mt-1">@Model.TongSoDon</span>
+        </a>
+
+        <!-- Chờ xác nhận -->
+        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDonHangConstant.ChoXacNhan"
+           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-keyword="@Model.Keyword"
+           class="p-3.5 rounded-card border transition text-left flex flex-col justify-between @(currentStatus == TrangThaiDonHangConstant.ChoXacNhan ? "bg-statusWarning text-white border-statusWarning shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+            <span class="text-[11px] font-bold uppercase tracking-wider @(currentStatus == TrangThaiDonHangConstant.ChoXacNhan ? "text-white/80" : "text-statusWarning")">@L["Status_Order_ChoXacNhan"]</span>
+            <span class="text-xl font-bold mt-1">@Model.SoDonChoXacNhan</span>
+        </a>
+
+        <!-- Đã xác nhận -->
+        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDonHangConstant.DaXacNhan"
+           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-keyword="@Model.Keyword"
+           class="p-3.5 rounded-card border transition text-left flex flex-col justify-between @(currentStatus == TrangThaiDonHangConstant.DaXacNhan ? "bg-statusInfo text-white border-statusInfo shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+            <span class="text-[11px] font-bold uppercase tracking-wider @(currentStatus == TrangThaiDonHangConstant.DaXacNhan ? "text-white/80" : "text-statusInfo")">@L["Status_Order_DaXacNhan"]</span>
+            <span class="text-xl font-bold mt-1">@Model.SoDonDaXacNhan</span>
+        </a>
+
+        <!-- Đang giao -->
+        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDonHangConstant.DangGiao"
+           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-keyword="@Model.Keyword"
+           class="p-3.5 rounded-card border transition text-left flex flex-col justify-between @(currentStatus == TrangThaiDonHangConstant.DangGiao ? "bg-primary text-white border-primary shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+            <span class="text-[11px] font-bold uppercase tracking-wider @(currentStatus == TrangThaiDonHangConstant.DangGiao ? "text-white/80" : "text-primary")">@L["Status_Order_DangGiao"]</span>
+            <span class="text-xl font-bold mt-1">@Model.SoDonDangGiao</span>
+        </a>
+
+        <!-- Hoàn thành -->
+        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDonHangConstant.HoanThanh"
+           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-keyword="@Model.Keyword"
+           class="p-3.5 rounded-card border transition text-left flex flex-col justify-between @(currentStatus == TrangThaiDonHangConstant.HoanThanh ? "bg-statusSuccess text-white border-statusSuccess shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+            <span class="text-[11px] font-bold uppercase tracking-wider @(currentStatus == TrangThaiDonHangConstant.HoanThanh ? "text-white/80" : "text-statusSuccess")">@L["Status_Order_HoanThanh"]</span>
+            <span class="text-xl font-bold mt-1">@Model.SoDonHoanThanh</span>
+        </a>
+
+        <!-- Đã hủy -->
+        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDonHangConstant.DaHuy"
+           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+           asp-route-keyword="@Model.Keyword"
+           class="p-3.5 rounded-card border transition text-left flex flex-col justify-between @(currentStatus == TrangThaiDonHangConstant.DaHuy ? "bg-statusDanger text-white border-statusDanger shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+            <span class="text-[11px] font-bold uppercase tracking-wider @(currentStatus == TrangThaiDonHangConstant.DaHuy ? "text-white/80" : "text-statusDanger")">@L["Status_Order_DaHuy"]</span>
+            <span class="text-xl font-bold mt-1">@Model.SoDonDaHuy</span>
+        </a>
+    </div>
+
+    <!-- Bộ lọc tìm kiếm & ngày -->
+    <div class="bg-surface p-4 rounded-card border border-borderLight shadow-soft">
+        <form method="get" asp-area="Admin" asp-controller="DonHang" asp-action="Index" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <input type="hidden" name="trangThai" value="@Model.TrangThai" />
+
+            <div class="lg:col-span-2">
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Common_Search"]</label>
+                <input type="text" name="keyword" value="@Model.Keyword"
+                       placeholder="@L["Admin_Order_SearchPlaceholder"]"
+                       class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Admin_Order_Filter_FromDate"]</label>
+                <input type="date" name="tuNgay" value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+                       class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-bold text-charcoal/70 mb-1">@L["Admin_Order_Filter_ToDate"]</label>
+                <input type="date" name="denNgay" value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+                       class="w-full px-3 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
+            </div>
+
+            <div class="flex items-end gap-2">
+                <button type="submit" class="w-full px-4 py-2 bg-charcoal hover:bg-charcoal/90 text-white text-xs font-bold rounded-btn transition flex items-center justify-center gap-1.5 shadow-sm">
+                    <i class="ph-bold ph-magnifying-glass"></i> @L["Common_Search"]
+                </button>
+                @if (!string.IsNullOrWhiteSpace(Model.Keyword) || Model.TuNgay.HasValue || Model.DenNgay.HasValue || !string.IsNullOrWhiteSpace(Model.TrangThai))
+                {
+                    <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+                       class="px-3 py-2 bg-cream hover:bg-pastel/40 text-muted text-xs font-semibold rounded-btn border border-borderLight transition whitespace-nowrap">
+                        @L["Common_Cancel"]
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <!-- Bảng danh sách Đơn hàng -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs divide-y divide-borderLight">
+                <thead>
+                    <tr class="bg-cream text-charcoal font-bold uppercase tracking-wider text-[11px]">
+                        <th class="p-3.5 w-24">@L["Admin_Order_Col_Id"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_Customer"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_Recipient"] / @L["Admin_Order_Col_Phone"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_OrderDate"]</th>
+                        <th class="p-3.5 text-right">@L["Admin_Order_Col_Total"]</th>
+                        <th class="p-3.5 text-center">@L["Admin_Order_Col_Status"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_Payment"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_PaymentStatus"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_WaybillDate"]</th>
+                        <th class="p-3.5">@L["Admin_Order_Col_DeliveredDate"]</th>
+                        <th class="p-3.5 text-right w-24">@L["Common_Action"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-borderLight">
+                    @if (Model.DonHangs.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="11" class="p-8 text-center text-muted">
+                                <i class="ph ph-receipt text-3xl mb-1 block"></i>
+                                @L["Admin_Order_Empty"]
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.DonHangs)
+                        {
+                            <tr class="hover:bg-cream/40 transition">
+                                <td class="p-3.5 font-mono font-bold text-charcoal whitespace-nowrap">
+                                    <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@item.MaDH" class="text-primary hover:underline">
+                                        @LocalizationHelper.MaDonHang(item.MaDH)
+                                    </a>
+                                </td>
+                                <td class="p-3.5">
+                                    <div class="font-bold text-charcoal">@item.TenKhachHang</div>
+                                    <div class="text-[11px] text-muted truncate max-w-[150px]">@item.EmailKhachHang</div>
+                                </td>
+                                <td class="p-3.5">
+                                    <div class="text-charcoal">@item.TenNguoiNhan</div>
+                                    <div class="text-[11px] font-mono text-muted">@item.SdtNguoiNhan</div>
+                                </td>
+                                <td class="p-3.5 text-charcoal/80 whitespace-nowrap">
+                                    @LocalizationHelper.FormatDateTime(item.NgayDat)
+                                </td>
+                                <td class="p-3.5 text-right font-bold text-charcoal whitespace-nowrap">
+                                    @LocalizationHelper.FormatCurrency(item.TongThanhToan)
+                                </td>
+                                <td class="p-3.5 text-center whitespace-nowrap">
+                                    <partial name="_StatusBadge" model="item.TrangThai" />
+                                </td>
+                                <td class="p-3.5 text-charcoal/80 whitespace-nowrap">
+                                    @LocalizationHelper.GetPaymentMethodLabel(item.TenPhuongThuc)
+                                </td>
+                                <td class="p-3.5 whitespace-nowrap">
+                                    <div class="text-[11px]">
+                                        @if (item.TrangThaiThanhToan == TrangThaiThanhToanConstant.DaThanhToan)
+                                        {
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-statusSuccess/15 text-statusSuccess font-semibold">
+                                                @LocalizationHelper.GetPaymentStatusLabel(item.TrangThaiThanhToan)
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-statusWarning/15 text-statusWarning font-semibold">
+                                                @LocalizationHelper.GetPaymentStatusLabel(item.TrangThaiThanhToan)
+                                            </span>
+                                        }
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(item.TrangThaiHoanTien) && item.TrangThaiHoanTien != TrangThaiHoanTienConstant.KhongCan)
+                                    {
+                                        <div class="mt-1">
+                                            @if (item.TrangThaiHoanTien == TrangThaiHoanTienConstant.ChoHoan)
+                                            {
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-statusDanger/15 text-statusDanger font-bold text-[10px]">
+                                                    <i class="ph-bold ph-arrow-counter-clockwise"></i> @LocalizationHelper.GetRefundStatusLabel(item.TrangThaiHoanTien)
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-statusSuccess/15 text-statusSuccess font-semibold text-[10px]">
+                                                    @LocalizationHelper.GetRefundStatusLabel(item.TrangThaiHoanTien)
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-muted whitespace-nowrap">
+                                    @(item.NgayVanDon.HasValue ? LocalizationHelper.FormatDateTime(item.NgayVanDon) : "—")
+                                </td>
+                                <td class="p-3.5 text-muted whitespace-nowrap">
+                                    @(item.NgayGiaoThanhCong.HasValue ? LocalizationHelper.FormatDateTime(item.NgayGiaoThanhCong) : "—")
+                                </td>
+                                <td class="p-3.5 text-right whitespace-nowrap">
+                                    <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@item.MaDH"
+                                       class="px-2.5 py-1 text-primary hover:bg-pastel/40 rounded font-semibold transition" title="@L["Common_Detail"]">
+                                        @L["Common_Detail"]
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phân trang -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3">
+                <span class="text-xs text-muted">
+                    Trang @Model.PageIndex / @Model.TotalPages (@Model.TotalItems @L["Admin_Nav_Orders"].Value.ToLower())
+                </span>
+                <div class="flex items-center gap-1.5">
+                    @if (Model.PageIndex > 1)
+                    {
+                        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex - 1)"
+                           asp-route-trangThai="@Model.TrangThai"
+                           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+                           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+                           asp-route-keyword="@Model.Keyword"
+                           class="px-3 py-1.5 bg-cream hover:bg-pastel/50 rounded-btn text-xs font-semibold border border-borderLight text-charcoal transition">
+                            ←
+                        </a>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == Model.PageIndex)
+                        {
+                            <span class="px-3 py-1.5 bg-primary text-white rounded-btn text-xs font-bold">@i</span>
+                        }
+                        else if (i == 1 || i == Model.TotalPages || (i >= Model.PageIndex - 2 && i <= Model.PageIndex + 2))
+                        {
+                            <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+                               asp-route-trang="@i"
+                               asp-route-trangThai="@Model.TrangThai"
+                               asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+                               asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+                               asp-route-keyword="@Model.Keyword"
+                               class="px-3 py-1.5 bg-cream hover:bg-pastel/50 rounded-btn text-xs font-semibold border border-borderLight text-charcoal transition">
+                                @i
+                            </a>
+                        }
+                        else if (i == Model.PageIndex - 3 || i == Model.PageIndex + 3)
+                        {
+                            <span class="px-1 text-xs text-muted">...</span>
+                        }
+                    }
+                    @if (Model.PageIndex < Model.TotalPages)
+                    {
+                        <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex + 1)"
+                           asp-route-trangThai="@Model.TrangThai"
+                           asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+                           asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+                           asp-route-keyword="@Model.Keyword"
+                           class="px-3 py-1.5 bg-cream hover:bg-pastel/50 rounded-btn text-xs font-semibold border border-borderLight text-charcoal transition">
+                            →
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

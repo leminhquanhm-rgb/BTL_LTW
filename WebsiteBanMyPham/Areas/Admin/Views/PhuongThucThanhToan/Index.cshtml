@@ -1,0 +1,203 @@
+@model List<WebsiteBanMyPham.ViewModels.Admin.PhuongThucThanhToanAdminViewModel>
+@{
+    ViewData["Title"] = L["Admin_PaymentMethod_Title"].Value;
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Tab điều hướng phụ (Giao dịch thanh toán / Phương thức thanh toán) -->
+    <div class="flex items-center gap-2 border-b border-borderLight pb-3">
+        <a asp-area="Admin" asp-controller="ThanhToan" asp-action="Index"
+           class="px-4 py-2 text-xs font-semibold rounded-btn transition text-muted hover:text-charcoal hover:bg-surface/60 flex items-center gap-2">
+            <i class="ph-bold ph-receipt text-base"></i>
+            <span>@L["Admin_Tab_Payments"]</span>
+        </a>
+        <a asp-area="Admin" asp-controller="PhuongThucThanhToan" asp-action="Index"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition bg-surface text-charcoal shadow-sm border border-borderLight flex items-center gap-2">
+            <i class="ph-bold ph-credit-card text-base text-primary"></i>
+            <span>@L["Admin_Tab_PaymentMethods"]</span>
+        </a>
+    </div>
+
+    <!-- Header quản lý phương thức -->
+    <div class="bg-surface p-5 rounded-card border border-borderLight shadow-soft flex items-center justify-between">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_PaymentMethod_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_PaymentMethod_List"] (@Model.Count)</p>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách phương thức thanh toán -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs divide-y divide-borderLight">
+                <thead class="bg-cream font-bold text-charcoal uppercase tracking-wider text-[11px]">
+                    <tr>
+                        <th class="p-3.5 w-16">#</th>
+                        <th class="p-3.5">@L["Admin_PaymentMethod_Name"]</th>
+                        <th class="p-3.5">@L["Admin_PaymentMethod_Priority"]</th>
+                        <th class="p-3.5">@L["Admin_PaymentMethod_Desc"]</th>
+                        <th class="p-3.5 text-center">@L["Admin_PaymentMethod_Status"]</th>
+                        <th class="p-3.5 text-right">@L["Common_Action"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-borderLight">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-cream/40 transition">
+                            <td class="p-3.5 font-mono text-[11px] text-muted">@item.MaPT</td>
+                            <td class="p-3.5">
+                                <div class="font-bold text-charcoal text-sm">
+                                    @LocalizationHelper.GetPaymentMethodLabel(item.TenPT)
+                                </div>
+                                <div class="font-mono text-[11px] text-muted">@item.TenPT</div>
+                            </td>
+                            <td class="p-3.5">
+                                @if (item.LaBatBuoc)
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-primary text-white">
+                                        @L["Admin_PaymentMethod_Required"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-cream border border-borderLight text-charcoal">
+                                        @L["Admin_PaymentMethod_Optional"]
+                                    </span>
+                                }
+                            </td>
+                            <td class="p-3.5 text-muted max-w-md">
+                                @(string.IsNullOrWhiteSpace(item.MoTa) ? "-" : item.MoTa)
+                            </td>
+                            <td class="p-3.5 text-center">
+                                @if (item.TrangThai)
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#E6F4EE] text-statusSuccess">
+                                        @L["Admin_Filter_Active"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FCEAEA] text-statusDanger">
+                                        @L["Admin_Filter_Inactive"]
+                                    </span>
+                                }
+                            </td>
+                            <td class="p-3.5 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <!-- Nút Sửa mô tả -->
+                                    <a asp-area="Admin" asp-controller="PhuongThucThanhToan" asp-action="Sua" asp-route-id="@item.MaPT"
+                                       class="px-3 py-1.5 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition flex items-center gap-1 shadow-sm">
+                                        <i class="ph ph-note-pencil"></i> @L["Common_Edit"]
+                                    </a>
+
+                                    <!-- Nút Bật/Tắt trạng thái -->
+                                    @if (item.LaBatBuoc)
+                                    {
+                                        <button type="button" disabled
+                                                title="@L["Admin_PaymentMethod_CodCannotDisable"].Value"
+                                                class="px-3 py-1.5 opacity-40 cursor-not-allowed bg-cream text-muted text-xs font-semibold rounded-btn border border-borderLight flex items-center gap-1">
+                                            <i class="ph ph-lock"></i> @L["Admin_Action_Deactivate"]
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <form asp-area="Admin" asp-controller="PhuongThucThanhToan" asp-action="DatTrangThai" asp-route-id="@item.MaPT" method="post" class="inline">
+                                            <input type="hidden" name="trangThaiMoi" value="@((!item.TrangThai).ToString().ToLower())" />
+                                            @if (item.TrangThai)
+                                            {
+                                                <button type="button"
+                                                        class="btn-toggle-pt px-3 py-1.5 bg-[#FCEAEA] hover:bg-statusDanger text-statusDanger hover:text-white text-xs font-semibold rounded-btn transition flex items-center gap-1"
+                                                        data-message="@L["Admin_PaymentMethod_DeactivateConfirm"].Value">
+                                                    <i class="ph ph-power"></i> @L["Admin_Action_Deactivate"]
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button"
+                                                        class="btn-toggle-pt px-3 py-1.5 bg-[#E6F4EE] hover:bg-statusSuccess text-statusSuccess hover:text-white text-xs font-semibold rounded-btn transition flex items-center gap-1"
+                                                        data-message="@L["Admin_PaymentMethod_ActivateConfirm"].Value">
+                                                    <i class="ph ph-check"></i> @L["Admin_Action_Activate"]
+                                                </button>
+                                            }
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận thao tác bật/tắt trạng thái -->
+<div id="ptModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-pastel/40 text-primary flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-power text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="ptModalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+            <button type="button" id="btnPtCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Cancel"]
+            </button>
+            <button type="button" id="btnPtConfirm" class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                @L["Common_Save"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = document.getElementById('ptModal');
+            var msgEl = document.getElementById('ptModalMessage');
+            var btnCancel = document.getElementById('btnPtCancel');
+            var btnConfirm = document.getElementById('btnPtConfirm');
+            var currentForm = null;
+
+            document.querySelectorAll('.btn-toggle-pt').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var msg = this.dataset.message || '';
+                    currentForm = this.closest('form');
+                    msgEl.textContent = msg;
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            btnCancel.addEventListener('click', function () {
+                modal.classList.add('hidden');
+                currentForm = null;
+            });
+
+            btnConfirm.addEventListener('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+        });
+    </script>
+}

@@ -15,19 +15,22 @@ namespace WebsiteBanMyPham.Services
         private readonly IConfiguration _configuration;
         private readonly ILogger<DonHangService> _logger;
         private readonly IStringLocalizer<SharedResource> _localizer;
+        private readonly ILocalizationHelper _localizationHelper;
 
         public DonHangService(
             WebsiteBanMyPhamContext context,
             IKhuyenMaiService khuyenMaiService,
             IConfiguration configuration,
             ILogger<DonHangService> logger,
-            IStringLocalizer<SharedResource> localizer)
+            IStringLocalizer<SharedResource> localizer,
+            ILocalizationHelper localizationHelper)
         {
             _context = context;
             _khuyenMaiService = khuyenMaiService;
             _configuration = configuration;
             _logger = logger;
             _localizer = localizer;
+            _localizationHelper = localizationHelper;
         }
 
         private class ItemDatHang
@@ -450,7 +453,9 @@ namespace WebsiteBanMyPham.Services
                 if (!hopLe)
                 {
                     await transaction.RollbackAsync();
-                    return (false, _localizer["Msg_Order_InvalidStatusTransition", trangThaiHienTai, trangThaiMoi].Value);
+                    var nhanHienTai = _localizationHelper.GetOrderStatusLabel(trangThaiHienTai);
+                    var nhanMoi = _localizationHelper.GetOrderStatusLabel(trangThaiMoi);
+                    return (false, _localizer["Msg_Order_InvalidStatusTransition", nhanHienTai, nhanMoi].Value);
                 }
 
                 var now = DateTime.Now;
@@ -794,37 +799,31 @@ namespace WebsiteBanMyPham.Services
             if (pageIndex < 1) pageIndex = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.DonHang
+            var baseQuery = _context.DonHang
                 .AsNoTracking()
                 .Include(d => d.MaTKNavigation)
                 .Include(d => d.ThanhToan)
                     .ThenInclude(t => t!.MaPTNavigation)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(trangThai))
-            {
-                query = query.Where(d => d.TrangThai == trangThai.Trim());
-            }
+            // 1. Áp dụng bộ lọc ngày & từ khóa (BỎ QUA trạng thái) để tính 5 thẻ đếm trạng thái
+            var queryKhongTrangThai = baseQuery.LocDonHangAdminKhongTrangThai(tuNgay, denNgay, keyword);
 
-            if (tuNgay.HasValue)
-            {
-                query = query.Where(d => d.NgayDat >= tuNgay.Value.Date);
-            }
+            var counts = await queryKhongTrangThai
+                .GroupBy(d => d.TrangThai)
+                .Select(g => new { TrangThai = g.Key, Count = g.Count() })
+                .ToListAsync();
 
-            if (denNgay.HasValue)
-            {
-                var endDay = denNgay.Value.Date.AddDays(1).AddTicks(-1);
-                query = query.Where(d => d.NgayDat <= endDay);
-            }
+            var dictCounts = counts.ToDictionary(x => x.TrangThai, x => x.Count);
+            int countChoXacNhan = dictCounts.GetValueOrDefault(TrangThaiDonHangConstant.ChoXacNhan, 0);
+            int countDaXacNhan = dictCounts.GetValueOrDefault(TrangThaiDonHangConstant.DaXacNhan, 0);
+            int countDangGiao = dictCounts.GetValueOrDefault(TrangThaiDonHangConstant.DangGiao, 0);
+            int countHoanThanh = dictCounts.GetValueOrDefault(TrangThaiDonHangConstant.HoanThanh, 0);
+            int countDaHuy = dictCounts.GetValueOrDefault(TrangThaiDonHangConstant.DaHuy, 0);
+            int countTong = countChoXacNhan + countDaXacNhan + countDangGiao + countHoanThanh + countDaHuy;
 
-            if (!string.IsNullOrWhiteSpace(keyword))
-            {
-                var kw = keyword.Trim().ToLower();
-                query = query.Where(d => d.MaDH.ToString().Contains(kw) 
-                                         || d.TenNguoiNhan.ToLower().Contains(kw) 
-                                         || d.SdtNguoiNhan.Contains(kw) 
-                                         || d.MaTKNavigation.HoTen.ToLower().Contains(kw));
-            }
+            // 2. Áp dụng thêm bộ lọc trạng thái (nếu có) để phân trang danh sách bảng
+            var query = baseQuery.LocDonHangAdmin(trangThai, tuNgay, denNgay, keyword);
 
             int totalItems = await query.CountAsync();
             int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -861,7 +860,13 @@ namespace WebsiteBanMyPham.Services
                 Keyword = keyword,
                 PageIndex = pageIndex,
                 TotalPages = totalPages,
-                TotalItems = totalItems
+                TotalItems = totalItems,
+                SoDonChoXacNhan = countChoXacNhan,
+                SoDonDaXacNhan = countDaXacNhan,
+                SoDonDangGiao = countDangGiao,
+                SoDonHoanThanh = countHoanThanh,
+                SoDonDaHuy = countDaHuy,
+                TongSoDon = countTong
             };
         }
 

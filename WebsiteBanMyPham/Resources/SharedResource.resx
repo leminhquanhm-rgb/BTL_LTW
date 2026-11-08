@@ -2141,4 +2141,256 @@
   <data name="Product_DescriptionUpdating" xml:space="preserve">
     <value>Mô tả sản phẩm đang được cập nhật.</value>
   </data>
+  <data name="Admin_Order_Title" xml:space="preserve">
+    <value>Quản lý đơn hàng</value>
+  </data>
+  <data name="Admin_Order_List" xml:space="preserve">
+    <value>Danh sách đơn hàng</value>
+  </data>
+  <data name="Admin_Order_Filter_All" xml:space="preserve">
+    <value>Tất cả đơn hàng</value>
+  </data>
+  <data name="Admin_Order_Filter_FromDate" xml:space="preserve">
+    <value>Từ ngày</value>
+  </data>
+  <data name="Admin_Order_Filter_ToDate" xml:space="preserve">
+    <value>Đến ngày</value>
+  </data>
+  <data name="Admin_Order_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo mã đơn (DH000003, #3), khách hàng, người nhận, SĐT...</value>
+  </data>
+  <data name="Admin_Order_Col_Id" xml:space="preserve">
+    <value>Mã đơn</value>
+  </data>
+  <data name="Admin_Order_Col_Customer" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Admin_Order_Col_Recipient" xml:space="preserve">
+    <value>Người nhận</value>
+  </data>
+  <data name="Admin_Order_Col_Phone" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
+  <data name="Admin_Order_Col_OrderDate" xml:space="preserve">
+    <value>Ngày đặt</value>
+  </data>
+  <data name="Admin_Order_Col_Total" xml:space="preserve">
+    <value>Tổng thanh toán</value>
+  </data>
+  <data name="Admin_Order_Col_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Admin_Order_Col_Payment" xml:space="preserve">
+    <value>Phương thức</value>
+  </data>
+  <data name="Admin_Order_Col_PaymentStatus" xml:space="preserve">
+    <value>Thanh toán &amp; Hoàn tiền</value>
+  </data>
+  <data name="Admin_Order_Col_WaybillDate" xml:space="preserve">
+    <value>Ngày vận đơn</value>
+  </data>
+  <data name="Admin_Order_Col_DeliveredDate" xml:space="preserve">
+    <value>Ngày giao TC</value>
+  </data>
+  <data name="Admin_Order_Empty" xml:space="preserve">
+    <value>Không có đơn hàng nào phù hợp.</value>
+  </data>
+  <data name="Admin_Order_Detail_Title" xml:space="preserve">
+    <value>Chi tiết đơn hàng</value>
+  </data>
+  <data name="Admin_Order_Detail_CustomerInfo" xml:space="preserve">
+    <value>Thông tin khách hàng</value>
+  </data>
+  <data name="Admin_Order_Detail_DeliveryInfo" xml:space="preserve">
+    <value>Thông tin giao hàng</value>
+  </data>
+  <data name="Admin_Order_Detail_Items" xml:space="preserve">
+    <value>Danh sách sản phẩm</value>
+  </data>
+  <data name="Admin_Order_Detail_PaymentSummary" xml:space="preserve">
+    <value>Tổng kết thanh toán</value>
+  </data>
+  <data name="Admin_Order_Detail_PaymentTransaction" xml:space="preserve">
+    <value>Thông tin thanh toán</value>
+  </data>
+  <data name="Admin_Order_Detail_StatusHistory" xml:space="preserve">
+    <value>Lịch sử trạng thái đơn hàng</value>
+  </data>
+  <data name="Admin_Order_Detail_Performer" xml:space="preserve">
+    <value>Người thực hiện</value>
+  </data>
+  <data name="Admin_Order_Detail_OldStatus" xml:space="preserve">
+    <value>Trạng thái trước</value>
+  </data>
+  <data name="Admin_Order_Detail_NewStatus" xml:space="preserve">
+    <value>Trạng thái mới</value>
+  </data>
+  <data name="Admin_Order_Action_Confirm" xml:space="preserve">
+    <value>Xác nhận đơn hàng</value>
+  </data>
+  <data name="Admin_Order_Action_Confirm_Modal" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xác nhận đơn hàng này và chuyển sang trạng thái Đã xác nhận?</value>
+  </data>
+  <data name="Admin_Order_Action_Ship" xml:space="preserve">
+    <value>Bàn giao vận chuyển</value>
+  </data>
+  <data name="Admin_Order_Action_Ship_Modal" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn bàn giao đơn hàng này cho đơn vị vận chuyển? Ngày vận đơn sẽ được tự động ghi nhận.</value>
+  </data>
+  <data name="Admin_Order_Action_Complete" xml:space="preserve">
+    <value>Xác nhận giao thành công</value>
+  </data>
+  <data name="Admin_Order_Action_Complete_Modal" xml:space="preserve">
+    <value>Bạn có chắc chắn đơn hàng đã được giao thành công cho khách hàng? Ngày giao thành công sẽ được tự động ghi nhận.</value>
+  </data>
+  <data name="Admin_Order_Online_PendingNotice" xml:space="preserve">
+    <value>Đơn hàng thanh toán trực tuyến chưa hoàn tất thanh toán. Vui lòng chờ khách hàng thanh toán để xác nhận đơn.</value>
+  </data>
+  <data name="Admin_Order_UpdateStatus_Success" xml:space="preserve">
+    <value>Cập nhật trạng thái đơn hàng thành công.</value>
+  </data>
+  <data name="Admin_Order_TrackingNumber_Placeholder" xml:space="preserve">
+    <value>Nhập mã vận đơn (tùy chọn, tối đa 50 ký tự)...</value>
+  </data>
+  <data name="Admin_Order_TrackingNumber_Label" xml:space="preserve">
+    <value>Mã vận đơn</value>
+  </data>
+  <data name="Admin_Payment_Title" xml:space="preserve">
+    <value>Quản lý thanh toán &amp; hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_List" xml:space="preserve">
+    <value>Danh sách giao dịch thanh toán</value>
+  </data>
+  <data name="Admin_Payment_Overview_PendingRefund" xml:space="preserve">
+    <value>Giao dịch chờ hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_Overview_Total" xml:space="preserve">
+    <value>Tổng số giao dịch</value>
+  </data>
+  <data name="Admin_Payment_Overview_Paid" xml:space="preserve">
+    <value>Đã thanh toán</value>
+  </data>
+  <data name="Admin_Payment_Overview_Unpaid" xml:space="preserve">
+    <value>Chưa thanh toán</value>
+  </data>
+  <data name="Admin_Payment_Filter_Method" xml:space="preserve">
+    <value>Phương thức thanh toán</value>
+  </data>
+  <data name="Admin_Payment_Filter_Status" xml:space="preserve">
+    <value>Trạng thái thanh toán</value>
+  </data>
+  <data name="Admin_Payment_Filter_Refund" xml:space="preserve">
+    <value>Trạng thái hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_Filter_AllMethods" xml:space="preserve">
+    <value>Tất cả phương thức</value>
+  </data>
+  <data name="Admin_Payment_Filter_AllRefunds" xml:space="preserve">
+    <value>Tất cả hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo mã giao dịch, mã đơn (DH000003, #3)...</value>
+  </data>
+  <data name="Admin_Payment_Col_PaymentId" xml:space="preserve">
+    <value>Mã TT</value>
+  </data>
+  <data name="Admin_Payment_Col_TransactionCode" xml:space="preserve">
+    <value>Mã giao dịch</value>
+  </data>
+  <data name="Admin_Payment_Col_TxId" xml:space="preserve">
+    <value>Mã GD</value>
+  </data>
+  <data name="Admin_Payment_Col_OrderId" xml:space="preserve">
+    <value>Đơn hàng</value>
+  </data>
+  <data name="Admin_Payment_Col_Customer" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Admin_Payment_Col_Method" xml:space="preserve">
+    <value>Phương thức</value>
+  </data>
+  <data name="Admin_Payment_Col_Amount" xml:space="preserve">
+    <value>Số tiền</value>
+  </data>
+  <data name="Admin_Payment_Col_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Admin_Payment_Col_PaidDate" xml:space="preserve">
+    <value>Ngày thanh toán</value>
+  </data>
+  <data name="Admin_Payment_Col_RefundStatus" xml:space="preserve">
+    <value>Hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_Col_RefundDate" xml:space="preserve">
+    <value>Ngày hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_Action_ConfirmRefund" xml:space="preserve">
+    <value>Xác nhận đã hoàn tiền</value>
+  </data>
+  <data name="Admin_Payment_Action_ViewOrder" xml:space="preserve">
+    <value>Xem đơn</value>
+  </data>
+  <data name="Admin_Payment_Action_ConfirmRefund_Modal" xml:space="preserve">
+    <value>Bạn có chắc chắn đã hoàn trả tiền cho khách hàng của đơn hàng này? Trạng thái hoàn tiền sẽ chuyển sang Đã hoàn.</value>
+  </data>
+  <data name="Admin_Payment_Refund_Success" xml:space="preserve">
+    <value>Xác nhận hoàn tiền cho đơn hàng thành công.</value>
+  </data>
+  <data name="Admin_Payment_Empty" xml:space="preserve">
+    <value>Không có giao dịch thanh toán nào phù hợp.</value>
+  </data>
+  <data name="Admin_PaymentMethod_Title" xml:space="preserve">
+    <value>Phương thức thanh toán</value>
+  </data>
+  <data name="Admin_PaymentMethod_List" xml:space="preserve">
+    <value>Danh sách phương thức thanh toán</value>
+  </data>
+  <data name="Admin_PaymentMethod_Edit" xml:space="preserve">
+    <value>Chỉnh sửa phương thức thanh toán</value>
+  </data>
+  <data name="Admin_PaymentMethod_Name" xml:space="preserve">
+    <value>Tên phương thức</value>
+  </data>
+  <data name="Admin_PaymentMethod_Desc" xml:space="preserve">
+    <value>Mô tả phương thức</value>
+  </data>
+  <data name="Admin_PaymentMethod_Status" xml:space="preserve">
+    <value>Trạng thái hoạt động</value>
+  </data>
+  <data name="Admin_PaymentMethod_Required" xml:space="preserve">
+    <value>Bắt buộc</value>
+  </data>
+  <data name="Admin_PaymentMethod_Optional" xml:space="preserve">
+    <value>Mở rộng</value>
+  </data>
+  <data name="Admin_PaymentMethod_CodCannotDisable" xml:space="preserve">
+    <value>Phương thức COD là bắt buộc theo quy định, không được phép tắt.</value>
+  </data>
+  <data name="Admin_PaymentMethod_UpdateSuccess" xml:space="preserve">
+    <value>Cập nhật mô tả phương thức thanh toán thành công.</value>
+  </data>
+  <data name="Admin_PaymentMethod_ToggleSuccess" xml:space="preserve">
+    <value>Thay đổi trạng thái phương thức thanh toán thành công.</value>
+  </data>
+  <data name="Admin_PaymentMethod_ActivateConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn kích hoạt phương thức thanh toán này?</value>
+  </data>
+  <data name="Admin_PaymentMethod_DeactivateConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn ngừng hoạt động phương thức thanh toán này? Các đơn hàng mới sẽ không thể chọn phương thức này.</value>
+  </data>
+  <data name="Admin_PaymentMethod_Priority" xml:space="preserve">
+    <value>Loại ưu tiên</value>
+  </data>
+  <data name="Admin_Filter_Reset" xml:space="preserve">
+    <value>Xóa bộ lọc</value>
+  </data>
+  <data name="Admin_Tab_Payments" xml:space="preserve">
+    <value>Giao dịch thanh toán</value>
+  </data>
+  <data name="Admin_Tab_PaymentMethods" xml:space="preserve">
+    <value>Phương thức thanh toán</value>
+  </data>
+  <data name="Validation_DateRangeInvalid" xml:space="preserve">
+    <value>Đến ngày không được nhỏ hơn Từ ngày.</value>
+  </data>
 </root>

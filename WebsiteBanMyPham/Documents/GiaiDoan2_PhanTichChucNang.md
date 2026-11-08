@@ -157,6 +157,7 @@ Các nội dung đã được nhóm thống nhất và chốt phạm vi như sau
 * **Quên mật khẩu:** Áp dụng cho cả Customer và Admin. Người dùng chưa đăng nhập có thể yêu cầu xác minh danh tính và đặt lại mật khẩu.
 * **Banner/slider:** Thuộc nhóm chức năng Mở rộng; chỉ triển khai sau khi các nghiệp vụ cốt lõi đã hoàn thiện.
 * **Khiếu nại:** Bắt buộc gắn với một đơn hàng của khách hàng ở trạng thái Hoàn thành và chỉ gửi được trong 10 ngày kể từ ngày giao hàng thành công; sản phẩm là tùy chọn và phải thuộc đơn đó. Nội dung từ 10 đến 1000 ký tự; tối đa 10 khiếu nại đang mở mỗi khách hàng. Trường hợp giao trễ được khiếu nại sau khi nhận hàng.
+* **Phương thức thanh toán:** Hệ thống nhận diện phương thức bằng TenPT (COD và Online); không cho phép đổi TenPT và không cho phép thêm phương thức thanh toán mới. Admin chỉ được xem danh sách, sửa mô tả (tối đa 255 ký tự) và bật/tắt trạng thái. Phương thức COD là bắt buộc và luôn bật (chặn ở cả client và server); khi tắt Online thì trang đặt hàng chỉ hiển thị COD, các đơn Online đã tạo trước đó vẫn được thanh toán mô phỏng và xử lý bình thường (chỉ đơn mới không chọn được Online).
 
 ## 2.9. Sơ đồ Use Case
 Sơ đồ Use Case tổng quát thể hiện phạm vi chức năng của hệ thống và tương tác giữa ba Actor chính: Guest, Customer và Admin. Cổng thanh toán là tác nhân ngoài, chỉ tham gia khi triển khai thanh toán trực tuyến.

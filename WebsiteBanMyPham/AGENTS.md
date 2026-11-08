@@ -730,6 +730,8 @@ Trạng thái và ngày phải được lưu cùng một lần cập nhật đ�
 
 Mỗi lần thay đổi trạng thái phải ghi LichSuDonHang.
 
+-   Quản lý phương thức thanh toán: Hệ thống nhận diện phương thức bằng TenPT (COD và Online); không cho phép đổi TenPT và không cho phép thêm phương thức thanh toán mới. Admin chỉ được sửa mô tả (tối đa 255 ký tự) và bật/tắt trạng thái. Phương thức COD là bắt buộc và luôn bật (chặn tắt ở cả client và server); khi tắt Online thì giao diện đặt hàng chỉ hiển thị COD, các đơn Online đã tạo trước đó vẫn được thanh toán mô phỏng và xử lý bình thường (chỉ đơn mới không chọn được Online).
+
 ### 6.10. Hủy đơn
 
 -   Chỉ chủ sở hữu đơn được hủy.
