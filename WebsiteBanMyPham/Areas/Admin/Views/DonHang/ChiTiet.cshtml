@@ -194,7 +194,7 @@
                 @L["Admin_Order_Detail_DeliveryInfo"]
             </h2>
             <div class="space-y-1.5 text-charcoal">
-                <p><span class="text-muted">@L["Admin_Order_Col_Customer"]:</span> <strong class="font-semibold">@Model.TenKhachHang</strong> (ID: #@Model.MaTK)</p>
+                <p><span class="text-muted">@L["Admin_Order_Col_Customer"]:</span> <strong class="font-semibold">@Model.TenKhachHang</strong> (ID: #@(Model.MaTK))</p>
                 <p><span class="text-muted">Email:</span> @Model.EmailKhachHang</p>
                 <div class="pt-2 border-t border-borderLight/60">
                     <p><span class="text-muted">@L["Admin_Order_Col_Recipient"]:</span> <strong>@Model.TenNguoiNhan</strong></p>
@@ -282,7 +282,7 @@
                                          class="w-10 h-10 object-cover rounded border border-borderLight shrink-0" />
                                     <div>
                                         <p class="font-bold text-charcoal">@item.TenSP</p>
-                                        <span class="text-[11px] text-muted">ID: #@item.MaSP</span>
+                                        <span class="text-[11px] text-muted">ID: #@(item.MaSP)</span>
                                     </div>
                                 </div>
                             </td>

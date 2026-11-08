@@ -10,7 +10,7 @@
             <a asp-area="Admin" asp-controller="DanhMuc" asp-action="Index" class="text-xs text-muted hover:text-primary transition flex items-center gap-1 mb-1">
                 <i class="ph ph-arrow-left"></i> @L["Common_Back"]
             </a>
-            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Category_Edit"] #@Model.MaDM</h1>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Category_Edit"] #@(Model.MaDM)</h1>
         </div>
         <span class="text-xs text-muted">
             @L["Admin_Category_ProductCount"]: <strong class="text-charcoal font-mono">@Model.SoLuongSanPham</strong>

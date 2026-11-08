@@ -101,7 +101,7 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr class="hover:bg-cream/40 transition">
-                                <td class="p-3.5 font-mono text-muted">#@item.MaTH</td>
+                                <td class="p-3.5 font-mono text-muted">#@(item.MaTH)</td>
                                 <td class="p-3.5 text-center">
                                     @if (!string.IsNullOrWhiteSpace(item.Logo))
                                     {

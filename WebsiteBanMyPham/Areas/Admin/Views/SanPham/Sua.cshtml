@@ -40,7 +40,7 @@
                 <i class="ph ph-arrow-left"></i> @L["Common_Back"]
             </a>
             <h1 class="text-lg font-bold text-charcoal">@L["Admin_Product_Edit"]: @Model.TenSP</h1>
-            <p class="text-xs text-muted">ID: #@Model.MaSP &bull; @L["Label_NgayTao"]: @LocalizationHelper.FormatDateTime(Model.NgayTao)</p>
+            <p class="text-xs text-muted">ID: #@(Model.MaSP) &bull; @L["Label_NgayTao"]: @LocalizationHelper.FormatDateTime(Model.NgayTao)</p>
         </div>
         <a asp-area="" asp-controller="ChiTietSanPham" asp-action="Index" asp-route-id="@Model.MaSP" target="_blank"
            class="px-3.5 py-1.5 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition flex items-center gap-1 shadow-sm">

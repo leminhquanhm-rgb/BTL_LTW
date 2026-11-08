@@ -25,7 +25,7 @@ Giai đoạn này tập trung xác định các chức năng của hệ thống,
 | **7. Quản lý danh mục, thương hiệu và sản phẩm** | Quản lý danh mục, thương hiệu, sản phẩm và hình ảnh sản phẩm. |
 | **8. Quản lý tồn kho, thanh toán** | Cập nhật tồn kho, cảnh báo sắp hết hàng, quản lý phương thức thanh toán, giao dịch và hoàn tiền. |
 | **9. Quản lý khuyến mãi, banner** | Tạo và quản lý mã khuyến mãi; quản lý banner/slider (chức năng mở rộng). |
-| **10. Quản lý khách hàng, tài khoản Admin** | Xem, cập nhật, khóa tài khoản khách hàng; xem, thêm, cập nhật và khóa tài khoản Admin. |
+| **10. Quản lý khách hàng** | Xem, cập nhật, khóa tài khoản khách hàng; không quản lý tài khoản Admin trên web (tạo trực tiếp trong CSDL khi triển khai). |
 | **11. Dashboard và thống kê** | Hiển thị thông tin tổng quan và báo cáo chi tiết về hoạt động kinh doanh. |
 
 ## 2.3. Phân tích chức năng theo từng Actor
@@ -87,7 +87,7 @@ Giai đoạn này tập trung xác định các chức năng của hệ thống,
 | 14 | Phương thức thanh toán | Thêm, sửa và quản lý phương thức thanh toán. |
 | 15 | Khuyến mãi | Tạo, sửa, xóa và quản lý mã khuyến mãi. |
 | 16 | Khách hàng | Xem và quản lý tài khoản khách hàng. |
-| 17 | Tài khoản Admin | Quản lý tài khoản quản trị viên. |
+| 17 | Tài khoản Admin | Không quản lý trên web (tạo trực tiếp trong CSDL khi triển khai). |
 | 18 | Đánh giá | Duyệt hoặc từ chối đánh giá. |
 | 19 | Khiếu nại | Tiếp nhận, phản hồi và cập nhật trạng thái khiếu nại. |
 | 20 | Thống kê | Xem báo cáo kinh doanh. |
@@ -111,7 +111,7 @@ Giai đoạn này tập trung xác định các chức năng của hệ thống,
 | Thanh toán | Tạo và theo dõi giao dịch, cập nhật hoàn tiền | Customer, Admin |
 | Phương thức thanh toán | Thêm, xem, sửa, quản lý | Admin |
 | Banner | Thêm, xem, sửa, xóa | Admin |
-| Tài khoản Admin | Xem, thêm, cập nhật và khóa tài khoản | Admin |
+| Tài khoản Admin | Tạo trực tiếp trong CSDL khi triển khai (không làm trên web) | — |
 
 *Lưu ý: Không phải mọi đối tượng đều cần đủ bốn thao tác CRUD. Đơn hàng đã phát sinh giao dịch không nên bị xóa tùy tiện; sản phẩm đã được mua nên chuyển sang trạng thái ngừng kinh doanh thay vì xóa vật lý.*
 
@@ -143,7 +143,7 @@ Các luồng dưới đây mô tả trình tự xử lý ở mức nghiệp vụ
 | Mức độ | Chức năng |
 | --- | --- |
 | **Bắt buộc** | Đăng ký, đăng nhập, đăng xuất, phân quyền; đổi mật khẩu, quên mật khẩu; xem, tìm kiếm, lọc sản phẩm; giỏ hàng; đặt hàng; thanh toán COD; hủy đơn khi đủ điều kiện; CRUD danh mục, thương hiệu, sản phẩm; quản lý đơn hàng và ghi nhận ngày vận đơn, ngày giao hàng thành công. |
-| **Quan trọng** | Quản lý khuyến mãi; quản lý tồn kho và cảnh báo; quản lý khách hàng và tài khoản Admin; quản lý giao dịch thanh toán; đánh giá, khiếu nại; Dashboard và thống kê. |
+| **Quan trọng** | Quản lý khuyến mãi; quản lý tồn kho và cảnh báo; quản lý khách hàng; quản lý giao dịch thanh toán; đánh giá, khiếu nại; Dashboard và thống kê. |
 | **Mở rộng** | Thanh toán trực tuyến Sandbox; quy trình hoàn tiền tự động (nếu không thực hiện được thì Admin cập nhật thủ công); banner/slider; các báo cáo nâng cao. |
 
 *Các chức năng bắt buộc cần được hoàn thiện trước. Những chức năng mở rộng chỉ triển khai khi các nghiệp vụ cốt lõi đã hoạt động ổn định.*
@@ -158,6 +158,7 @@ Các nội dung đã được nhóm thống nhất và chốt phạm vi như sau
 * **Banner/slider:** Thuộc nhóm chức năng Mở rộng; chỉ triển khai sau khi các nghiệp vụ cốt lõi đã hoàn thiện.
 * **Khiếu nại:** Bắt buộc gắn với một đơn hàng của khách hàng ở trạng thái Hoàn thành và chỉ gửi được trong 10 ngày kể từ ngày giao hàng thành công; sản phẩm là tùy chọn và phải thuộc đơn đó. Nội dung từ 10 đến 1000 ký tự; tối đa 10 khiếu nại đang mở mỗi khách hàng. Trường hợp giao trễ được khiếu nại sau khi nhận hàng.
 * **Phương thức thanh toán:** Hệ thống nhận diện phương thức bằng TenPT (COD và Online); không cho phép đổi TenPT và không cho phép thêm phương thức thanh toán mới. Admin chỉ được xem danh sách, sửa mô tả (tối đa 255 ký tự) và bật/tắt trạng thái. Phương thức COD là bắt buộc và luôn bật (chặn ở cả client và server); khi tắt Online thì trang đặt hàng chỉ hiển thị COD, các đơn Online đã tạo trước đó vẫn được thanh toán mô phỏng và xử lý bình thường (chỉ đơn mới không chọn được Online).
+* **Tài khoản Admin:** Không quản lý tài khoản Admin trên giao diện web (tránh Admin tự khóa chính mình hoặc khóa hết Admin làm mất quyền quản trị). Tài khoản Admin được tạo trực tiếp trong CSDL khi triển khai; Admin vẫn tự đổi mật khẩu và dùng quên mật khẩu như hiện có. Trang Tài khoản trong Admin chỉ quản lý tài khoản khách hàng (VaiTro = KhachHang).
 
 ## 2.9. Sơ đồ Use Case
 Sơ đồ Use Case tổng quát thể hiện phạm vi chức năng của hệ thống và tương tác giữa ba Actor chính: Guest, Customer và Admin. Cổng thanh toán là tác nhân ngoài, chỉ tham gia khi triển khai thanh toán trực tuyến.

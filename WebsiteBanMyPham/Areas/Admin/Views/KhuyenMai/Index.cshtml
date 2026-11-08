@@ -1,0 +1,333 @@
+@model WebsiteBanMyPham.ViewModels.PaginatedList<WebsiteBanMyPham.ViewModels.Admin.KhuyenMaiAdminListItemViewModel>
+@{
+    ViewData["Title"] = L["Admin_Promo_Title"].Value;
+    var filter = ViewBag.Filter as WebsiteBanMyPham.ViewModels.Admin.KhuyenMaiAdminFilterViewModel ?? new();
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Tab điều hướng phụ (Mã khuyến mãi / Banner quảng cáo) -->
+    <div class="flex items-center gap-2 border-b border-borderLight pb-3">
+        <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition bg-surface text-charcoal shadow-sm border border-borderLight flex items-center gap-2">
+            <i class="ph-bold ph-ticket text-base text-primary"></i>
+            <span>@L["Admin_Tab_Promotions"]</span>
+        </a>
+        <a asp-area="Admin" asp-controller="Banner" asp-action="Index"
+           class="px-4 py-2 text-xs font-semibold rounded-btn transition text-muted hover:text-charcoal hover:bg-surface/60 flex items-center gap-2">
+            <i class="ph-bold ph-image text-base"></i>
+            <span>@L["Admin_Tab_Banners"]</span>
+        </a>
+    </div>
+
+    <!-- Header quản lý & Nút Thêm mới -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-5 rounded-card border border-borderLight shadow-soft">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Promo_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_Promo_List"] (@Model.TotalItems)</p>
+        </div>
+        <div>
+            <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Them"
+               class="px-4 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                <i class="ph-bold ph-plus text-sm"></i> @L["Admin_Promo_Add"]
+            </a>
+        </div>
+    </div>
+
+    <!-- Khối Bộ lọc -->
+    <form method="get" asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index"
+          class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Trạng thái -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Status"]</label>
+                <select name="trangThai" class="w-full text-xs px-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition">
+                    <option value="">@L["Admin_Filter_AllStatus"]</option>
+                    <option value="true" selected="@(filter.TrangThai == true)">@L["Admin_Filter_Active"]</option>
+                    <option value="false" selected="@(filter.TrangThai == false)">@L["Admin_Filter_Inactive"]</option>
+                </select>
+            </div>
+
+            <!-- Từ khóa tìm kiếm -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Search"]</label>
+                <div class="relative">
+                    <input type="text" name="keyword" value="@filter.Keyword"
+                           placeholder="@L["Admin_Promo_SearchPlaceholder"]"
+                           class="w-full text-xs pl-8 pr-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                    <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-1">
+            @if (!string.IsNullOrWhiteSpace(filter.Keyword) || filter.TrangThai.HasValue)
+            {
+                <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index"
+                   class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                    @L["Admin_Filter_Reset"]
+                </a>
+            }
+            <button type="submit" class="px-5 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                <i class="ph-bold ph-funnel text-sm"></i> @L["Common_Filter"]
+            </button>
+        </div>
+    </form>
+
+    <!-- Bảng danh sách Khuyến mãi -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        @if (Model.Items.Count == 0)
+        {
+            <div class="p-12 text-center text-muted text-xs">
+                <i class="ph ph-ticket text-4xl block mb-2 opacity-40"></i>
+                <span>@L["Admin_Promo_Empty"]</span>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs divide-y divide-borderLight">
+                    <thead class="bg-cream font-bold text-charcoal uppercase tracking-wider text-[11px]">
+                        <tr>
+                            <th class="p-3">@L["Admin_Promo_Col_Code"]</th>
+                            <th class="p-3">@L["Admin_Promo_Col_Name"]</th>
+                            <th class="p-3">@L["Admin_Promo_Col_Value"]</th>
+                            <th class="p-3">@L["Admin_Promo_Col_MinOrder"]</th>
+                            <th class="p-3">@L["Admin_Promo_Col_Time"]</th>
+                            <th class="p-3 text-center">@L["Admin_Promo_Col_Usage"]</th>
+                            <th class="p-3 text-center">@L["Admin_Promo_Col_Status"]</th>
+                            <th class="p-3 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="hover:bg-cream/40 transition">
+                                <td class="p-3 font-mono font-bold text-primary text-xs">
+                                    @item.Code
+                                </td>
+                                <td class="p-3 font-semibold text-charcoal max-w-xs">
+                                    @item.TenKM
+                                </td>
+                                <td class="p-3">
+                                    @if (item.LoaiGiam == WebsiteBanMyPham.Constants.LoaiGiamGiaConstant.PhanTram)
+                                    {
+                                        <div class="font-bold text-primary">@item.GiaTriGiam%</div>
+                                        @if (item.GiamToiDa.HasValue)
+                                        {
+                                            <div class="text-[11px] text-muted">@L["Admin_Promo_Col_MaxDiscount"]: @LocalizationHelper.FormatCurrency(item.GiamToiDa)</div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="font-bold text-primary">@LocalizationHelper.FormatCurrency(item.GiaTriGiam)</div>
+                                    }
+                                </td>
+                                <td class="p-3 font-mono text-charcoal">
+                                    @LocalizationHelper.FormatCurrency(item.DonToiThieu)
+                                </td>
+                                <td class="p-3 text-muted text-[11px] whitespace-nowrap">
+                                    <div>@item.NgayBatDau.ToString("dd/MM/yyyy")</div>
+                                    <div class="text-charcoal font-medium">→ @item.NgayKetThuc.ToString("dd/MM/yyyy")</div>
+                                </td>
+                                <td class="p-3 text-center whitespace-nowrap">
+                                    <span class="font-bold text-charcoal">@item.SoLuotDaDung</span>
+                                    <span class="text-muted">/ @(item.SoLuotToiDa.HasValue ? item.SoLuotToiDa.Value.ToString() : L["Admin_Promo_Unlimited"].Value)</span>
+                                </td>
+                                <td class="p-3 text-center whitespace-nowrap">
+                                    @switch (item.TrangThaiTinhToan)
+                                    {
+                                        case "DangChay":
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#E6F4EE] text-statusSuccess">
+                                                @L["Admin_Promo_Status_Running"]
+                                            </span>
+                                            break;
+                                        case "SapDienRa":
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EBF3F9] text-statusInfo">
+                                                @L["Admin_Promo_Status_Upcoming"]
+                                            </span>
+                                            break;
+                                        case "HetHan":
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FCEAEA] text-statusDanger">
+                                                @L["Admin_Promo_Status_Expired"]
+                                            </span>
+                                            break;
+                                        case "HetLuot":
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FDF3E7] text-statusWarning">
+                                                @L["Admin_Promo_Status_OutOfUses"]
+                                            </span>
+                                            break;
+                                        default:
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cream text-muted border border-borderLight">
+                                                @L["Admin_Promo_Status_Disabled"]
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="p-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <!-- Sửa -->
+                                        <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Sua" asp-route-id="@item.MaKM"
+                                           class="px-2.5 py-1 text-primary hover:bg-pastel/40 rounded font-semibold transition" title="@L["Common_Edit"]">
+                                            @L["Common_Edit"]
+                                        </a>
+
+                                        <!-- Bật/Tắt -->
+                                        <form asp-area="Admin" asp-controller="KhuyenMai" asp-action="DatTrangThai" asp-route-id="@item.MaKM" method="post" class="inline">
+                                            <input type="hidden" name="trangThaiMoi" value="@((!item.TrangThai).ToString().ToLower())" />
+                                            @if (item.TrangThai)
+                                            {
+                                                <button type="submit" class="px-2 py-1 text-muted hover:text-statusDanger hover:bg-[#FCEAEA] rounded text-xs transition" title="@L["Admin_Action_Deactivate"]">
+                                                    <i class="ph ph-power"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="px-2 py-1 text-statusSuccess hover:bg-[#E6F4EE] rounded text-xs transition" title="@L["Admin_Action_Activate"]">
+                                                    <i class="ph ph-check"></i>
+                                                </button>
+                                            }
+                                        </form>
+
+                                        <!-- Xóa -->
+                                        @if (item.CoTheXoa)
+                                        {
+                                            <form asp-area="Admin" asp-controller="KhuyenMai" asp-action="Xoa" asp-route-id="@item.MaKM" method="post" class="inline">
+                                                <button type="button" class="btn-delete-promo px-2 py-1 text-muted hover:text-statusDanger hover:bg-[#FCEAEA] rounded text-xs transition"
+                                                        data-message="@L["Admin_Promo_Delete_Confirm"].Value" title="@L["Common_Delete"]">
+                                                    <i class="ph ph-trash"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="px-2 py-1 text-muted opacity-40 cursor-not-allowed" title="@L["Admin_Promo_Delete_HasOrders"].Value">
+                                                <i class="ph ph-trash"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3">
+                    <span class="text-xs text-muted">
+                        Trang @Model.PageIndex / @Model.TotalPages (@Model.TotalItems @L["Admin_Nav_Promotions"].Value.ToLower())
+                    </span>
+                    <div class="flex items-center gap-1.5">
+                        <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex - 1)"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight text-xs font-semibold transition @(!Model.HasPreviousPage ? "opacity-40 pointer-events-none bg-cream text-muted" : "bg-surface hover:bg-cream text-charcoal")">
+                            @L["Pagination_Previous"]
+                        </a>
+
+                        @for (int p = 1; p <= Model.TotalPages; p++)
+                        {
+                            if (p == 1 || p == Model.TotalPages || (p >= Model.PageIndex - 2 && p <= Model.PageIndex + 2))
+                            {
+                                <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index"
+                                   asp-route-trang="@p"
+                                   asp-route-trangThai="@filter.TrangThai"
+                                   asp-route-keyword="@filter.Keyword"
+                                   class="px-3 py-1.5 rounded-btn border text-xs font-bold transition @(p == Model.PageIndex ? "bg-primary text-white border-primary shadow-sm" : "bg-surface hover:bg-cream border-borderLight text-charcoal")">
+                                    @p
+                                </a>
+                            }
+                            else if (p == Model.PageIndex - 3 || p == Model.PageIndex + 3)
+                            {
+                                <span class="px-2 text-xs text-muted">...</span>
+                            }
+                        }
+
+                        <a asp-area="Admin" asp-controller="KhuyenMai" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex + 1)"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight text-xs font-semibold transition @(!Model.HasNextPage ? "opacity-40 pointer-events-none bg-cream text-muted" : "bg-surface hover:bg-cream text-charcoal")">
+                            @L["Pagination_Next"]
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div id="deleteModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-trash text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="deleteModalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+            <button type="button" id="btnDeleteCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Cancel"]
+            </button>
+            <button type="button" id="btnDeleteConfirm" class="px-4 py-2 bg-statusDanger hover:bg-statusDanger/90 text-white text-xs font-bold rounded-btn transition shadow-sm">
+                @L["Common_Delete"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = document.getElementById('deleteModal');
+            var msgEl = document.getElementById('deleteModalMessage');
+            var btnCancel = document.getElementById('btnDeleteCancel');
+            var btnConfirm = document.getElementById('btnDeleteConfirm');
+            var currentForm = null;
+
+            document.querySelectorAll('.btn-delete-promo').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var msg = this.dataset.message || '';
+                    currentForm = this.closest('form');
+                    msgEl.textContent = msg;
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            btnCancel.addEventListener('click', function () {
+                modal.classList.add('hidden');
+                currentForm = null;
+            });
+
+            btnConfirm.addEventListener('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+        });
+    </script>
+}
+

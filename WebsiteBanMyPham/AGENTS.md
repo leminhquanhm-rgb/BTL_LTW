@@ -503,7 +503,7 @@ Quản lý tài khoản
 -   Xem khách hàng.
 -   Khóa tài khoản.
 -   Mở khóa.
--   Quản lý tài khoản Admin theo quyền được phép.
+-   Không quản lý tài khoản Admin trên web (tạo trực tiếp trong CSDL khi triển khai để tránh Admin tự khóa chính mình hoặc mất quyền quản trị); trang Tài khoản chỉ quản lý tài khoản khách hàng (VaiTro = KhachHang).
 
 Quản lý đánh giá
 
@@ -1056,7 +1056,7 @@ Bước 6B – Sản phẩm (soạn thảo rich text, tải ảnh), hình ảnh,
 
 Bước 6C – Đơn hàng, thanh toán, hoàn tiền, phương thức thanh toán.
 
-Bước 6D – Khuyến mãi, banner, tài khoản (khóa và mở khóa phải xóa cache của CookieValidator).
+Bước 6D – Khuyến mãi, banner, tài khoản (khóa và mở khóa phải xóa cache của CookieValidator; chỉ quản lý tài khoản khách hàng, không quản lý tài khoản Admin trên web).
 
 Bước 6E – Đánh giá (duyệt, từ chối) và khiếu nại (phản hồi, đổi trạng thái).
 

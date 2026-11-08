@@ -1,0 +1,281 @@
+@model WebsiteBanMyPham.ViewModels.Admin.KhachHangAdminDetailViewModel
+@using WebsiteBanMyPham.Constants
+@{
+    ViewData["Title"] = $"{L["Admin_Customer_Detail_Title"].Value} - {Model.HoTen}";
+}
+
+<div class="max-w-5xl mx-auto space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index" class="text-xs text-muted hover:text-primary transition flex items-center gap-1 mb-1">
+                <i class="ph ph-arrow-left"></i> @L["Common_Back"]
+            </a>
+            <h1 class="text-lg font-bold text-charcoal flex items-center gap-2">
+                <span>@L["Admin_Customer_Detail_Title"]</span>
+                <span class="font-mono text-primary">#TK@(Model.MaTK.ToString("D4"))</span>
+            </h1>
+            <p class="text-xs text-muted">@L["Admin_Customer_Col_CreatedDate"]: @LocalizationHelper.FormatDateTime(Model.NgayTao)</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            @if (Model.TrangThai)
+            {
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#E6F4EE] text-statusSuccess border border-statusSuccess/20">
+                    <i class="ph-bold ph-check-circle mr-1.5"></i> @L["Admin_Customer_Status_Active"]
+                </span>
+            }
+            else
+            {
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#FCEAEA] text-statusDanger border border-statusDanger/20">
+                    <i class="ph-bold ph-lock mr-1.5"></i> @L["Admin_Customer_Status_Locked"]
+                </span>
+            }
+
+            <form method="post" asp-area="Admin" asp-controller="TaiKhoan" asp-action="DatTrangThai" class="inline">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.MaTK" />
+                <input type="hidden" name="trangThaiMoi" value="@((!Model.TrangThai).ToString().ToLower())" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                @if (Model.TrangThai)
+                {
+                    <button type="button"
+                            class="btn-toggle-customer px-3.5 py-1.5 bg-[#FCEAEA] hover:bg-statusDanger hover:text-white text-statusDanger text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5"
+                            data-message="@string.Format(L["Admin_Customer_LockConfirm"].Value, Model.HoTen)"
+                            data-confirm-text="@L["Admin_Customer_Action_Lock"]"
+                            data-confirm-class="bg-statusDanger hover:bg-statusDanger/90 text-white"
+                            title="@L["Admin_Customer_Action_Lock"]">
+                        <i class="ph-bold ph-lock text-sm"></i> @L["Admin_Customer_Action_Lock"]
+                    </button>
+                }
+                else
+                {
+                    <button type="button"
+                            class="btn-toggle-customer px-3.5 py-1.5 bg-[#E6F4EE] hover:bg-statusSuccess hover:text-white text-statusSuccess text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5"
+                            data-message="@string.Format(L["Admin_Customer_UnlockConfirm"].Value, Model.HoTen)"
+                            data-confirm-text="@L["Admin_Customer_Action_Unlock"]"
+                            data-confirm-class="bg-statusSuccess hover:bg-statusSuccess/90 text-white"
+                            title="@L["Admin_Customer_Action_Unlock"]">
+                        <i class="ph-bold ph-lock-open text-sm"></i> @L["Admin_Customer_Action_Unlock"]
+                    </button>
+                }
+            </form>
+        </div>
+    </div>
+
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- 3 Thẻ chỉ số tổng quan của khách hàng -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Tổng đơn hàng -->
+        <div class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Customer_Col_OrderCount"]</span>
+            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongSoDon</p>
+            <p class="text-xs text-muted">@L["Admin_Dashboard_Unit_Order"]</p>
+        </div>
+
+        <!-- Đơn hoàn thành -->
+        <div class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Customer_CompletedOrders"]</span>
+            <p class="text-2xl font-bold text-statusSuccess pt-1">@Model.SoDonHoanThanh</p>
+            <p class="text-xs text-muted">@L["Admin_Dashboard_Unit_Order"]</p>
+        </div>
+
+        <!-- Tổng chi tiêu -->
+        <div class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-1">
+            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Customer_Col_TotalSpent"]</span>
+            <p class="text-2xl font-bold text-primary pt-1">@LocalizationHelper.FormatCurrency(Model.TongChiTieu)</p>
+            <p class="text-xs text-muted">@L["Admin_Customer_TotalSpentNote"]</p>
+        </div>
+    </div>
+
+    <!-- Thông tin khách hàng chi tiết -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4">
+        <h2 class="text-sm font-bold text-charcoal border-b border-borderLight pb-3 flex items-center gap-2">
+            <i class="ph-bold ph-user text-primary text-base"></i>
+            <span>@L["Account_ProfileTitle"]</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div class="space-y-1">
+                <span class="text-muted block font-medium">@L["Admin_Customer_Col_FullName"]</span>
+                <p class="font-bold text-charcoal text-sm">@Model.HoTen</p>
+            </div>
+            <div class="space-y-1">
+                <span class="text-muted block font-medium">@L["Admin_Customer_Col_Email"]</span>
+                <p class="font-semibold text-charcoal">@Model.Email</p>
+            </div>
+            <div class="space-y-1">
+                <span class="text-muted block font-medium">@L["Admin_Customer_Col_Phone"]</span>
+                <p class="font-semibold text-charcoal">@(string.IsNullOrWhiteSpace(Model.SoDienThoai) ? "—" : Model.SoDienThoai)</p>
+            </div>
+            <div class="space-y-1">
+                <span class="text-muted block font-medium">@L["Admin_Customer_Col_CreatedDate"]</span>
+                <p class="font-semibold text-charcoal">@LocalizationHelper.FormatDateTime(Model.NgayTao)</p>
+            </div>
+            <div class="sm:col-span-2 lg:col-span-4 space-y-1 pt-1 border-t border-borderLight/60">
+                <span class="text-muted block font-medium">@L["Admin_Customer_Col_Address"]</span>
+                <p class="font-semibold text-charcoal">@(string.IsNullOrWhiteSpace(Model.DiaChi) ? "—" : Model.DiaChi)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lịch sử 5 đơn hàng gần nhất -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden space-y-0">
+        <div class="p-5 border-b border-borderLight flex items-center justify-between">
+            <h2 class="text-sm font-bold text-charcoal flex items-center gap-2">
+                <i class="ph-bold ph-clock-counter-clockwise text-primary text-base"></i>
+                <span>@L["Admin_Customer_RecentOrders"]</span>
+            </h2>
+            <span class="text-xs text-muted">(@Model.DonHangGanNhat.Count @L["Admin_Dashboard_Unit_Order"])</span>
+        </div>
+
+        @if (!Model.DonHangGanNhat.Any())
+        {
+            <div class="p-8 text-center text-muted">
+                <i class="ph ph-shopping-bag text-3xl mb-1 text-charcoal/30"></i>
+                <p class="text-xs font-medium">@L["Admin_Customer_NoOrders"]</p>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-cream/60 border-b border-borderLight text-charcoal font-bold uppercase tracking-wider text-[11px]">
+                            <th class="p-3.5">@L["Admin_Order_Col_Id"]</th>
+                            <th class="p-3.5">@L["Admin_Order_Col_OrderDate"]</th>
+                            <th class="p-3.5 text-right">@L["Admin_Order_Col_Total"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Order_Col_Status"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Order_Col_Payment"]</th>
+                            <th class="p-3.5 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var dh in Model.DonHangGanNhat)
+                        {
+                            <tr class="hover:bg-cream/30 transition">
+                                <td class="p-3.5 font-mono font-bold">
+                                    <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@dh.MaDH"
+                                       class="text-primary hover:underline">
+                                        @LocalizationHelper.MaDonHang(dh.MaDH)
+                                    </a>
+                                </td>
+                                <td class="p-3.5 text-muted text-[11px]">
+                                    @LocalizationHelper.FormatDateTime(dh.NgayDat)
+                                </td>
+                                <td class="p-3.5 text-right font-bold text-charcoal">
+                                    @LocalizationHelper.FormatCurrency(dh.TongThanhToan)
+                                </td>
+                                <td class="p-3.5 text-center">
+                                    <partial name="_StatusBadge" model="dh.TrangThai" />
+                                </td>
+                                <td class="p-3.5 text-center">
+                                    <div class="inline-flex flex-col items-center gap-1">
+                                        <partial name="_StatusBadge" model='("ThanhToan", dh.TrangThaiThanhToan)' />
+                                        @if (!string.IsNullOrEmpty(dh.TrangThaiHoanTien) && dh.TrangThaiHoanTien != TrangThaiHoanTienConstant.KhongCan)
+                                        {
+                                            <partial name="_StatusBadge" model='("HoanTien", dh.TrangThaiHoanTien)' />
+                                        }
+                                    </div>
+                                </td>
+                                <td class="p-3.5 text-right">
+                                    <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@dh.MaDH"
+                                       class="px-2.5 py-1 text-primary hover:bg-pastel/40 font-bold rounded-btn transition inline-flex items-center gap-1">
+                                        <i class="ph-bold ph-eye text-xs"></i> @L["Common_Detail"]
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal xác nhận Khóa / Mở khóa -->
+<div id="statusModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div id="statusModalIconBox" class="w-10 h-10 rounded-full bg-pastel text-primary flex items-center justify-center shrink-0">
+                <i id="statusModalIcon" class="ph-bold ph-shield-warning text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="statusModalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+            <button type="button" id="btnStatusCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Cancel"]
+            </button>
+            <button type="button" id="btnStatusConfirm" class="px-4 py-2 text-xs font-bold rounded-btn transition shadow-sm">
+                @L["Common_Save"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = document.getElementById('statusModal');
+            var msgEl = document.getElementById('statusModalMessage');
+            var btnCancel = document.getElementById('btnStatusCancel');
+            var btnConfirm = document.getElementById('btnStatusConfirm');
+            var iconBox = document.getElementById('statusModalIconBox');
+            var iconEl = document.getElementById('statusModalIcon');
+            var currentForm = null;
+
+            document.querySelectorAll('.btn-toggle-customer').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var msg = this.dataset.message || '';
+                    var confirmText = this.dataset.confirmText || '';
+                    var confirmClass = this.dataset.confirmClass || 'bg-primary text-white';
+
+                    currentForm = this.closest('form');
+                    msgEl.textContent = msg;
+
+                    btnConfirm.textContent = confirmText;
+                    btnConfirm.className = 'px-4 py-2 text-xs font-bold rounded-btn transition shadow-sm ' + confirmClass;
+
+                    if (confirmClass.includes('statusDanger')) {
+                        iconBox.className = 'w-10 h-10 rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center shrink-0';
+                        iconEl.className = 'ph-bold ph-lock text-xl';
+                    } else {
+                        iconBox.className = 'w-10 h-10 rounded-full bg-[#E6F4EE] text-statusSuccess flex items-center justify-center shrink-0';
+                        iconEl.className = 'ph-bold ph-lock-open text-xl';
+                    }
+
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            btnCancel.addEventListener('click', function () {
+                modal.classList.add('hidden');
+                currentForm = null;
+            });
+
+            btnConfirm.addEventListener('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+        });
+    </script>
+}

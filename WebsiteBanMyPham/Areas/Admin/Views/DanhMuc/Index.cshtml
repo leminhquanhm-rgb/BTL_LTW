@@ -100,7 +100,7 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr class="hover:bg-cream/40 transition">
-                                <td class="p-3.5 font-mono text-muted">#@item.MaDM</td>
+                                <td class="p-3.5 font-mono text-muted">#@(item.MaDM)</td>
                                 <td class="p-3.5 font-bold text-charcoal">@item.TenDM</td>
                                 <td class="p-3.5 text-muted max-w-xs truncate" title="@item.MoTa">
                                     @(string.IsNullOrWhiteSpace(item.MoTa) ? "—" : item.MoTa)

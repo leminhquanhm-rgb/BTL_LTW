@@ -71,9 +71,16 @@
 
         <!-- Thẻ 4: Tổng Khách Hàng -->
         <div class="bg-[#F7EFE8] p-5 rounded-card border border-borderLight shadow-soft space-y-1">
-            <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Customers_Total"]</span>
-            <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongKhachHang @L["Admin_Dashboard_Unit_Customer"]</p>
-            <p class="text-xs text-charcoal font-medium">@string.Format(L["Admin_Dashboard_Customers_NewThisMonth"].Value, Model.SoKhachHangMoiThangNay)</p>
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-charcoal uppercase">@L["Admin_Dashboard_Customers_Total"]</span>
+                <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index" class="text-xs text-primary font-bold hover:underline" title="@L["Admin_Nav_Customers"]">
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+            </div>
+            <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index" class="block hover:opacity-80 transition">
+                <p class="text-2xl font-bold text-charcoal pt-1">@Model.TongKhachHang @L["Admin_Dashboard_Unit_Customer"]</p>
+                <p class="text-xs text-charcoal font-medium">@string.Format(L["Admin_Dashboard_Customers_NewThisMonth"].Value, Model.SoKhachHangMoiThangNay)</p>
+            </a>
         </div>
 
     </div>

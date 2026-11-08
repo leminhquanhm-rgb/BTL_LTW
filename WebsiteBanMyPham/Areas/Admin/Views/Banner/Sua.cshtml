@@ -1,0 +1,142 @@
+@model WebsiteBanMyPham.ViewModels.Admin.BannerAdminFormViewModel
+@{
+    ViewData["Title"] = L["Admin_Banner_Edit"].Value;
+}
+
+<div class="max-w-2xl mx-auto space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="flex items-center justify-between">
+        <div>
+            <a asp-area="Admin" asp-controller="Banner" asp-action="Index" class="text-xs text-muted hover:text-primary transition flex items-center gap-1 mb-1">
+                <i class="ph ph-arrow-left"></i> @L["Common_Back"]
+            </a>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Banner_Edit"]</h1>
+            <p class="text-xs text-muted">ID: #@(Model.MaBanner)</p>
+        </div>
+    </div>
+
+    <!-- Form Chỉnh sửa Banner -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft">
+        <form asp-area="Admin" asp-controller="Banner" asp-action="Sua" asp-route-id="@Model.MaBanner" method="post" enctype="multipart/form-data" class="space-y-5">
+            <input type="hidden" asp-for="MaBanner" />
+            <input type="hidden" asp-for="DuongDanAnh" />
+
+            <div asp-validation-summary="ModelOnly" class="p-3.5 rounded-btn bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs font-semibold"></div>
+
+            <!-- Ảnh Banner hiện tại & Thay ảnh mới -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-2">@L["Admin_Banner_Col_Image"]</label>
+                <div class="space-y-3">
+                    <!-- Ảnh hiện tại -->
+                    @if (!string.IsNullOrEmpty(Model.DuongDanAnh))
+                    {
+                        <div>
+                            <span class="text-[11px] text-muted block mb-1">Ảnh hiện tại:</span>
+                            <div class="w-full aspect-[16/7] rounded overflow-hidden border border-borderLight bg-cream max-w-md">
+                                <img src="@Model.DuongDanAnh" alt="Current Banner"
+                                     onerror="this.src='/images/placeholder.svg'"
+                                     class="w-full h-full object-cover" />
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Chọn ảnh mới thay thế -->
+                    <div>
+                        <span class="text-[11px] text-muted block mb-1">Chọn ảnh mới (nếu muốn thay đổi):</span>
+                        <input asp-for="FileAnh" type="file" accept="image/*" id="bannerFileInput"
+                               class="w-full text-xs p-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                        <span asp-validation-for="FileAnh" class="text-[11px] text-statusDanger block mt-0.5"></span>
+                    </div>
+
+                    <!-- Khung xem trước ảnh mới -->
+                    <div id="imagePreviewContainer" class="hidden">
+                        <span class="text-[11px] text-primary font-semibold block mb-1">Xem trước ảnh mới:</span>
+                        <div class="w-full aspect-[16/7] rounded overflow-hidden border border-primary/40 bg-cream max-w-md">
+                            <img id="imagePreview" src="#" alt="Preview" class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tiêu đề Banner -->
+            <div>
+                <label asp-for="TieuDe" class="block text-xs font-semibold text-charcoal mb-1">
+                    @L["Admin_Banner_Col_Title"]
+                </label>
+                <input asp-for="TieuDe" maxlength="150"
+                       class="w-full text-xs p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                <span asp-validation-for="TieuDe" class="text-[11px] text-statusDanger block mt-0.5"></span>
+            </div>
+
+            <!-- Liên kết khi click -->
+            <div>
+                <label asp-for="LienKet" class="block text-xs font-semibold text-charcoal mb-1">
+                    @L["Admin_Banner_Col_Link"]
+                </label>
+                <input asp-for="LienKet" maxlength="255"
+                       class="w-full text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                <span asp-validation-for="LienKet" class="text-[11px] text-statusDanger block mt-0.5"></span>
+                <span class="text-[11px] text-muted block mt-0.5">@L["Admin_Banner_LinkHint"]</span>
+            </div>
+
+            <!-- Thứ tự hiển thị -->
+            <div>
+                <label asp-for="ThuTu" class="block text-xs font-semibold text-charcoal mb-1">
+                    @L["Admin_Banner_Col_Order"]
+                </label>
+                <input asp-for="ThuTu" type="number" min="0" max="999"
+                       class="w-32 text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                <span asp-validation-for="ThuTu" class="text-[11px] text-statusDanger block mt-0.5"></span>
+            </div>
+
+            <!-- Trạng thái hoạt động -->
+            <div class="pt-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input asp-for="TrangThai" type="checkbox"
+                           class="w-4 h-4 rounded border-borderLight text-primary focus:ring-primary/20 accent-primary" />
+                    <span class="text-xs font-semibold text-charcoal">@L["Admin_Filter_Active"]</span>
+                </label>
+            </div>
+
+            <!-- Nút thao tác -->
+            <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-borderLight">
+                <a asp-area="Admin" asp-controller="Banner" asp-action="Index"
+                   class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                    @L["Common_Cancel"]
+                </a>
+                <button type="submit" class="px-5 py-2 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                    <i class="ph-bold ph-floppy-disk text-sm"></i> @L["Common_Save"]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var fileInput = document.getElementById('bannerFileInput');
+            var previewContainer = document.getElementById('imagePreviewContainer');
+            var previewImg = document.getElementById('imagePreview');
+
+            if (fileInput && previewContainer && previewImg) {
+                fileInput.addEventListener('change', function () {
+                    var file = this.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            previewImg.src = e.target.result;
+                            previewContainer.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewImg.src = '#';
+                        previewContainer.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+}
+

@@ -139,7 +139,7 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr class="hover:bg-cream/40 transition">
-                                <td class="p-3.5 font-mono text-muted">#@item.MaSP</td>
+                                <td class="p-3.5 font-mono text-muted">#@(item.MaSP)</td>
                                 <td class="p-3.5 text-center">
                                     <img src="@item.AnhChinh" alt="@item.TenSP" 
                                          onerror="this.src='/images/placeholder.svg'"

@@ -2393,4 +2393,269 @@
   <data name="Validation_DateRangeInvalid" xml:space="preserve">
     <value>Đến ngày không được nhỏ hơn Từ ngày.</value>
   </data>
+  <!-- Bước 6D: Khuyến mãi, Banner, Tài khoản khách hàng -->
+  <data name="Admin_Tab_Promotions" xml:space="preserve">
+    <value>Mã khuyến mãi</value>
+  </data>
+  <data name="Admin_Tab_Banners" xml:space="preserve">
+    <value>Banner quảng cáo</value>
+  </data>
+  <data name="Admin_Promo_Title" xml:space="preserve">
+    <value>Quản lý mã khuyến mãi</value>
+  </data>
+  <data name="Admin_Promo_List" xml:space="preserve">
+    <value>Danh sách mã khuyến mãi</value>
+  </data>
+  <data name="Admin_Promo_Add" xml:space="preserve">
+    <value>Tạo mã mới</value>
+  </data>
+  <data name="Admin_Promo_Edit" xml:space="preserve">
+    <value>Chỉnh sửa mã khuyến mãi</value>
+  </data>
+  <data name="Admin_Promo_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo mã, tên khuyến mãi...</value>
+  </data>
+  <data name="Admin_Promo_Col_Code" xml:space="preserve">
+    <value>Mã KM</value>
+  </data>
+  <data name="Admin_Promo_Col_Name" xml:space="preserve">
+    <value>Tên khuyến mãi</value>
+  </data>
+  <data name="Admin_Promo_Col_Type" xml:space="preserve">
+    <value>Loại giảm</value>
+  </data>
+  <data name="Admin_Promo_Col_Value" xml:space="preserve">
+    <value>Mức giảm</value>
+  </data>
+  <data name="Admin_Promo_Col_MaxDiscount" xml:space="preserve">
+    <value>Giảm tối đa</value>
+  </data>
+  <data name="Admin_Promo_Col_MinOrder" xml:space="preserve">
+    <value>Đơn tối thiểu</value>
+  </data>
+  <data name="Admin_Promo_Col_Time" xml:space="preserve">
+    <value>Thời gian áp dụng</value>
+  </data>
+  <data name="Admin_Promo_Col_Usage" xml:space="preserve">
+    <value>Lượt dùng</value>
+  </data>
+  <data name="Admin_Promo_Col_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Admin_Promo_Type_Percent" xml:space="preserve">
+    <value>Phần trăm (%)</value>
+  </data>
+  <data name="Admin_Promo_Type_Amount" xml:space="preserve">
+    <value>Số tiền cố định (đ)</value>
+  </data>
+  <data name="Admin_Promo_Unlimited" xml:space="preserve">
+    <value>Không giới hạn</value>
+  </data>
+  <data name="Admin_Promo_Status_Running" xml:space="preserve">
+    <value>Đang chạy</value>
+  </data>
+  <data name="Admin_Promo_Status_Upcoming" xml:space="preserve">
+    <value>Sắp diễn ra</value>
+  </data>
+  <data name="Admin_Promo_Status_Expired" xml:space="preserve">
+    <value>Hết hạn</value>
+  </data>
+  <data name="Admin_Promo_Status_OutOfUses" xml:space="preserve">
+    <value>Hết lượt</value>
+  </data>
+  <data name="Admin_Promo_Status_Disabled" xml:space="preserve">
+    <value>Tạm tắt</value>
+  </data>
+  <data name="Admin_Promo_StartDate" xml:space="preserve">
+    <value>Ngày bắt đầu</value>
+  </data>
+  <data name="Admin_Promo_EndDate" xml:space="preserve">
+    <value>Ngày kết thúc</value>
+  </data>
+  <data name="Admin_Promo_MaxUses" xml:space="preserve">
+    <value>Số lượt tối đa</value>
+  </data>
+  <data name="Admin_Promo_MaxUsesHint" xml:space="preserve">
+    <value>Để trống nếu không giới hạn lượt dùng</value>
+  </data>
+  <data name="Admin_Promo_CodeHint" xml:space="preserve">
+    <value>Chỉ gồm chữ cái và số (không dấu cách), tự động viết hoa</value>
+  </data>
+  <data name="Admin_Promo_CodeCannotChange" xml:space="preserve">
+    <value>Mã đã có lượt sử dụng trong đơn hàng, không thể thay đổi mã.</value>
+  </data>
+  <data name="Admin_Promo_ConditionsChangeNotice" xml:space="preserve">
+    <value>Lưu ý: Thay đổi điều kiện mã chỉ áp dụng cho các đơn đặt mới, không làm thay đổi các đơn hàng đã đặt trước đây.</value>
+  </data>
+  <data name="Admin_Promo_Delete_Confirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa mã khuyến mãi này? Thao tác không thể hoàn tác.</value>
+  </data>
+  <data name="Admin_Promo_Delete_HasOrders" xml:space="preserve">
+    <value>Mã khuyến mãi này đã được sử dụng trong đơn hàng, không thể xóa. Vui lòng chuyển sang trạng thái Ngừng hoạt động nếu không muốn tiếp tục áp dụng.</value>
+  </data>
+  <data name="Admin_Promo_AddSuccess" xml:space="preserve">
+    <value>Tạo mã khuyến mãi thành công.</value>
+  </data>
+  <data name="Admin_Promo_UpdateSuccess" xml:space="preserve">
+    <value>Cập nhật mã khuyến mãi thành công.</value>
+  </data>
+  <data name="Admin_Promo_DeleteSuccess" xml:space="preserve">
+    <value>Xóa mã khuyến mãi thành công.</value>
+  </data>
+  <data name="Admin_Promo_ToggleSuccess" xml:space="preserve">
+    <value>Thay đổi trạng thái mã khuyến mãi thành công.</value>
+  </data>
+  <data name="Admin_Promo_Error_DuplicateCode" xml:space="preserve">
+    <value>Mã khuyến mãi '{0}' đã tồn tại trong hệ thống. Vui lòng chọn mã khác.</value>
+  </data>
+  <data name="Admin_Promo_Error_MaxUsesLessThanUsed" xml:space="preserve">
+    <value>Số lượt tối đa mới ({0}) không được nhỏ hơn số lượt đã dùng hiện tại ({1}).</value>
+  </data>
+  <data name="Admin_Promo_Error_PercentValue" xml:space="preserve">
+    <value>Giá trị giảm theo phần trăm phải lớn hơn 0 và không vượt quá 100%.</value>
+  </data>
+  <data name="Admin_Promo_Error_AmountValue" xml:space="preserve">
+    <value>Số tiền giảm phải lớn hơn 0.</value>
+  </data>
+  <data name="Admin_Promo_Empty" xml:space="preserve">
+    <value>Không tìm thấy mã khuyến mãi nào phù hợp.</value>
+  </data>
+  <data name="Admin_Banner_Title" xml:space="preserve">
+    <value>Quản lý Banner quảng cáo</value>
+  </data>
+  <data name="Admin_Banner_List" xml:space="preserve">
+    <value>Danh sách Banner</value>
+  </data>
+  <data name="Admin_Banner_Add" xml:space="preserve">
+    <value>Thêm Banner mới</value>
+  </data>
+  <data name="Admin_Banner_Edit" xml:space="preserve">
+    <value>Chỉnh sửa Banner</value>
+  </data>
+  <data name="Admin_Banner_Col_Image" xml:space="preserve">
+    <value>Hình ảnh</value>
+  </data>
+  <data name="Admin_Banner_Col_Title" xml:space="preserve">
+    <value>Tiêu đề</value>
+  </data>
+  <data name="Admin_Banner_Col_Link" xml:space="preserve">
+    <value>Liên kết</value>
+  </data>
+  <data name="Admin_Banner_Col_Order" xml:space="preserve">
+    <value>Thứ tự</value>
+  </data>
+  <data name="Admin_Banner_Col_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Admin_Banner_ImageRequired" xml:space="preserve">
+    <value>Vui lòng chọn hình ảnh banner.</value>
+  </data>
+  <data name="Admin_Banner_LinkHint" xml:space="preserve">
+    <value>Đường dẫn nội bộ (bắt đầu bằng '/') hoặc URL tuyệt đối (http/https)</value>
+  </data>
+  <data name="Admin_Banner_LinkInvalid" xml:space="preserve">
+    <value>Liên kết không hợp lệ. Chỉ chấp nhận đường dẫn nội bộ (bắt đầu bằng '/', không chứa '\\') hoặc URL tuyệt đối http/https.</value>
+  </data>
+  <data name="Admin_Banner_Delete_Confirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa banner này? Thao tác không thể hoàn tác.</value>
+  </data>
+  <data name="Admin_Banner_AddSuccess" xml:space="preserve">
+    <value>Thêm banner thành công.</value>
+  </data>
+  <data name="Admin_Banner_UpdateSuccess" xml:space="preserve">
+    <value>Cập nhật banner thành công.</value>
+  </data>
+  <data name="Admin_Banner_DeleteSuccess" xml:space="preserve">
+    <value>Xóa banner thành công.</value>
+  </data>
+  <data name="Admin_Banner_ToggleSuccess" xml:space="preserve">
+    <value>Thay đổi trạng thái banner thành công.</value>
+  </data>
+  <data name="Admin_Banner_OrderSuccess" xml:space="preserve">
+    <value>Cập nhật thứ tự banner thành công.</value>
+  </data>
+  <data name="Admin_Banner_Empty" xml:space="preserve">
+    <value>Chưa có banner nào.</value>
+  </data>
+  <data name="Admin_Customer_Title" xml:space="preserve">
+    <value>Quản lý tài khoản khách hàng</value>
+  </data>
+  <data name="Admin_Customer_List" xml:space="preserve">
+    <value>Danh sách tài khoản khách hàng</value>
+  </data>
+  <data name="Admin_Customer_Detail_Title" xml:space="preserve">
+    <value>Chi tiết tài khoản khách hàng</value>
+  </data>
+  <data name="Admin_Customer_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo họ tên, email, số điện thoại...</value>
+  </data>
+  <data name="Admin_Customer_Col_Id" xml:space="preserve">
+    <value>Mã TK</value>
+  </data>
+  <data name="Admin_Customer_Col_FullName" xml:space="preserve">
+    <value>Họ tên</value>
+  </data>
+  <data name="Admin_Customer_Col_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Admin_Customer_Col_Phone" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
+  <data name="Admin_Customer_Col_Address" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
+  <data name="Admin_Customer_Col_CreatedDate" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="Admin_Customer_Col_OrderCount" xml:space="preserve">
+    <value>Số đơn hàng</value>
+  </data>
+  <data name="Admin_Customer_Col_TotalSpent" xml:space="preserve">
+    <value>Tổng chi tiêu</value>
+  </data>
+  <data name="Admin_Customer_Col_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Admin_Customer_Status_Active" xml:space="preserve">
+    <value>Hoạt động</value>
+  </data>
+  <data name="Admin_Customer_Status_Locked" xml:space="preserve">
+    <value>Đã khóa</value>
+  </data>
+  <data name="Admin_Customer_Action_Lock" xml:space="preserve">
+    <value>Khóa tài khoản</value>
+  </data>
+  <data name="Admin_Customer_Action_Unlock" xml:space="preserve">
+    <value>Mở khóa tài khoản</value>
+  </data>
+  <data name="Admin_Customer_LockConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn KHÓA tài khoản của khách hàng '{0}'? Khách hàng sẽ bị đăng xuất ngay lập tức và không thể đăng nhập lại.</value>
+  </data>
+  <data name="Admin_Customer_UnlockConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn MỞ KHÓA tài khoản của khách hàng '{0}'? Khách hàng sẽ có thể đăng nhập và mua sắm bình thường.</value>
+  </data>
+  <data name="Admin_Customer_LockSuccess" xml:space="preserve">
+    <value>Đã khóa tài khoản khách hàng thành công.</value>
+  </data>
+  <data name="Admin_Customer_UnlockSuccess" xml:space="preserve">
+    <value>Đã mở khóa tài khoản khách hàng thành công.</value>
+  </data>
+  <data name="Admin_Customer_RecentOrders" xml:space="preserve">
+    <value>Lịch sử 5 đơn hàng gần nhất</value>
+  </data>
+  <data name="Admin_Customer_NoOrders" xml:space="preserve">
+    <value>Khách hàng chưa có đơn hàng nào.</value>
+  </data>
+  <data name="Admin_Customer_CompletedOrders" xml:space="preserve">
+    <value>Đơn hoàn thành</value>
+  </data>
+  <data name="Admin_Customer_Empty" xml:space="preserve">
+    <value>Không tìm thấy tài khoản khách hàng nào phù hợp.</value>
+  </data>
+  <data name="Admin_Customer_Error_CannotModifyAdmin" xml:space="preserve">
+    <value>Không thể thực hiện thao tác trên tài khoản Quản trị viên.</value>
+  </data>
+  <data name="Admin_Customer_TotalSpentNote" xml:space="preserve">
+    <value>Chỉ tính đơn hoàn thành</value>
+  </data>
 </root>

@@ -1,0 +1,308 @@
+@model WebsiteBanMyPham.ViewModels.PaginatedList<WebsiteBanMyPham.ViewModels.Admin.KhachHangAdminListItemViewModel>
+@{
+    ViewData["Title"] = L["Admin_Customer_Title"].Value;
+    var filter = ViewBag.Filter as WebsiteBanMyPham.ViewModels.Admin.KhachHangAdminFilterViewModel ?? new();
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Header quản lý -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-5 rounded-card border border-borderLight shadow-soft">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Customer_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_Customer_List"] (@Model.TotalItems)</p>
+        </div>
+    </div>
+
+    <!-- Khối Bộ lọc -->
+    <form method="get" asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index"
+          class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Trạng thái -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Status"]</label>
+                <select name="trangThai" class="w-full text-xs px-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition">
+                    <option value="">@L["Admin_Filter_AllStatus"]</option>
+                    <option value="true" selected="@(filter.TrangThai == true)">@L["Admin_Customer_Status_Active"]</option>
+                    <option value="false" selected="@(filter.TrangThai == false)">@L["Admin_Customer_Status_Locked"]</option>
+                </select>
+            </div>
+
+            <!-- Từ khóa tìm kiếm -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Search"]</label>
+                <div class="relative">
+                    <input type="text" name="keyword" value="@filter.Keyword"
+                           placeholder="@L["Admin_Customer_SearchPlaceholder"]"
+                           class="w-full text-xs pl-8 pr-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                    <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-1">
+            @if (!string.IsNullOrWhiteSpace(filter.Keyword) || filter.TrangThai.HasValue)
+            {
+                <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index"
+                   class="px-4 py-2 text-xs font-semibold text-muted hover:text-charcoal transition">
+                    @L["Admin_Filter_Reset"]
+                </a>
+            }
+            <button type="submit"
+                    class="px-4 py-2 bg-charcoal hover:bg-charcoal/90 text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                <i class="ph-bold ph-funnel text-sm"></i> @L["Common_Filter"]
+            </button>
+        </div>
+    </form>
+
+    <!-- Danh sách tài khoản khách hàng -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        @if (Model.Items == null || !Model.Items.Any())
+        {
+            <div class="p-12 text-center text-muted">
+                <i class="ph ph-users text-4xl mb-2 text-charcoal/30"></i>
+                <p class="text-xs font-medium">@L["Admin_Customer_Empty"]</p>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-cream/60 border-b border-borderLight text-charcoal font-bold uppercase tracking-wider text-[11px]">
+                            <th class="p-3.5">@L["Admin_Customer_Col_Id"]</th>
+                            <th class="p-3.5">@L["Admin_Customer_Col_FullName"]</th>
+                            <th class="p-3.5">@L["Admin_Customer_Col_Email"]</th>
+                            <th class="p-3.5">@L["Admin_Customer_Col_Phone"]</th>
+                            <th class="p-3.5">@L["Admin_Customer_Col_CreatedDate"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Customer_Col_OrderCount"]</th>
+                            <th class="p-3.5 text-right">@L["Admin_Customer_Col_TotalSpent"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Customer_Col_Status"]</th>
+                            <th class="p-3.5 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="hover:bg-cream/30 transition">
+                                <td class="p-3.5 font-mono text-muted text-[11px]">
+                                    #TK@(item.MaTK.ToString("D4"))
+                                </td>
+                                <td class="p-3.5">
+                                    <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="ChiTiet" asp-route-id="@item.MaTK"
+                                       class="font-bold text-charcoal hover:text-primary transition">
+                                        @item.HoTen
+                                    </a>
+                                </td>
+                                <td class="p-3.5 text-charcoal">
+                                    @item.Email
+                                </td>
+                                <td class="p-3.5 text-charcoal">
+                                    @(string.IsNullOrWhiteSpace(item.SoDienThoai) ? "—" : item.SoDienThoai)
+                                </td>
+                                <td class="p-3.5 text-muted text-[11px]">
+                                    @LocalizationHelper.FormatDateTime(item.NgayTao)
+                                </td>
+                                <td class="p-3.5 text-center font-bold text-charcoal">
+                                    @item.SoDonHang
+                                </td>
+                                <td class="p-3.5 text-right font-bold text-charcoal">
+                                    @LocalizationHelper.FormatCurrency(item.TongChiTieu)
+                                </td>
+                                <td class="p-3.5 text-center">
+                                    @if (item.TrangThai)
+                                    {
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#E6F4EE] text-statusSuccess border border-statusSuccess/20">
+                                            @L["Admin_Customer_Status_Active"]
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#FCEAEA] text-statusDanger border border-statusDanger/20">
+                                            @L["Admin_Customer_Status_Locked"]
+                                        </span>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-right">
+                                    <div class="inline-flex items-center gap-1.5 justify-end">
+                                        <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="ChiTiet" asp-route-id="@item.MaTK"
+                                           class="p-1.5 text-charcoal hover:text-primary hover:bg-cream rounded-btn transition"
+                                           title="@L["Common_Detail"]">
+                                            <i class="ph-bold ph-eye text-sm"></i>
+                                        </a>
+
+                                        <form method="post" asp-area="Admin" asp-controller="TaiKhoan" asp-action="DatTrangThai" class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.MaTK" />
+                                            <input type="hidden" name="trangThaiMoi" value="@((!item.TrangThai).ToString().ToLower())" />
+                                            <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                            @if (item.TrangThai)
+                                            {
+                                                <button type="button"
+                                                        class="btn-toggle-customer p-1.5 text-statusDanger hover:bg-statusDanger/10 rounded-btn transition"
+                                                        data-message="@string.Format(L["Admin_Customer_LockConfirm"].Value, item.HoTen)"
+                                                        data-confirm-text="@L["Admin_Customer_Action_Lock"]"
+                                                        data-confirm-class="bg-statusDanger hover:bg-statusDanger/90 text-white"
+                                                        title="@L["Admin_Customer_Action_Lock"]">
+                                                    <i class="ph-bold ph-lock text-sm"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button"
+                                                        class="btn-toggle-customer p-1.5 text-statusSuccess hover:bg-statusSuccess/10 rounded-btn transition"
+                                                        data-message="@string.Format(L["Admin_Customer_UnlockConfirm"].Value, item.HoTen)"
+                                                        data-confirm-text="@L["Admin_Customer_Action_Unlock"]"
+                                                        data-confirm-class="bg-statusSuccess hover:bg-statusSuccess/90 text-white"
+                                                        title="@L["Admin_Customer_Action_Unlock"]">
+                                                    <i class="ph-bold ph-lock-open text-sm"></i>
+                                                </button>
+                                            }
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <p class="text-muted">
+                        @L["Pagination_Page"] @Model.PageIndex / @Model.TotalPages
+                        (@Model.TotalItems @L["Admin_Dashboard_Unit_Customer"])
+                    </p>
+                    <div class="inline-flex items-center gap-1">
+                        <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index"
+                           asp-route-pageIndex="@(Model.PageIndex - 1)"
+                           asp-route-keyword="@filter.Keyword"
+                           asp-route-trangThai="@filter.TrangThai"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight @(Model.HasPreviousPage ? "bg-surface text-charcoal hover:bg-cream" : "opacity-40 pointer-events-none text-muted") transition">
+                            @L["Pagination_Previous"]
+                        </a>
+
+                        @for (int p = 1; p <= Model.TotalPages; p++)
+                        {
+                            if (p == Model.PageIndex)
+                            {
+                                <span class="px-3 py-1.5 rounded-btn bg-primary text-white font-bold">@p</span>
+                            }
+                            else if (p == 1 || p == Model.TotalPages || (p >= Model.PageIndex - 2 && p <= Model.PageIndex + 2))
+                            {
+                                <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index"
+                                   asp-route-pageIndex="@p"
+                                   asp-route-keyword="@filter.Keyword"
+                                   asp-route-trangThai="@filter.TrangThai"
+                                   class="px-3 py-1.5 rounded-btn border border-borderLight bg-surface text-charcoal hover:bg-cream transition">
+                                    @p
+                                </a>
+                            }
+                            else if (p == Model.PageIndex - 3 || p == Model.PageIndex + 3)
+                            {
+                                <span class="px-2 py-1 text-muted">...</span>
+                            }
+                        }
+
+                        <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="Index"
+                           asp-route-pageIndex="@(Model.PageIndex + 1)"
+                           asp-route-keyword="@filter.Keyword"
+                           asp-route-trangThai="@filter.TrangThai"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight @(Model.HasNextPage ? "bg-surface text-charcoal hover:bg-cream" : "opacity-40 pointer-events-none text-muted") transition">
+                            @L["Pagination_Next"]
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Modal xác nhận Khóa / Mở khóa -->
+<div id="statusModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div id="statusModalIconBox" class="w-10 h-10 rounded-full bg-pastel text-primary flex items-center justify-center shrink-0">
+                <i id="statusModalIcon" class="ph-bold ph-shield-warning text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="statusModalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+            <button type="button" id="btnStatusCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Cancel"]
+            </button>
+            <button type="button" id="btnStatusConfirm" class="px-4 py-2 text-xs font-bold rounded-btn transition shadow-sm">
+                @L["Common_Save"]
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = document.getElementById('statusModal');
+            var msgEl = document.getElementById('statusModalMessage');
+            var btnCancel = document.getElementById('btnStatusCancel');
+            var btnConfirm = document.getElementById('btnStatusConfirm');
+            var iconBox = document.getElementById('statusModalIconBox');
+            var iconEl = document.getElementById('statusModalIcon');
+            var currentForm = null;
+
+            document.querySelectorAll('.btn-toggle-customer').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var msg = this.dataset.message || '';
+                    var confirmText = this.dataset.confirmText || '';
+                    var confirmClass = this.dataset.confirmClass || 'bg-primary text-white';
+
+                    currentForm = this.closest('form');
+                    msgEl.textContent = msg;
+
+                    btnConfirm.textContent = confirmText;
+                    btnConfirm.className = 'px-4 py-2 text-xs font-bold rounded-btn transition shadow-sm ' + confirmClass;
+
+                    if (confirmClass.includes('statusDanger')) {
+                        iconBox.className = 'w-10 h-10 rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center shrink-0';
+                        iconEl.className = 'ph-bold ph-lock text-xl';
+                    } else {
+                        iconBox.className = 'w-10 h-10 rounded-full bg-[#E6F4EE] text-statusSuccess flex items-center justify-center shrink-0';
+                        iconEl.className = 'ph-bold ph-lock-open text-xl';
+                    }
+
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            btnCancel.addEventListener('click', function () {
+                modal.classList.add('hidden');
+                currentForm = null;
+            });
+
+            btnConfirm.addEventListener('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+        });
+    </script>
+}

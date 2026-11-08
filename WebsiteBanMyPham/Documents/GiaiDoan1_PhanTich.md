@@ -77,7 +77,7 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 | 10 | Quản lý phương thức thanh toán | Thêm, sửa và quản lý các phương thức thanh toán được hỗ trợ. |
 | 11 | Quản lý khuyến mãi | Tạo, sửa, xóa và quản lý mã khuyến mãi. |
 | 12 | Quản lý khách hàng | Xem thông tin, cập nhật trạng thái và quản lý tài khoản khách hàng. |
-| 13 | Quản lý tài khoản Admin | Quản lý các tài khoản quản trị viên. |
+| 13 | Quản lý tài khoản Admin | Không quản lý trên web; tài khoản Admin được tạo trực tiếp trong CSDL khi triển khai để tránh Admin tự khóa chính mình hoặc mất quyền quản trị. |
 | 14 | Quản lý đánh giá | Kiểm tra, duyệt hoặc từ chối đánh giá của khách hàng. |
 | 15 | Quản lý khiếu nại | Tiếp nhận, phản hồi và cập nhật trạng thái xử lý khiếu nại. |
 | 16 | Thống kê, báo cáo | Thống kê doanh thu, đơn hàng, khách hàng, sản phẩm bán chạy và các số liệu kinh doanh. |
@@ -117,7 +117,7 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 | Quản lý phương thức thanh toán | — | — | ✓ |
 | Quản lý chương trình khuyến mãi | — | — | ✓ |
 | Quản lý tài khoản khách hàng | — | — | ✓ |
-| Quản lý tài khoản Admin | — | — | ✓ |
+| Quản lý tài khoản Admin (không làm trên web, tài khoản Admin tạo trong CSDL khi triển khai) | — | — | — |
 | Duyệt đánh giá sản phẩm | — | — | ✓ |
 | Xử lý khiếu nại | — | — | ✓ |
 | Xem Dashboard | — | — | ✓ |
