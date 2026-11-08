@@ -124,12 +124,6 @@
                                     <p class="text-[11px] text-muted">@L[$"Payment_Method_{pt.TenPT}_Desc"]</p>
                                 </div>
                             </div>
-                            @if (pt.IsOnline && Model.ChoPhepMoPhong)
-                            {
-                                <span class="px-2.5 py-1 rounded bg-cream border border-borderLight text-primary text-[10px] font-bold shrink-0">
-                                    @L["Payment_Method_Online_Badge"]
-                                </span>
-                            }
                         </label>
                     }
                 </div>
@@ -251,21 +245,6 @@
                 <div class="flex justify-between text-muted">
                     <span>@L["Checkout_Discount"]</span>
                     <span id="checkout-discount" class="font-bold text-statusSuccess">-@LocHelper.FormatCurrency(Model.TienGiam)</span>
-                </div>
-                <div class="flex justify-between items-center text-xs pt-1">
-                    <span class="text-muted">@L["Product_StockRemaining"]</span>
-                    @if (Model.HopLeDeDatHang)
-                    {
-                        <span class="font-bold text-statusSuccess flex items-center gap-1">
-                            <i class="ph-bold ph-check"></i> @L["Product_InStock"]
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="font-bold text-statusDanger flex items-center gap-1">
-                            <i class="ph-bold ph-warning"></i> @L["Checkout_StockWarning"]
-                        </span>
-                    }
                 </div>
             </div>
 

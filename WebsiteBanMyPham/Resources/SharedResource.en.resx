@@ -370,7 +370,7 @@
     <value>An error occurred while confirming refund.</value>
   </data>
   <data name="Msg_Order_SimulateDisabled" xml:space="preserve">
-    <value>Online payment simulation is currently disabled in the system.</value>
+    <value>Online payment feature is currently disabled.</value>
   </data>
   <data name="Msg_Order_SimulateNotFoundOrNotOwned" xml:space="preserve">
     <value>Order not found or does not belong to you.</value>
@@ -1201,10 +1201,7 @@
     <value>Pay in cash upon delivery</value>
   </data>
   <data name="Payment_Method_Online_Desc" xml:space="preserve">
-    <value>Simulated online payment (Sandbox) - no real money deducted</value>
-  </data>
-  <data name="Payment_Method_Online_Badge" xml:space="preserve">
-    <value>Simulated</value>
+    <value>Pay by scanning a QR code</value>
   </data>
   <data name="OrderSuccess_PageTitle" xml:space="preserve">
     <value>Order Placed Successfully</value>
@@ -1237,7 +1234,7 @@
     <value>Order Code:</value>
   </data>
   <data name="PaymentSim_BtnSuccess" xml:space="preserve">
-    <value>Simulate: Payment SUCCESS</value>
+    <value>Pay now</value>
   </data>
   <data name="PaymentSim_BtnBack" xml:space="preserve">
     <value>Back to Order</value>
@@ -1278,6 +1275,9 @@
   <data name="Payment_QrFallback" xml:space="preserve">
     <value>Payment QR code</value>
   </data>
+  <data name="Payment_RecipientInfo" xml:space="preserve">
+    <value>Delivery information:</value>
+  </data>
   <data name="PaymentSim_FailedMessage" xml:space="preserve">
     <value>Online payment failed. You can retry payment or choose another method.</value>
   </data>
@@ -1285,7 +1285,7 @@
     <value>Online payment succeeded!</value>
   </data>
   <data name="PaymentSim_NotAllowed" xml:space="preserve">
-    <value>Simulated payment feature is currently disabled.</value>
+    <value>Online payment feature is currently disabled.</value>
   </data>
   <data name="Product_BuyNowAdminWarning" xml:space="preserve">
     <value>Administrators cannot use shopping features.</value>

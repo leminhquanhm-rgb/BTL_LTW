@@ -370,7 +370,7 @@
     <value>Đã xảy ra lỗi khi xác nhận hoàn tiền.</value>
   </data>
   <data name="Msg_Order_SimulateDisabled" xml:space="preserve">
-    <value>Chức năng thanh toán trực tuyến mô phỏng hiện đang bị tắt trên hệ thống.</value>
+    <value>Chức năng thanh toán trực tuyến hiện đang tạm tắt.</value>
   </data>
   <data name="Msg_Order_SimulateNotFoundOrNotOwned" xml:space="preserve">
     <value>Không tìm thấy đơn hàng hoặc đơn không thuộc về bạn.</value>
@@ -1201,10 +1201,7 @@
     <value>Thanh toán tiền mặt khi nhận hàng</value>
   </data>
   <data name="Payment_Method_Online_Desc" xml:space="preserve">
-    <value>Thanh toán trực tuyến mô phỏng (Sandbox) - không trừ tiền thật</value>
-  </data>
-  <data name="Payment_Method_Online_Badge" xml:space="preserve">
-    <value>Mô phỏng</value>
+    <value>Quét mã QR để thanh toán</value>
   </data>
   <data name="OrderSuccess_PageTitle" xml:space="preserve">
     <value>Đặt Hàng Thành Công</value>
@@ -1237,7 +1234,7 @@
     <value>Mã đơn hàng:</value>
   </data>
   <data name="PaymentSim_BtnSuccess" xml:space="preserve">
-    <value>Xác nhận: Thanh toán THÀNH CÔNG</value>
+    <value>Thanh toán ngay</value>
   </data>
   <data name="PaymentSim_BtnBack" xml:space="preserve">
     <value>Quay lại đơn hàng</value>
@@ -1278,6 +1275,9 @@
   <data name="Payment_QrFallback" xml:space="preserve">
     <value>Mã QR thanh toán</value>
   </data>
+  <data name="Payment_RecipientInfo" xml:space="preserve">
+    <value>Thông tin nhận hàng:</value>
+  </data>
   <data name="PaymentSim_FailedMessage" xml:space="preserve">
     <value>Thanh toán trực tuyến thất bại. Bạn có thể thử thanh toán lại hoặc chọn phương thức khác.</value>
   </data>
@@ -1285,7 +1285,7 @@
     <value>Thanh toán trực tuyến thành công!</value>
   </data>
   <data name="PaymentSim_NotAllowed" xml:space="preserve">
-    <value>Chức năng thanh toán mô phỏng hiện không được bật.</value>
+    <value>Chức năng thanh toán trực tuyến hiện không được bật.</value>
   </data>
   <data name="Product_BuyNowAdminWarning" xml:space="preserve">
     <value>Quản trị viên không sử dụng chức năng mua hàng.</value>
