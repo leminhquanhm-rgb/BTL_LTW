@@ -2992,4 +2992,10 @@
   <data name="Jqv_Step" xml:space="preserve">
     <value>Vui lòng nhập bội số của {0}.</value>
   </data>
+  <data name="Product_RecentlyViewed_Title" xml:space="preserve">
+    <value>Sản phẩm bạn đã xem</value>
+  </data>
+  <data name="Product_RecentlyViewed_Subtitle" xml:space="preserve">
+    <value>Các sản phẩm bạn vừa xem gần đây trong phiên làm việc</value>
+  </data>
 </root>

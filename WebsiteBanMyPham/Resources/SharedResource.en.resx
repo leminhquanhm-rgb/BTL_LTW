@@ -2992,4 +2992,10 @@
   <data name="Jqv_Step" xml:space="preserve">
     <value>Please enter a multiple of {0}.</value>
   </data>
+  <data name="Product_RecentlyViewed_Title" xml:space="preserve">
+    <value>Recently viewed</value>
+  </data>
+  <data name="Product_RecentlyViewed_Subtitle" xml:space="preserve">
+    <value>Products you recently viewed during this session</value>
+  </data>
 </root>

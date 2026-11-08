@@ -53,7 +53,7 @@ Khi scaffold:
 -   Không đưa Connection String chứa thông tin bí mật vào mã nguồn: dùng tùy chọn --no-onconfiguring (hoặc xóa OnConfiguring sau khi scaffold) và cấu hình kết nối qua Program.cs với appsettings.Development.json, User Secrets hoặc biến môi trường.
 -   Sau khi scaffold phải đối chiếu Model với cấu trúc SQL thực tế.
 
-### 2.3. Xác thực và mật khẩu
+### 2.3. Xác thực, phiên và trạng thái
 
 Sử dụng:
 
@@ -62,6 +62,9 @@ Sử dụng:
 -   Claims để lưu thông tin tài khoản và vai trò.
 -   [Authorize] để kiểm soát quyền.
 -   [Authorize(Roles = "QuanTriVien")] để bảo vệ Admin.
+-   Cookie: dùng cho xác thực đăng nhập (Cookie Authentication) và lưu tùy chọn ngôn ngữ hiển thị (CookieRequestCultureProvider).
+-   ASP.NET Core Session: dùng để lưu trữ danh sách sản phẩm đã xem gần đây (SanPhamDaXem) trong phiên duyệt web (tối đa lưu 8, hiển thị tối đa 6; không dùng cho giỏ hàng vì giỏ hàng lưu trong CSDL).
+-   TempData: dùng cho truyền thông báo một lần giữa các request theo mô hình Post/Redirect/Get (PRG).
 
 Không sử dụng ASP.NET Identity.
 
@@ -1025,7 +1028,7 @@ Bước 3 – ViewModel và Services (chia hai phần: 3A tài khoản và đăn
 -   Cài BCrypt.Net-Next; cấu hình Cookie Authentication và Authorization trong Program.cs (LoginPath, AccessDeniedPath, Role Claims).
 -   Tạo ViewModel.
 -   Tạo cấu trúc Services khi cần.
--   Không cấu hình Session: giỏ hàng lưu trong database.
+-   Cấu hình Session trong Program.cs cho tính năng Sản phẩm đã xem gần đây (giỏ hàng lưu trong CSDL).
 -   Không tự ý sửa Model scaffold.
 -   Không dùng Migrations.
 

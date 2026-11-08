@@ -20,6 +20,24 @@ namespace WebsiteBanMyPham
             // Cấu hình MemoryCache cho ứng dụng (dùng cho xác thực Cookie và tra cứu nhanh)
             builder.Services.AddMemoryCache();
 
+            // Bộ nhớ đệm phân tán trong bộ nhớ RAM phục vụ lưu trữ dữ liệu Session
+            builder.Services.AddDistributedMemoryCache();
+
+            // Cấu hình Session của ASP.NET Core (dùng cho tính năng danh sách sản phẩm đã xem gần đây)
+            builder.Services.AddSession(options =>
+            {
+                // Thời gian hết hạn phiên làm việc nếu không có tương tác là 30 phút
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                // Tên Cookie định danh phiên Session của website
+                options.Cookie.Name = ".WebsiteBanMyPham.Session";
+                // Ngăn chặn truy cập Cookie Session từ JavaScript phía client để chống tấn công XSS
+                options.Cookie.HttpOnly = true;
+                // Đánh dấu Cookie Session là thiết yếu để hoạt động độc lập với consent tracking
+                options.Cookie.IsEssential = true;
+                // Áp dụng chính sách bảo mật cho Cookie đồng bộ theo giao thức của request (HTTP/HTTPS)
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
+
             // Cấu hình Đa ngôn ngữ (Localization)
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -203,6 +221,9 @@ namespace WebsiteBanMyPham
             localizationOptions.RequestCultureProviders.Add(new CookieRequestCultureProvider());
 
             app.UseRequestLocalization(localizationOptions);
+
+            // Kích hoạt middleware Session trong HTTP pipeline (đặt sau UseRouting và trước UseAuthentication/UseAuthorization)
+            app.UseSession();
 
             // Authentication phải đặt trước Authorization
             app.UseAuthentication();

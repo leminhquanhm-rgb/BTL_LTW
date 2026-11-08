@@ -148,6 +148,7 @@ namespace WebsiteBanMyPham.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DangXuat()
         {
+            HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "TrangChu");
         }

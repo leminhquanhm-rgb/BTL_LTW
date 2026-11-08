@@ -227,6 +227,9 @@
             }
         </div>
     </div>
+
+    <!-- Khối sản phẩm đã xem gần đây (ASP.NET Core Session) -->
+    @await Component.InvokeAsync("SanPhamDaXem", new { maSPHienTai = Model.MaSP })
 </div>
 
 <style>
