@@ -1228,10 +1228,7 @@
     <value>View My Orders</value>
   </data>
   <data name="PaymentSim_PageTitle" xml:space="preserve">
-    <value>Simulated Online Payment Gateway</value>
-  </data>
-  <data name="PaymentSim_Notice" xml:space="preserve">
-    <value>This is a simulated Sandbox online payment page, NO real money will be charged.</value>
+    <value>Order Payment</value>
   </data>
   <data name="PaymentSim_Amount" xml:space="preserve">
     <value>Payment Amount:</value>
@@ -1242,11 +1239,44 @@
   <data name="PaymentSim_BtnSuccess" xml:space="preserve">
     <value>Simulate: Payment SUCCESS</value>
   </data>
-  <data name="PaymentSim_BtnFail" xml:space="preserve">
-    <value>Simulate: Payment FAILED</value>
-  </data>
   <data name="PaymentSim_BtnBack" xml:space="preserve">
     <value>Back to Order</value>
+  </data>
+  <data name="PaymentSim_OrderInfo" xml:space="preserve">
+    <value>Order details</value>
+  </data>
+  <data name="PaymentSim_ProductList" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="PaymentSim_Subtotal" xml:space="preserve">
+    <value>Subtotal:</value>
+  </data>
+  <data name="PaymentSim_Discount" xml:space="preserve">
+    <value>Discount:</value>
+  </data>
+  <data name="PaymentSim_ScanToPay" xml:space="preserve">
+    <value>Scan QR code to pay</value>
+  </data>
+  <data name="PaymentSim_TransferContent" xml:space="preserve">
+    <value>Transfer content:</value>
+  </data>
+  <data name="PaymentSim_Step1" xml:space="preserve">
+    <value>Open banking or e-wallet app</value>
+  </data>
+  <data name="PaymentSim_Step2" xml:space="preserve">
+    <value>Scan the QR code above</value>
+  </data>
+  <data name="PaymentSim_Step3" xml:space="preserve">
+    <value>Click Pay now to complete</value>
+  </data>
+  <data name="PaymentSim_BtnPaid" xml:space="preserve">
+    <value>Pay now</value>
+  </data>
+  <data name="Payment_QrImageAlt" xml:space="preserve">
+    <value>Payment QR code</value>
+  </data>
+  <data name="Payment_QrFallback" xml:space="preserve">
+    <value>Payment QR code</value>
   </data>
   <data name="PaymentSim_FailedMessage" xml:space="preserve">
     <value>Online payment failed. You can retry payment or choose another method.</value>
