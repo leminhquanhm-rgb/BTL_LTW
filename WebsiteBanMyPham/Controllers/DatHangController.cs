@@ -14,6 +14,7 @@ namespace WebsiteBanMyPham.Controllers
     {
         private readonly IDatHangService _datHangService;
         private readonly IDonHangService _donHangService;
+        private readonly IDiaChiService _diaChiService;
         private readonly IOrderAntiDuplicateService _antiDuplicateService;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ILogger<DatHangController> _logger;
@@ -21,12 +22,14 @@ namespace WebsiteBanMyPham.Controllers
         public DatHangController(
             IDatHangService datHangService,
             IDonHangService donHangService,
+            IDiaChiService diaChiService,
             IOrderAntiDuplicateService antiDuplicateService,
             IStringLocalizer<SharedResource> localizer,
             ILogger<DatHangController> logger)
         {
             _datHangService = datHangService;
             _donHangService = donHangService;
+            _diaChiService = diaChiService;
             _antiDuplicateService = antiDuplicateService;
             _localizer = localizer;
             _logger = logger;
@@ -58,6 +61,26 @@ namespace WebsiteBanMyPham.Controllers
             var maTK = User.LayMaTK();
             if (!maTK.HasValue || maTK.Value <= 0) return RedirectToAction("DangNhap", "TaiKhoan");
 
+            // 0. Xử lý địa chỉ từ Sổ địa chỉ (nếu có MaDC) TRƯỚC KHI kiểm tra ModelState.IsValid (Điều chỉnh 4)
+            if (form.MaDC.HasValue && form.MaDC.Value > 0)
+            {
+                var diaChiDb = await _diaChiService.LayChiTietAsync(form.MaDC.Value, maTK.Value);
+                if (diaChiDb == null)
+                {
+                    ModelState.AddModelError(nameof(form.MaDC), _localizer["Msg_Address_NotFound"].Value);
+                }
+                else
+                {
+                    form.TenNguoiNhan = diaChiDb.TenNguoiNhan;
+                    form.SdtNguoiNhan = diaChiDb.SoDienThoai;
+                    form.DiaChiGiao = diaChiDb.DiaChi;
+
+                    ModelState.Remove(nameof(DatHangFormViewModel.TenNguoiNhan));
+                    ModelState.Remove(nameof(DatHangFormViewModel.SdtNguoiNhan));
+                    ModelState.Remove(nameof(DatHangFormViewModel.DiaChiGiao));
+                }
+            }
+
             // 1. Nhánh ModelState không hợp lệ: Chưa nhận mã, giữ nguyên mã còn hiệu lực (hoặc cấp mới nếu rỗng)
             if (!ModelState.IsValid)
             {
@@ -66,6 +89,8 @@ namespace WebsiteBanMyPham.Controllers
 
                 if (prepare.HopLe && prepare.ViewModel != null)
                 {
+                    prepare.ViewModel.MaDCChon = form.MaDC;
+                    prepare.ViewModel.LuuVaoSoDiaChi = form.LuuVaoSoDiaChi;
                     prepare.ViewModel.TenNguoiNhan = form.TenNguoiNhan ?? string.Empty;
                     prepare.ViewModel.SdtNguoiNhan = form.SdtNguoiNhan ?? string.Empty;
                     prepare.ViewModel.DiaChiGiao = form.DiaChiGiao ?? string.Empty;
@@ -93,6 +118,8 @@ namespace WebsiteBanMyPham.Controllers
 
                 if (prepare.HopLe && prepare.ViewModel != null)
                 {
+                    prepare.ViewModel.MaDCChon = form.MaDC;
+                    prepare.ViewModel.LuuVaoSoDiaChi = form.LuuVaoSoDiaChi;
                     prepare.ViewModel.TenNguoiNhan = form.TenNguoiNhan ?? string.Empty;
                     prepare.ViewModel.SdtNguoiNhan = form.SdtNguoiNhan ?? string.Empty;
                     prepare.ViewModel.DiaChiGiao = form.DiaChiGiao ?? string.Empty;
@@ -195,6 +222,8 @@ namespace WebsiteBanMyPham.Controllers
 
                 if (reloadPrepare.HopLe && reloadPrepare.ViewModel != null)
                 {
+                    reloadPrepare.ViewModel.MaDCChon = form.MaDC;
+                    reloadPrepare.ViewModel.LuuVaoSoDiaChi = form.LuuVaoSoDiaChi;
                     reloadPrepare.ViewModel.TenNguoiNhan = form.TenNguoiNhan;
                     reloadPrepare.ViewModel.SdtNguoiNhan = form.SdtNguoiNhan;
                     reloadPrepare.ViewModel.DiaChiGiao = form.DiaChiGiao;
@@ -215,6 +244,12 @@ namespace WebsiteBanMyPham.Controllers
             {
                 _antiDuplicateService.CapNhatKetQua(form.MaChongDatTrung, maDH.Value);
 
+                // Lưu vào sổ địa chỉ nếu khách chọn nhập khác và tick Lưu vào sổ
+                if ((!form.MaDC.HasValue || form.MaDC.Value <= 0) && form.LuuVaoSoDiaChi)
+                {
+                    await _diaChiService.ThemDiaChiTuDonHangAsync(maTK.Value, form.TenNguoiNhan, form.SdtNguoiNhan, form.DiaChiGiao);
+                }
+
                 if (checkPt.TenPT == PhuongThucThanhToanConstant.Online)
                 {
                     return RedirectToAction("MoPhong", "ThanhToan", new { maDH = maDH.Value });
@@ -233,6 +268,8 @@ namespace WebsiteBanMyPham.Controllers
 
             if (failPrepare.HopLe && failPrepare.ViewModel != null)
             {
+                failPrepare.ViewModel.MaDCChon = form.MaDC;
+                failPrepare.ViewModel.LuuVaoSoDiaChi = form.LuuVaoSoDiaChi;
                 failPrepare.ViewModel.TenNguoiNhan = form.TenNguoiNhan;
                 failPrepare.ViewModel.SdtNguoiNhan = form.SdtNguoiNhan;
                 failPrepare.ViewModel.DiaChiGiao = form.DiaChiGiao;

@@ -1,5 +1,4 @@
 @model WebsiteBanMyPham.ViewModels.XacMinhOtpViewModel
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 
 @{
     ViewData["Title"] = L["Account_VerifyOtpTitle"];
@@ -18,18 +17,6 @@
                 <span class="font-semibold text-charcoal block mt-0.5">@Model.Email</span>
             </p>
         </div>
-
-        @if (WebHostEnvironment.IsDevelopment())
-        {
-            <!-- Gợi ý dành riêng cho môi trường Development khi demo / chấm bài -->
-            <div class="p-3 rounded-btn bg-pastel/40 border border-nude/70 text-xs text-charcoal flex items-start gap-2.5">
-                <i class="ph-fill ph-info text-primary text-base shrink-0 mt-0.5"></i>
-                <div class="space-y-0.5">
-                    <span class="font-bold text-primary block">@L["Account_OtpDemoNote"]</span>
-                    <span class="text-muted leading-relaxed">@L["Account_OtpDemoDesc"]</span>
-                </div>
-            </div>
-        }
 
         <!-- Báo lỗi tổng quát nếu có -->
         <div asp-validation-summary="ModelOnly" class="empty:hidden p-3 rounded-btn bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs"></div>

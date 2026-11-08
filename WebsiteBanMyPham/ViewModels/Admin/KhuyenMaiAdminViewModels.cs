@@ -35,34 +35,44 @@ namespace WebsiteBanMyPham.ViewModels.Admin
     {
         public int MaKM { get; set; }
 
+        [Display(Name = "Admin_Promo_Col_Code")]
         [Required(ErrorMessage = "Validation_Required")]
         [MaxLength(30, ErrorMessage = "Validation_MaxLength")]
         [RegularExpression(@"^[A-Za-z0-9]+$", ErrorMessage = "Admin_Promo_CodeHint")]
         public string Code { get; set; } = string.Empty;
 
+        [Display(Name = "Admin_Promo_Col_Name")]
         [Required(ErrorMessage = "Validation_Required")]
         [MaxLength(150, ErrorMessage = "Validation_MaxLength")]
         public string TenKM { get; set; } = string.Empty;
 
+        [Display(Name = "Admin_Promo_Col_Type")]
         [Required(ErrorMessage = "Validation_Required")]
         public string LoaiGiam { get; set; } = LoaiGiamGiaConstant.PhanTram;
 
-        [Range(1, double.MaxValue, ErrorMessage = "Admin_Promo_Error_AmountValue")]
+        [Display(Name = "Admin_Promo_Col_Value")]
+        [Required(ErrorMessage = "Validation_Required")]
+        [Range(1, 1000000000, ErrorMessage = "Validation_RangeMin")]
         public decimal GiaTriGiam { get; set; }
 
-        [Range(1, double.MaxValue, ErrorMessage = "Validation_Range")]
+        [Display(Name = "Admin_Promo_Col_MaxDiscount")]
+        [Range(1, 1000000000, ErrorMessage = "Validation_RangeMin")]
         public decimal? GiamToiDa { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Validation_Range")]
+        [Display(Name = "Admin_Promo_Col_MinOrder")]
+        [Range(0, 1000000000, ErrorMessage = "Validation_RangeMin")]
         public decimal DonToiThieu { get; set; } = 0;
 
+        [Display(Name = "Admin_Promo_StartDate")]
         [Required(ErrorMessage = "Validation_Required")]
         public DateTime NgayBatDau { get; set; } = DateTime.Today;
 
+        [Display(Name = "Admin_Promo_EndDate")]
         [Required(ErrorMessage = "Validation_Required")]
         public DateTime NgayKetThuc { get; set; } = DateTime.Today.AddMonths(1);
 
-        [Range(1, int.MaxValue, ErrorMessage = "Validation_Range")]
+        [Display(Name = "Admin_Promo_MaxUses")]
+        [Range(1, 1000000, ErrorMessage = "Validation_RangeMin")]
         public int? SoLuotToiDa { get; set; }
 
         public int SoLuotDaDung { get; set; }

@@ -1,4 +1,4 @@
-﻿USE WebsiteBanMyPham;
+USE WebsiteBanMyPham;
 GO
 
 /* ===== 1. TÀI KHOẢN (mật khẩu: 123456) ===== */
@@ -77,6 +77,13 @@ INSERT INTO KhuyenMai (Code, TenKM, LoaiGiam, GiaTriGiam, GiamToiDa, DonToiThieu
 INSERT INTO GioHang (MaTK, MaSP, SoLuong) VALUES
 (2, 10, 1),
 (3, 5, 1), (3, 7, 2);
+GO
+
+/* ===== 5b. SỔ ĐỊA CHỈ (an có 2 địa chỉ, bình có 1; chi và khoa chưa có) ===== */
+INSERT INTO DiaChiNhanHang (MaTK, TenNguoiNhan, SoDienThoai, DiaChi, LaMacDinh) VALUES
+(2, N'Nguyễn Văn An',  '0901000001', N'12 Cầu Giấy, Hà Nội',                      1),
+(2, N'Nguyễn Văn An',  '0901000011', N'Tầng 5, 99 Trần Duy Hưng, Cầu Giấy, Hà Nội', 0),
+(3, N'Trần Thị Bình',  '0901000002', N'45 Nguyễn Trãi, Thanh Xuân, Hà Nội',       1);
 GO
 
 /* ===== 6. ĐƠN HÀNG (phương thức thanh toán 1: COD, 2: Online đã có ở file 1) ===== */
@@ -163,4 +170,5 @@ SELECT 'TaiKhoan' AS Bang, COUNT(*) AS SoDong FROM TaiKhoan UNION ALL
 SELECT 'SanPham', COUNT(*) FROM SanPham UNION ALL
 SELECT 'DonHang', COUNT(*) FROM DonHang UNION ALL
 SELECT 'ChiTietDonHang', COUNT(*) FROM ChiTietDonHang UNION ALL
+SELECT 'DiaChiNhanHang', COUNT(*) FROM DiaChiNhanHang UNION ALL
 SELECT 'VW_DanhGia', COUNT(*) FROM VW_DanhGia;

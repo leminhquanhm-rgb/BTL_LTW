@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +22,8 @@ public partial class WebsiteBanMyPhamContext : DbContext
     public virtual DbSet<DanhMuc> DanhMuc { get; set; }
 
     public virtual DbSet<DatLaiMatKhau> DatLaiMatKhau { get; set; }
+
+    public virtual DbSet<DiaChiNhanHang> DiaChiNhanHang { get; set; }
 
     public virtual DbSet<DonHang> DonHang { get; set; }
 
@@ -133,6 +135,31 @@ public partial class WebsiteBanMyPhamContext : DbContext
             entity.HasOne(d => d.MaTKNavigation).WithMany(p => p.DatLaiMatKhau)
                 .HasForeignKey(d => d.MaTK)
                 .HasConstraintName("FK__DatLaiMatK__MaTK__3E52440B");
+        });
+
+        modelBuilder.Entity<DiaChiNhanHang>(entity =>
+        {
+            entity.HasKey(e => e.MaDC);
+
+            entity.ToTable("DiaChiNhanHang");
+
+            entity.HasIndex(e => e.MaTK, "IX_DiaChiNhanHang_MaTK");
+
+            entity.HasIndex(e => e.MaTK, "UX_DiaChiNhanHang_MacDinh")
+                .IsUnique()
+                .HasFilter("([LaMacDinh]=(1))");
+
+            entity.Property(e => e.TenNguoiNhan).HasMaxLength(100);
+            entity.Property(e => e.SoDienThoai)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.DiaChi).HasMaxLength(255);
+            entity.Property(e => e.LaMacDinh).HasDefaultValue(false);
+            entity.Property(e => e.NgayTao).HasDefaultValueSql("(sysdatetime())");
+
+            entity.HasOne(d => d.MaTKNavigation).WithMany(p => p.DiaChiNhanHang)
+                .HasForeignKey(d => d.MaTK)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<DonHang>(entity =>

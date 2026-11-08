@@ -144,6 +144,7 @@ namespace WebsiteBanMyPham
             builder.Services.AddScoped<IKhuyenMaiService, KhuyenMaiService>();
             builder.Services.AddScoped<IDonHangService, DonHangService>();
             builder.Services.AddScoped<IDatHangService, DatHangService>();
+            builder.Services.AddScoped<IDiaChiService, DiaChiService>();
             builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
             builder.Services.AddScoped<IKhieuNaiService, KhieuNaiService>();
             builder.Services.AddScoped<IDanhMucService, DanhMucService>();

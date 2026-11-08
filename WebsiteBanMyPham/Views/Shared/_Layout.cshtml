@@ -140,6 +140,9 @@
                                 <a asp-area="" asp-controller="TaiKhoan" asp-action="HoSo" class="block px-4 py-2 hover:bg-cream text-charcoal flex items-center gap-2">
                                     <i class="ph ph-user text-primary"></i> @L["Nav_Profile"]
                                 </a>
+                                <a asp-area="" asp-controller="DiaChi" asp-action="Index" class="block px-4 py-2 hover:bg-cream text-charcoal flex items-center gap-2">
+                                    <i class="ph ph-address-book text-primary"></i> @L["Nav_AddressBook"]
+                                </a>
                                 <a asp-area="" asp-controller="DonHang" asp-action="Index" class="block px-4 py-2 hover:bg-cream text-charcoal flex items-center gap-2">
                                     <i class="ph ph-package text-primary"></i> @L["Nav_MyOrders"]
                                 </a>
@@ -260,6 +263,27 @@
 
     <!-- Toast Notification Partial -->
     <partial name="_Toast" />
+
+    <!-- jQuery Validation Global Messages (Bản địa hóa qua .resx) -->
+    <div id="jqv-messages" hidden
+         data-required="@L["Jqv_Required"]"
+         data-remote="@L["Jqv_Remote"]"
+         data-email="@L["Jqv_Email"]"
+         data-url="@L["Jqv_Url"]"
+         data-date="@L["Jqv_Date"]"
+         data-dateiso="@L["Jqv_DateISO"]"
+         data-number="@L["Jqv_Number"]"
+         data-digits="@L["Jqv_Digits"]"
+         data-creditcard="@L["Jqv_CreditCard"]"
+         data-equalto="@L["Jqv_EqualTo"]"
+         data-extension="@L["Jqv_Extension"]"
+         data-maxlength="@L["Jqv_MaxLength"]"
+         data-minlength="@L["Jqv_MinLength"]"
+         data-rangelength="@L["Jqv_RangeLength"]"
+         data-range="@L["Jqv_Range"]"
+         data-max="@L["Jqv_Max"]"
+         data-min="@L["Jqv_Min"]"
+         data-step="@L["Jqv_Step"]"></div>
 
     <!-- Scripts chuẩn: jQuery, Validation, site.js -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

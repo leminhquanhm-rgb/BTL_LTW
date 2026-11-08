@@ -55,43 +55,162 @@
 
         <!-- CỘT TRÁI (7 cột): Thông tin nhận hàng & Phương thức thanh toán -->
         <div class="lg:col-span-7 space-y-6">
-            <!-- 1. Thông tin người nhận -->
+            <!-- 1. Thông tin người nhận & Sổ địa chỉ -->
             <div class="bg-surface p-5 sm:p-6 rounded-card border border-borderLight shadow-soft space-y-4">
                 <div class="flex items-center justify-between border-b border-borderLight pb-3">
                     <h3 class="text-sm sm:text-base font-bold text-charcoal flex items-center gap-2">
                         <i class="ph-fill ph-map-pin text-primary text-lg"></i>
                         <span>@L["Checkout_RecipientTitle"]</span>
                     </h3>
+                    @if (Model.CoDiaChiLuu)
+                    {
+                        <a asp-controller="DiaChi" asp-action="Index" target="_blank"
+                           class="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
+                            <i class="ph ph-gear"></i>
+                            <span>@L["Checkout_ManageAddressBook"]</span>
+                        </a>
+                    }
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-charcoal mb-1">
-                            @L["Label_TenNguoiNhan"] <span class="text-statusDanger">*</span>
-                        </label>
-                        <input type="text" name="TenNguoiNhan" value="@Model.TenNguoiNhan" required maxlength="100"
-                               placeholder="@L["Label_TenNguoiNhan"]"
-                               class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                @if (Model.CoDiaChiLuu)
+                {
+                    var activeAddress = Model.MaDCChon.HasValue && Model.MaDCChon.Value > 0
+                        ? Model.DanhSachDiaChi.FirstOrDefault(d => d.MaDC == Model.MaDCChon.Value)
+                        : null;
+                    var hasSavedSelected = activeAddress != null;
+                    var displayAddress = activeAddress ?? Model.DanhSachDiaChi.FirstOrDefault(d => d.LaMacDinh) ?? Model.DanhSachDiaChi.First();
+
+                    <!-- Input ẩn lưu MaDC gửi lên server khi submit form -->
+                    <input type="hidden" name="MaDC" id="hidden-selected-madc" value="@(hasSavedSelected ? activeAddress!.MaDC.ToString() : "")" />
+
+                    <!-- Thẻ địa chỉ đang chọn (chỉ hiện khi đang chọn địa chỉ đã lưu) -->
+                    <div id="selected-address-card" class="p-4 rounded-btn border border-borderLight bg-cream/30 hover:border-borderMedium transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs @(hasSavedSelected ? "" : "hidden")">
+                        <div class="flex items-start gap-3 min-w-0">
+                            <div class="w-8 h-8 rounded-full bg-pastel text-primary flex items-center justify-center shrink-0 text-base mt-0.5">
+                                <i class="ph-fill ph-map-pin"></i>
+                            </div>
+                            <div class="space-y-1 min-w-0 text-xs">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-bold text-charcoal" id="card-ten">@displayAddress.TenNguoiNhan</span>
+                                    <span class="text-muted">|</span>
+                                    <span class="font-mono text-muted font-medium" id="card-sdt">@displayAddress.SoDienThoai</span>
+                                    <span id="card-badge-macdinh" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pastel text-primary border border-primary/20 @(displayAddress.LaMacDinh ? "" : "hidden")">
+                                        @L["Address_DefaultBadge"]
+                                    </span>
+                                </div>
+                                <p class="text-charcoal/80 text-[11px] leading-relaxed break-words" id="card-diachi">@displayAddress.DiaChi</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openAddressModal()"
+                                class="self-end sm:self-center px-3.5 py-1.5 rounded-btn bg-surface hover:bg-pastel border border-borderLight hover:border-primary text-xs font-bold text-primary transition shrink-0 inline-flex items-center gap-1.5 shadow-xs">
+                            <i class="ph ph-pencil-simple"></i>
+                            <span>@L["Checkout_ChangeAddress"]</span>
+                        </button>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-charcoal mb-1">
-                            @L["Label_SDTNguoiNhan"] <span class="text-statusDanger">*</span>
-                        </label>
-                        <input type="tel" name="SdtNguoiNhan" value="@Model.SdtNguoiNhan" required maxlength="15"
-                               placeholder="0912345678"
-                               class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+
+                    <!-- Khối nhập tay (hiện khi chọn "Giao đến địa chỉ khác" hoặc reload validation lỗi) -->
+                    <div id="custom-address-inputs" class="space-y-4 pt-1 @(hasSavedSelected ? "hidden" : "")">
+                        <div class="flex items-center justify-between pb-1">
+                            <span class="text-xs font-bold text-charcoal">@L["Checkout_DeliverToOther"]</span>
+                            <button type="button" onclick="openAddressModal()"
+                                    class="text-xs text-primary font-bold hover:underline inline-flex items-center gap-1.5">
+                                <i class="ph-bold ph-address-book"></i>
+                                <span>@L["Checkout_SelectFromAddressBook"]</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal mb-1">
+                                    @L["Label_TenNguoiNhan"] <span class="text-statusDanger">*</span>
+                                </label>
+                                <input type="text" name="TenNguoiNhan" id="input-ten-nguoi-nhan" value="@Model.TenNguoiNhan" maxlength="100"
+                                       placeholder="@L["Label_TenNguoiNhan"]"
+                                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                                <span asp-validation-for="TenNguoiNhan" class="text-[11px] text-statusDanger block mt-1"></span>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal mb-1">
+                                    @L["Label_SDTNguoiNhan"] <span class="text-statusDanger">*</span>
+                                </label>
+                                <input type="tel" name="SdtNguoiNhan" id="input-sdt-nguoi-nhan" value="@Model.SdtNguoiNhan" maxlength="15"
+                                       placeholder="0912345678"
+                                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                                <span asp-validation-for="SdtNguoiNhan" class="text-[11px] text-statusDanger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-charcoal mb-1">
+                                @L["Label_DiaChiGiao"] <span class="text-statusDanger">*</span>
+                            </label>
+                            <input type="text" name="DiaChiGiao" id="input-diachi-giao" value="@Model.DiaChiGiao" maxlength="255"
+                                   placeholder="Số nhà, ngõ, đường, phường/xã, quận/huyện, tỉnh/thành..."
+                                   class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                            <span asp-validation-for="DiaChiGiao" class="text-[11px] text-statusDanger block mt-1"></span>
+                        </div>
+
+                        @if (Model.CoTheLuuSoDiaChi)
+                        {
+                            <div class="pt-1">
+                                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                                    <input type="checkbox" name="LuuVaoSoDiaChi" value="true" @(Model.LuuVaoSoDiaChi ? "checked" : "")
+                                           class="accent-primary w-4 h-4 cursor-pointer rounded" />
+                                    <span class="text-xs font-medium text-charcoal">@L["Checkout_SaveToAddressBook"]</span>
+                                </label>
+                            </div>
+                        }
                     </div>
-                </div>
+                }
+                else
+                {
+                    <!-- Khách CHƯA CÓ địa chỉ lưu: Nhập tay trực tiếp -->
+                    <div id="custom-address-inputs" class="space-y-4 pt-1">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal mb-1">
+                                    @L["Label_TenNguoiNhan"] <span class="text-statusDanger">*</span>
+                                </label>
+                                <input type="text" name="TenNguoiNhan" id="input-ten-nguoi-nhan" value="@Model.TenNguoiNhan" maxlength="100"
+                                       placeholder="@L["Label_TenNguoiNhan"]"
+                                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                                <span asp-validation-for="TenNguoiNhan" class="text-[11px] text-statusDanger block mt-1"></span>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-charcoal mb-1">
+                                    @L["Label_SDTNguoiNhan"] <span class="text-statusDanger">*</span>
+                                </label>
+                                <input type="tel" name="SdtNguoiNhan" id="input-sdt-nguoi-nhan" value="@Model.SdtNguoiNhan" maxlength="15"
+                                       placeholder="0912345678"
+                                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                                <span asp-validation-for="SdtNguoiNhan" class="text-[11px] text-statusDanger block mt-1"></span>
+                            </div>
+                        </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-charcoal mb-1">
-                        @L["Label_DiaChiGiao"] <span class="text-statusDanger">*</span>
-                    </label>
-                    <input type="text" name="DiaChiGiao" value="@Model.DiaChiGiao" required maxlength="255"
-                           placeholder="Số nhà, ngõ, đường, phường/xã, quận/huyện, tỉnh/thành..."
-                           class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
-                </div>
+                        <div>
+                            <label class="block text-xs font-bold text-charcoal mb-1">
+                                @L["Label_DiaChiGiao"] <span class="text-statusDanger">*</span>
+                            </label>
+                            <input type="text" name="DiaChiGiao" id="input-diachi-giao" value="@Model.DiaChiGiao" maxlength="255"
+                                   placeholder="Số nhà, ngõ, đường, phường/xã, quận/huyện, tỉnh/thành..."
+                                   class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                            <span asp-validation-for="DiaChiGiao" class="text-[11px] text-statusDanger block mt-1"></span>
+                        </div>
 
+                        @if (Model.CoTheLuuSoDiaChi)
+                        {
+                            <div class="pt-1">
+                                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                                    <input type="checkbox" name="LuuVaoSoDiaChi" value="true" @(Model.LuuVaoSoDiaChi ? "checked" : "")
+                                           class="accent-primary w-4 h-4 cursor-pointer rounded" />
+                                    <span class="text-xs font-medium text-charcoal">@L["Checkout_SaveToAddressBook"]</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <!-- Ghi chú đơn hàng (luôn hiển thị) -->
                 <div>
                     <label class="block text-xs font-bold text-charcoal mb-1">
                         @L["Label_GhiChu"]
@@ -101,6 +220,94 @@
                            class="w-full px-3.5 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
                 </div>
             </div>
+
+            @if (Model.CoDiaChiLuu)
+            {
+                <!-- Modal chọn địa chỉ nhận hàng -->
+                <div id="address-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-address-title">
+                    <!-- Backdrop -->
+                    <div id="address-modal-backdrop" onclick="closeAddressModal()" class="fixed inset-0 bg-charcoal/60 backdrop-blur-xs transition-opacity"></div>
+
+                    <!-- Modal Dialog -->
+                    <div class="relative w-full max-w-lg bg-surface rounded-card border border-borderLight shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]">
+                        <!-- Modal Header -->
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-borderLight bg-cream/40">
+                            <h3 id="modal-address-title" class="text-sm sm:text-base font-bold text-charcoal flex items-center gap-2">
+                                <i class="ph-bold ph-map-pin text-primary text-lg"></i>
+                                <span>@L["Checkout_SelectAddressModalTitle"]</span>
+                            </h3>
+                            <button type="button" onclick="closeAddressModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-muted hover:text-charcoal hover:bg-cream transition" aria-label="@L["Common_Close"]">
+                                <i class="ph-bold ph-x text-base"></i>
+                            </button>
+                        </div>
+
+                        <!-- Modal Body (Danh sách địa chỉ) -->
+                        <div class="p-4 sm:p-5 overflow-y-auto space-y-2.5 max-h-[60vh]">
+                            <div class="space-y-2" id="modal-address-list">
+                                @foreach (var dc in Model.DanhSachDiaChi)
+                                {
+                                    var isChecked = Model.MaDCChon.HasValue && Model.MaDCChon.Value == dc.MaDC;
+                                    <label class="modal-address-card flex items-start gap-3 p-3.5 rounded-btn border border-borderLight hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-pastel/25 has-[:checked]:ring-1 has-[:checked]:ring-primary/30 cursor-pointer transition select-none">
+                                        <input type="radio" name="modal_madc" value="@dc.MaDC" @(isChecked ? "checked" : "")
+                                               class="modal-address-radio accent-primary w-4 h-4 mt-0.5 cursor-pointer shrink-0"
+                                               data-madc="@dc.MaDC"
+                                               data-ten="@dc.TenNguoiNhan"
+                                               data-sdt="@dc.SoDienThoai"
+                                               data-diachi="@dc.DiaChi"
+                                               data-macdinh="@(dc.LaMacDinh ? "true" : "false")" />
+                                        <div class="text-xs space-y-0.5 min-w-0 flex-1">
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="font-bold text-charcoal">@dc.TenNguoiNhan</span>
+                                                <span class="text-muted">|</span>
+                                                <span class="font-mono text-muted font-medium">@dc.SoDienThoai</span>
+                                                @if (dc.LaMacDinh)
+                                                {
+                                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pastel text-primary border border-primary/20">
+                                                        @L["Address_DefaultBadge"]
+                                                    </span>
+                                                }
+                                            </div>
+                                            <p class="text-muted text-[11px] leading-relaxed break-words">@dc.DiaChi</p>
+                                        </div>
+                                    </label>
+                                }
+
+                                <!-- Lựa chọn cuối cùng trong modal: Giao đến địa chỉ khác -->
+                                @{
+                                    var isOtherChecked = !Model.MaDCChon.HasValue || Model.MaDCChon.Value <= 0;
+                                }
+                                <label class="modal-address-card flex items-center gap-3 p-3.5 rounded-btn border border-borderLight hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-pastel/25 has-[:checked]:ring-1 has-[:checked]:ring-primary/30 cursor-pointer transition select-none">
+                                    <input type="radio" name="modal_madc" value="" id="modal-radio-other" @(isOtherChecked ? "checked" : "")
+                                           class="modal-address-radio accent-primary w-4 h-4 cursor-pointer shrink-0"
+                                           data-madc="" />
+                                    <span class="text-xs font-bold text-charcoal">@L["Checkout_DeliverToOther"]</span>
+                                </label>
+                            </div>
+
+                            <!-- Link quản lý sổ địa chỉ -->
+                            <div class="pt-2 text-right">
+                                <a asp-controller="DiaChi" asp-action="Index" target="_blank"
+                                   class="text-xs text-primary font-semibold hover:underline inline-flex items-center gap-1">
+                                    <i class="ph ph-gear"></i>
+                                    <span>@L["Checkout_ManageAddressBook"]</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="flex items-center justify-end gap-2.5 px-5 py-3.5 border-t border-borderLight bg-cream/40">
+                            <button type="button" onclick="closeAddressModal()"
+                                    class="px-4 py-2 rounded-btn bg-surface hover:bg-cream border border-borderLight text-xs font-bold text-charcoal transition">
+                                @L["Common_Cancel"]
+                            </button>
+                            <button type="button" onclick="confirmAddressModal()"
+                                    class="px-5 py-2 rounded-btn bg-primary hover:bg-primaryHover text-xs font-bold text-white transition shadow-sm">
+                                @L["Common_Confirm"]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
 
             <!-- 2. Phương thức thanh toán (Điều chỉnh 3 & 6: Không còn COD badge; Online badge chỉ hiện khi ChoPhepMoPhong = true) -->
             <div class="bg-surface p-5 sm:p-6 rounded-card border border-borderLight shadow-soft space-y-4">
@@ -115,7 +322,7 @@
                     @foreach (var pt in Model.DanhSachPhuongThuc)
                     {
                         var isChecked = pt.MaPT == Model.MaPTChon;
-                        <label class="flex items-center justify-between p-4 rounded-btn border border-borderLight hover:border-primary cursor-pointer transition select-none @(isChecked ? "border-primary bg-pastel/30" : "")">
+                        <label class="flex items-center justify-between p-4 rounded-btn border border-borderLight hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-pastel/30 cursor-pointer transition select-none">
                             <div class="flex items-center gap-3">
                                 <input type="radio" name="MaPT" value="@pt.MaPT" @(isChecked ? "checked" : "")
                                        class="accent-primary w-4 h-4 cursor-pointer" />
@@ -140,33 +347,7 @@
 
             <div class="flex items-center justify-between border-b border-borderLight pb-3">
                 <h3 class="text-sm sm:text-base font-bold text-charcoal">@L["Checkout_OrderSummaryTitle"]</h3>
-                @if (Model.NguonDat == WebsiteBanMyPham.Constants.NguonDatHangConstant.MuaNgay)
-                {
-                    <span class="px-2.5 py-0.5 rounded-full bg-pastel text-primary text-[11px] font-bold">@L["Checkout_ModeBuyNow"]</span>
-                }
-                else
-                {
-                    <span class="px-2.5 py-0.5 rounded-full bg-pastel text-primary text-[11px] font-bold">@L["Checkout_ModeCart"]</span>
-                }
             </div>
-
-            <!-- Banner cảnh báo chế độ Mua ngay trực tiếp -->
-            @if (Model.NguonDat == WebsiteBanMyPham.Constants.NguonDatHangConstant.MuaNgay)
-            {
-                <div class="p-3.5 rounded-card bg-pastel/55 border-2 border-primary space-y-2">
-                    <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs font-bold text-primary flex items-center gap-1">
-                            <i class="ph-fill ph-lightning text-sm"></i> @L["Checkout_ModeBuyNow"]
-                        </span>
-                        <a asp-controller="GioHang" asp-action="Index" class="px-2 py-1 rounded bg-surface border border-borderLight text-[11px] font-bold text-charcoal hover:border-primary transition">
-                            @L["Checkout_BackToCart"]
-                        </a>
-                    </div>
-                    <p class="text-[11px] text-charcoal leading-snug">
-                        @L["Checkout_BuyNowBanner"]
-                    </p>
-                </div>
-            }
 
             <!-- Danh sách sản phẩm thanh toán (Server tính toán & kiểm tra tồn kho) -->
             <div class="space-y-2.5 max-h-56 overflow-y-auto pr-1 divide-y divide-borderLight border border-borderLight rounded-btn p-3 bg-cream/40">
@@ -430,6 +611,124 @@
             }).join("");
             container.innerHTML = html;
         }
+
+        function openAddressModal() {
+            var modal = document.getElementById('address-modal');
+            if (!modal) return;
+
+            var currentMaDC = '';
+            var hiddenInput = document.getElementById('hidden-selected-madc');
+            if (hiddenInput) {
+                currentMaDC = hiddenInput.value || '';
+            }
+
+            var radios = modal.querySelectorAll('input[name="modal_madc"]');
+            var matched = false;
+            radios.forEach(function (r) {
+                var rVal = r.value || '';
+                if (rVal === currentMaDC) {
+                    r.checked = true;
+                    matched = true;
+                } else {
+                    r.checked = false;
+                }
+            });
+
+            if (!matched) {
+                var otherRadio = document.getElementById('modal-radio-other');
+                if (otherRadio) otherRadio.checked = true;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeAddressModal() {
+            var modal = document.getElementById('address-modal');
+            if (!modal) return;
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        function confirmAddressModal() {
+            var modal = document.getElementById('address-modal');
+            if (!modal) return;
+
+            var checkedRadio = modal.querySelector('input[name="modal_madc"]:checked');
+            if (!checkedRadio) {
+                closeAddressModal();
+                return;
+            }
+
+            var hiddenInput = document.getElementById('hidden-selected-madc');
+            var card = document.getElementById('selected-address-card');
+            var customInputs = document.getElementById('custom-address-inputs');
+
+            var inputTen = document.getElementById('input-ten-nguoi-nhan');
+            var inputSdt = document.getElementById('input-sdt-nguoi-nhan');
+            var inputDiaChi = document.getElementById('input-diachi-giao');
+
+            var cardTen = document.getElementById('card-ten');
+            var cardSdt = document.getElementById('card-sdt');
+            var cardDiaChi = document.getElementById('card-diachi');
+            var cardBadge = document.getElementById('card-badge-macdinh');
+
+            if (checkedRadio.value) {
+                var madc = checkedRadio.dataset.madc || checkedRadio.value;
+                var ten = checkedRadio.dataset.ten || '';
+                var sdt = checkedRadio.dataset.sdt || '';
+                var diachi = checkedRadio.dataset.diachi || '';
+                var isMacDinh = checkedRadio.dataset.macdinh === 'true';
+
+                if (hiddenInput) hiddenInput.value = madc;
+
+                if (cardTen) cardTen.textContent = ten;
+                if (cardSdt) cardSdt.textContent = sdt;
+                if (cardDiaChi) cardDiaChi.textContent = diachi;
+
+                if (cardBadge) {
+                    if (isMacDinh) {
+                        cardBadge.classList.remove('hidden');
+                    } else {
+                        cardBadge.classList.add('hidden');
+                    }
+                }
+
+                if (inputTen) inputTen.value = ten;
+                if (inputSdt) inputSdt.value = sdt;
+                if (inputDiaChi) inputDiaChi.value = diachi;
+
+                if (card) card.classList.remove('hidden');
+                if (customInputs) customInputs.classList.add('hidden');
+            } else {
+                if (hiddenInput) hiddenInput.value = '';
+
+                if (card) card.classList.add('hidden');
+                if (customInputs) {
+                    customInputs.classList.remove('hidden');
+                    if (inputTen) {
+                        inputTen.value = '';
+                        inputTen.focus();
+                    }
+                    if (inputSdt) inputSdt.value = '';
+                    if (inputDiaChi) inputDiaChi.value = '';
+                }
+            }
+
+            closeAddressModal();
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                var modal = document.getElementById('address-modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeAddressModal();
+                }
+            }
+        });
 
         document.addEventListener("DOMContentLoaded", function () {
             loadAvailablePromosCheckout();

@@ -121,6 +121,10 @@
                         <p class="font-bold text-charcoal font-mono mt-0.5">
                             @(Model.NgayVanDon.HasValue ? LocHelper.FormatDateTime(Model.NgayVanDon) : L["Order_WaybillPending"].Value)
                         </p>
+                        @if (!string.IsNullOrWhiteSpace(Model.MaVanDon))
+                        {
+                            <span class="text-[11px] text-primary font-semibold font-mono block mt-0.5">@L["Order_WaybillCode"]: @Model.MaVanDon</span>
+                        }
                     </div>
                     <div class="bg-cream/40 p-2.5 rounded-btn">
                         <span class="text-muted">@L["Order_DeliveredDate"]</span>

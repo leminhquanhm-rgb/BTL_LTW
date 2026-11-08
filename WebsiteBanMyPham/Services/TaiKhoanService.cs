@@ -96,7 +96,7 @@ namespace WebsiteBanMyPham.Services
 
             if (!user.TrangThai)
             {
-                return (false, _localizer["Msg_Account_Locked"].Value, null);
+                return (false, _localizer["Msg_Account_Locked", _localizer["Footer_ContactPhone"].Value].Value, null);
             }
 
             return (true, null, user);
@@ -139,7 +139,7 @@ namespace WebsiteBanMyPham.Services
 
             if (!user.TrangThai)
             {
-                return (false, _localizer["Msg_Account_Locked"].Value);
+                return (false, _localizer["Msg_Account_Locked", _localizer["Footer_ContactPhone"].Value].Value);
             }
 
             bool matKhauCuHopLe = false;
@@ -292,7 +292,7 @@ namespace WebsiteBanMyPham.Services
 
             if (!user.TrangThai)
             {
-                return (false, _localizer["Msg_Account_Locked"].Value);
+                return (false, _localizer["Msg_Account_Locked", _localizer["Footer_ContactPhone"].Value].Value);
             }
 
             // Chỉ cho phép cập nhật HoTen, SoDienThoai, DiaChi. Không cho đổi Email và VaiTro.

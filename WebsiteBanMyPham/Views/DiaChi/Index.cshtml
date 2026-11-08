@@ -1,0 +1,125 @@
+@model WebsiteBanMyPham.ViewModels.DiaChiDanhSachViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = L["Address_PageTitle"].Value;
+}
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="space-y-1">
+        <nav class="flex items-center gap-2 text-xs text-muted" aria-label="Breadcrumb">
+            <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+            <span>/</span>
+            <a asp-controller="TaiKhoan" asp-action="HoSo" class="hover:text-primary transition">@L["Nav_Profile"]</a>
+            <span>/</span>
+            <span class="text-charcoal font-semibold">@L["Nav_AddressBook"]</span>
+        </nav>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-serif font-bold text-charcoal">@L["Address_PageTitle"]</h1>
+                <p class="text-xs text-muted mt-0.5">
+                    @string.Format(L["Address_CountFormat"].Value, Model.TongSo, Model.GioiHanToiDa)
+                </p>
+            </div>
+            @if (Model.DuocThemTiep)
+            {
+                <a asp-action="Them"
+                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm shrink-0">
+                    <i class="ph-bold ph-plus text-sm"></i>
+                    <span>@L["Address_AddNew"]</span>
+                </a>
+            }
+            else
+            {
+                <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-btn bg-cream border border-borderLight text-xs text-muted font-medium shrink-0">
+                    <i class="ph ph-info"></i>
+                    @L["Address_LimitReached"]
+                </span>
+            }
+        </div>
+    </div>
+
+    <!-- Danh sách địa chỉ -->
+    @if (Model.TongSo == 0)
+    {
+        <div class="bg-surface rounded-card border border-borderLight p-10 text-center space-y-4 shadow-soft">
+            <div class="w-16 h-16 rounded-full bg-pastel text-primary flex items-center justify-center mx-auto text-2xl">
+                <i class="ph ph-address-book"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-sm font-bold text-charcoal">@L["Address_ListEmpty"]</h3>
+                <p class="text-xs text-muted max-w-sm mx-auto">
+                    @L["Address_FirstAddressNote"]
+                </p>
+            </div>
+            <div class="pt-2">
+                <a asp-action="Them"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm">
+                    <i class="ph-bold ph-plus"></i>
+                    <span>@L["Address_AddNew"]</span>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-3.5">
+            @foreach (var item in Model.DanhSach)
+            {
+                <div class="bg-surface rounded-card border @(item.LaMacDinh ? "border-primary/50 shadow-soft ring-1 ring-primary/20" : "border-borderLight") p-4 sm:p-5 transition hover:shadow-soft">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div class="space-y-1.5 min-w-0">
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <span class="font-bold text-sm text-charcoal">@item.TenNguoiNhan</span>
+                                <span class="text-muted text-xs">|</span>
+                                <span class="font-mono text-xs text-muted font-semibold">@item.SoDienThoai</span>
+                                @if (item.LaMacDinh)
+                                {
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-pastel text-primary border border-primary/25">
+                                        <i class="ph-bold ph-check text-[10px]"></i>
+                                        @L["Address_DefaultBadge"]
+                                    </span>
+                                }
+                            </div>
+                            <p class="text-xs text-charcoal leading-relaxed break-words">
+                                @item.DiaChi
+                            </p>
+                        </div>
+
+                        <!-- Thao tác -->
+                        <div class="flex items-center gap-2 pt-2 sm:pt-0 shrink-0 border-t sm:border-t-0 border-borderLight/60">
+                            @if (!item.LaMacDinh)
+                            {
+                                <form asp-action="DatMacDinh" asp-route-id="@item.MaDC" method="post" class="inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="px-2.5 py-1.5 rounded-btn border border-borderLight hover:border-primary text-xs font-semibold text-charcoal hover:text-primary transition">
+                                        @L["Address_SetAsDefault"]
+                                    </button>
+                                </form>
+                            }
+
+                            <a asp-action="Sua" asp-route-id="@item.MaDC"
+                               class="px-2.5 py-1.5 rounded-btn bg-cream hover:bg-pastel text-charcoal hover:text-primary text-xs font-semibold transition flex items-center gap-1">
+                                <i class="ph ph-pencil-simple text-xs"></i>
+                                <span>@L["Common_Edit"]</span>
+                            </a>
+
+                            <form asp-action="Xoa" asp-route-id="@item.MaDC" method="post" class="inline"
+                                  onsubmit="return confirm(this.dataset.confirm);"
+                                  data-confirm="@L["Address_ConfirmDelete"]">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"
+                                        class="px-2.5 py-1.5 rounded-btn bg-transparent hover:bg-statusDanger/10 text-muted hover:text-statusDanger text-xs font-semibold transition flex items-center gap-1">
+                                    <i class="ph ph-trash text-xs"></i>
+                                    <span>@L["Address_Delete"]</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+

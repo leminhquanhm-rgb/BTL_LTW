@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace WebsiteBanMyPham.Models;
@@ -24,6 +24,8 @@ public partial class TaiKhoan
     public DateTime NgayTao { get; set; }
 
     public virtual ICollection<DatLaiMatKhau> DatLaiMatKhau { get; set; } = new List<DatLaiMatKhau>();
+
+    public virtual ICollection<DiaChiNhanHang> DiaChiNhanHang { get; set; } = new List<DiaChiNhanHang>();
 
     public virtual ICollection<DonHang> DonHang { get; set; } = new List<DonHang>();
 

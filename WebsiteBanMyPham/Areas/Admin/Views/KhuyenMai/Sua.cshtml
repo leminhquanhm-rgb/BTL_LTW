@@ -82,6 +82,7 @@
                         @L["Admin_Promo_Col_Value"] <span class="text-statusDanger">*</span>
                     </label>
                     <input asp-for="GiaTriGiam" type="number" step="1" min="1"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Promo_Col_Value"].Value, 1)"
                            class="w-full text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
                     <span asp-validation-for="GiaTriGiam" class="text-[11px] text-statusDanger block mt-0.5"></span>
                 </div>
@@ -92,6 +93,7 @@
                         @L["Admin_Promo_Col_MaxDiscount"] (đ)
                     </label>
                     <input asp-for="GiamToiDa" type="number" step="1000" min="1000"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Promo_Col_MaxDiscount"].Value, "1.000")"
                            class="w-full text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
                     <span asp-validation-for="GiamToiDa" class="text-[11px] text-statusDanger block mt-0.5"></span>
                 </div>
@@ -104,6 +106,7 @@
                         @L["Admin_Promo_Col_MinOrder"] (đ)
                     </label>
                     <input asp-for="DonToiThieu" type="number" step="1000" min="0"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Promo_Col_MinOrder"].Value, 0)"
                            class="w-full text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
                     <span asp-validation-for="DonToiThieu" class="text-[11px] text-statusDanger block mt-0.5"></span>
                 </div>
@@ -114,6 +117,7 @@
                         @L["Admin_Promo_MaxUses"]
                     </label>
                     <input asp-for="SoLuotToiDa" type="number" step="1" min="1" placeholder="@L["Admin_Promo_Unlimited"]"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Promo_MaxUses"].Value, 1)"
                            class="w-full text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
                     <span asp-validation-for="SoLuotToiDa" class="text-[11px] text-statusDanger block mt-0.5"></span>
                 </div>

@@ -213,7 +213,12 @@ namespace WebsiteBanMyPham.Services
                 return (false, _localizer["Common_Error"].Value);
             }
 
-            banner.ThuTu = Math.Max(0, thuTuMoi);
+            if (thuTuMoi < 0 || thuTuMoi > 999)
+            {
+                return (false, string.Format(_localizer["Validation_Range"].Value, _localizer["Admin_Banner_Col_Order"].Value, 0, 999));
+            }
+
+            banner.ThuTu = thuTuMoi;
             await _context.SaveChangesAsync();
             return (true, null);
         }

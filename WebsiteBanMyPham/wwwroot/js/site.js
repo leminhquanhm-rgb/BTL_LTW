@@ -409,3 +409,53 @@ function muaNgayDetail(maSP, btn) {
     var qty = typeof getDetailQty === "function" ? getDetailQty() : 1;
     muaNgay(maSP, qty, btn);
 }
+
+// 12. jQuery Validation Localization Hook (Đa ngôn ngữ hóa thông báo mặc định của jQuery Validation qua .resx)
+(function () {
+    window.__applyJQueryValidationLocalization = function () {
+        if (!window.jQuery || !window.jQuery.validator) return;
+        var el = document.getElementById("jqv-messages");
+        if (!el) return;
+
+        var wrap = function (val) {
+            if (!val) return null;
+            if (val.indexOf("{0}") !== -1) {
+                return jQuery.validator.format(val);
+            }
+            return val;
+        };
+
+        var rules = [
+            { key: "required", attr: "required" },
+            { key: "remote", attr: "remote" },
+            { key: "email", attr: "email" },
+            { key: "url", attr: "url" },
+            { key: "date", attr: "date" },
+            { key: "dateISO", attr: "dateiso" },
+            { key: "number", attr: "number" },
+            { key: "digits", attr: "digits" },
+            { key: "creditcard", attr: "creditcard" },
+            { key: "equalTo", attr: "equalto" },
+            { key: "extension", attr: "extension" },
+            { key: "maxlength", attr: "maxlength" },
+            { key: "minlength", attr: "minlength" },
+            { key: "rangelength", attr: "rangelength" },
+            { key: "range", attr: "range" },
+            { key: "max", attr: "max" },
+            { key: "min", attr: "min" },
+            { key: "step", attr: "step" }
+        ];
+
+        var messages = {};
+        for (var i = 0; i < rules.length; i++) {
+            var val = el.getAttribute("data-" + rules[i].attr);
+            if (val) {
+                messages[rules[i].key] = wrap(val);
+            }
+        }
+
+        jQuery.extend(jQuery.validator.messages, messages);
+    };
+    window.__applyJQueryValidationLocalization();
+    document.addEventListener("DOMContentLoaded", window.__applyJQueryValidationLocalization);
+})();

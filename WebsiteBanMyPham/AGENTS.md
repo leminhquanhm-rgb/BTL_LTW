@@ -271,7 +271,7 @@ Tên database:
 
 WebsiteBanMyPham
 
-Có 16 bảng:
+Có 17 bảng:
 
 1.  TaiKhoan
 2.  DatLaiMatKhau
@@ -280,22 +280,16 @@ Có 16 bảng:
 5.  SanPham
 6.  AnhSanPham
 7.  GioHang
-8.  KhuyenMai
-9.  PhuongThucThanhToan
-
-10. DonHang
-
-11. ChiTietDonHang
-
-12. ThanhToan
-
-13. LichSuDonHang
-
-14. DanhGia
-
-15. KhieuNai
-
-16. Banner
+8.  DiaChiNhanHang
+9.  KhuyenMai
+10. PhuongThucThanhToan
+11. DonHang
+12. ChiTietDonHang
+13. ThanhToan
+14. LichSuDonHang
+15. DanhGia
+16. KhieuNai
+17. Banner
 
 Có View:
 
@@ -851,6 +845,19 @@ Chỉ tính đơn HoanThanh.
 Dựa trên NgayGiaoThanhCong.
 
 Không tính đơn đang xử lý, đang giao hoặc đã hủy.
+
+### 6.16. Sổ địa chỉ nhận hàng
+
+- Chỉ khách hàng (VaiTro = KhachHang) đã đăng nhập mới sử dụng sổ địa chỉ.
+- Mọi truy vấn đều lọc theo MaTK hiện tại (User.LayMaTK()); địa chỉ không thuộc mình trả về 404.
+- Tối đa 10 địa chỉ/khách (DiaChiConstant.ToiDaDiaChi).
+- TenNguoiNhan bắt buộc <= 100; SoDienThoai bắt buộc, regex ^0[0-9]{9,14}$, <= 15; DiaChi bắt buộc <= 255. Trim tất cả dữ liệu đầu vào.
+- Địa chỉ đầu tiên tạo tự động là mặc định.
+- Đặt mặc định: trong một transaction, bỏ mặc định cũ trước rồi mới đặt mặc định mới (bảo đảm không vi phạm unique filtered index UX_DiaChiNhanHang_MacDinh).
+- Xóa địa chỉ mặc định mà còn địa chỉ khác: địa chỉ mới nhất còn lại (theo OrderByDescending(NgayTao).ThenByDescending(MaDC)) tự động trở thành mặc định.
+- Sửa địa chỉ: nếu đang là mặc định thì không cho hủy mặc định (server bỏ qua yêu cầu hủy mặc định).
+- Đơn hàng KHÔNG lưu MaDC; vẫn lưu TenNguoiNhan, SdtNguoiNhan, DiaChiGiao như bản chụp snapshot tại thời điểm đặt hàng. Sửa hoặc xóa địa chỉ trong sổ không làm ảnh hưởng đơn cũ.
+- Khi đặt hàng: nếu gửi MaDC, server nạp dữ liệu từ DB (không tin client text); lưu vào sổ chỉ thực hiện sau khi tạo đơn thành công; lỗi lưu sổ không làm hỏng đơn.
 
 ## 7. GIAO DIỆN
 

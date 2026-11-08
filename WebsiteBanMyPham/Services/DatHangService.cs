@@ -207,8 +207,33 @@ namespace WebsiteBanMyPham.Services
                 ptChon.IsSelected = true;
             }
 
-            // Điền sẵn thông tin người nhận từ tài khoản
+            // Lấy danh sách sổ địa chỉ nhận hàng của khách
+            var danhSachDiaChi = await _context.DiaChiNhanHang
+                .AsNoTracking()
+                .Where(d => d.MaTK == maTK)
+                .OrderByDescending(d => d.LaMacDinh)
+                .ThenByDescending(d => d.NgayTao)
+                .ThenByDescending(d => d.MaDC)
+                .Select(d => new DiaChiItemViewModel
+                {
+                    MaDC = d.MaDC,
+                    TenNguoiNhan = d.TenNguoiNhan,
+                    SoDienThoai = d.SoDienThoai,
+                    DiaChi = d.DiaChi,
+                    LaMacDinh = d.LaMacDinh,
+                    NgayTao = d.NgayTao
+                })
+                .ToListAsync();
+
+            // Điền sẵn thông tin người nhận: ưu tiên địa chỉ mặc định/địa chỉ đã lưu, nếu chưa có thì lấy từ hồ sơ
             var user = await _context.TaiKhoan.AsNoTracking().FirstOrDefaultAsync(t => t.MaTK == maTK);
+            var diaChiChon = danhSachDiaChi.FirstOrDefault(d => d.LaMacDinh) ?? danhSachDiaChi.FirstOrDefault();
+
+            string tenNhan = diaChiChon != null ? diaChiChon.TenNguoiNhan : (user?.HoTen ?? string.Empty);
+            string sdtNhan = diaChiChon != null ? diaChiChon.SoDienThoai : (user?.SoDienThoai ?? string.Empty);
+            string dcNhan = diaChiChon != null ? diaChiChon.DiaChi : (user?.DiaChi ?? string.Empty);
+            int? maDCChon = diaChiChon?.MaDC;
+            bool coTheLuuSoDiaChi = danhSachDiaChi.Count < DiaChiConstant.ToiDaDiaChi;
 
             var vm = new DatHangViewModel
             {
@@ -223,9 +248,12 @@ namespace WebsiteBanMyPham.Services
                 TongThanhToan = tongThanhToan,
                 DanhSachPhuongThuc = danhSachPt,
                 ChoPhepMoPhong = choPhepMoPhong,
-                TenNguoiNhan = user?.HoTen ?? string.Empty,
-                SdtNguoiNhan = user?.SoDienThoai ?? string.Empty,
-                DiaChiGiao = user?.DiaChi ?? string.Empty,
+                DanhSachDiaChi = danhSachDiaChi,
+                MaDCChon = maDCChon,
+                CoTheLuuSoDiaChi = coTheLuuSoDiaChi,
+                TenNguoiNhan = tenNhan,
+                SdtNguoiNhan = sdtNhan,
+                DiaChiGiao = dcNhan,
                 MaPTChon = ptChon?.MaPT ?? 0,
                 MaChongDatTrung = string.Empty
             };

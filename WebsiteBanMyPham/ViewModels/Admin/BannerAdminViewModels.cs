@@ -27,7 +27,8 @@ namespace WebsiteBanMyPham.ViewModels.Admin
         [MaxLength(255, ErrorMessage = "Validation_MaxLength")]
         public string? LienKet { get; set; }
 
-        [Range(0, 99999, ErrorMessage = "Validation_Range")]
+        [Display(Name = "Admin_Banner_Col_Order")]
+        [Range(0, 999, ErrorMessage = "Validation_Range")]
         public int ThuTu { get; set; } = 0;
 
         public bool TrangThai { get; set; } = true;

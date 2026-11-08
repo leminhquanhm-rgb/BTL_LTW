@@ -160,7 +160,7 @@
                     <input type="hidden" name="trangThaiMoi" value="@TrangThaiDonHangConstant.DangGiao" />
                     
                     <div class="max-w-md space-y-1">
-                        <label class="block text-xs font-bold text-charcoal">@L["Admin_Order_TrackingNumber_Label"] (@L["Admin_PaymentMethod_Optional"])</label>
+                        <label class="block text-xs font-bold text-charcoal">@L["Admin_Order_TrackingNumber_Label"]</label>
                         <input type="text" name="maVanDon" maxlength="50"
                                placeholder="@L["Admin_Order_TrackingNumber_Placeholder"]"
                                class="w-full px-3.5 py-2 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
@@ -194,12 +194,12 @@
                 @L["Admin_Order_Detail_DeliveryInfo"]
             </h2>
             <div class="space-y-1.5 text-charcoal">
-                <p><span class="text-muted">@L["Admin_Order_Col_Customer"]:</span> <strong class="font-semibold">@Model.TenKhachHang</strong> (ID: #@(Model.MaTK))</p>
+                <p><span class="text-muted">@L["Admin_Order_Col_Customer"]:</span> <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="ChiTiet" asp-route-id="@Model.MaTK" class="font-bold text-primary hover:underline">@Model.TenKhachHang</a></p>
                 <p><span class="text-muted">Email:</span> @Model.EmailKhachHang</p>
                 <div class="pt-2 border-t border-borderLight/60">
                     <p><span class="text-muted">@L["Admin_Order_Col_Recipient"]:</span> <strong>@Model.TenNguoiNhan</strong></p>
                     <p><span class="text-muted">@L["Admin_Order_Col_Phone"]:</span> <span class="font-mono font-semibold">@Model.SdtNguoiNhan</span></p>
-                    <p><span class="text-muted">@L["Order_Detail_DeliveryInfo"]:</span> @Model.DiaChiGiao</p>
+                    <p><span class="text-muted">@L["Admin_Order_Col_Address"]:</span> @Model.DiaChiGiao</p>
                     @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
                     {
                         <p class="pt-1 text-muted italic bg-cream/50 p-2 rounded-btn mt-1">

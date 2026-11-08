@@ -53,6 +53,13 @@ namespace WebsiteBanMyPham.ViewModels
         public string DiaChiGiao { get; set; } = string.Empty;
         public string? GhiChu { get; set; }
         public int MaPTChon { get; set; }
+
+        // Sổ địa chỉ nhận hàng
+        public List<DiaChiItemViewModel> DanhSachDiaChi { get; set; } = new();
+        public int? MaDCChon { get; set; }
+        public bool CoTheLuuSoDiaChi { get; set; }
+        public bool LuuVaoSoDiaChi { get; set; }
+        public bool CoDiaChiLuu => DanhSachDiaChi.Count > 0;
     }
 
     public class DatHangFormViewModel
@@ -67,21 +74,24 @@ namespace WebsiteBanMyPham.ViewModels
         [Range(1, 99, ErrorMessage = "Validation_RangeMin")]
         public int SoLuongMuaNgay { get; set; } = 1;
 
+        public int? MaDC { get; set; }
+        public bool LuuVaoSoDiaChi { get; set; }
+
         [Required(ErrorMessage = "Validation_Required")]
         [StringLength(100, ErrorMessage = "Validation_MaxLength")]
         [Display(Name = "Label_TenNguoiNhan")]
-        public string TenNguoiNhan { get; set; } = null!;
+        public string TenNguoiNhan { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Validation_Required")]
         [RegularExpression(@"^0[0-9]{9,14}$", ErrorMessage = "Validation_Phone")]
         [StringLength(15, ErrorMessage = "Validation_MaxLength")]
         [Display(Name = "Label_SDTNguoiNhan")]
-        public string SdtNguoiNhan { get; set; } = null!;
+        public string SdtNguoiNhan { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Validation_Required")]
         [StringLength(255, ErrorMessage = "Validation_MaxLength")]
         [Display(Name = "Label_DiaChiGiao")]
-        public string DiaChiGiao { get; set; } = null!;
+        public string DiaChiGiao { get; set; } = string.Empty;
 
         [StringLength(500, ErrorMessage = "Validation_MaxLength")]
         [Display(Name = "Label_GhiChu")]

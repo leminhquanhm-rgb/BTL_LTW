@@ -1,0 +1,102 @@
+@model WebsiteBanMyPham.ViewModels.DiaChiFormViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> L
+@{
+    ViewData["Title"] = L["Address_EditTitle"].Value;
+}
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="space-y-1">
+        <nav class="flex items-center gap-2 text-xs text-muted" aria-label="Breadcrumb">
+            <a asp-controller="TrangChu" asp-action="Index" class="hover:text-primary transition">@L["Nav_Home"]</a>
+            <span>/</span>
+            <a asp-controller="DiaChi" asp-action="Index" class="hover:text-primary transition">@L["Nav_AddressBook"]</a>
+            <span>/</span>
+            <span class="text-charcoal font-semibold">@L["Address_EditTitle"]</span>
+        </nav>
+        <h1 class="text-xl sm:text-2xl font-serif font-bold text-charcoal">@L["Address_EditTitle"]</h1>
+    </div>
+
+    <!-- Thông báo lỗi tổng hợp từ ModelState (nếu có) -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/10 border border-statusDanger/30 text-statusDanger text-xs space-y-1" role="alert">
+            <div class="flex items-center gap-2 font-bold">
+                <i class="ph-fill ph-warning-circle text-base"></i>
+                <span>@L["Common_Error"]</span>
+            </div>
+            <div asp-validation-summary="All" class="pl-6 list-disc [&>ul]:list-disc"></div>
+        </div>
+    }
+
+    <!-- Form sửa địa chỉ -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft p-5 sm:p-7">
+        <form asp-action="Sua" asp-route-id="@Model.MaDC" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MaDC" />
+
+            <div>
+                <label asp-for="TenNguoiNhan" class="block text-xs font-bold text-charcoal mb-1">
+                    @L["Label_TenNguoiNhan"] <span class="text-statusDanger">*</span>
+                </label>
+                <input asp-for="TenNguoiNhan" maxlength="100"
+                       placeholder="@L["Label_TenNguoiNhan"]"
+                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                <span asp-validation-for="TenNguoiNhan" class="text-statusDanger text-[11px] mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="SoDienThoai" class="block text-xs font-bold text-charcoal mb-1">
+                    @L["Label_SDTNguoiNhan"] <span class="text-statusDanger">*</span>
+                </label>
+                <input asp-for="SoDienThoai" type="tel" maxlength="15"
+                       placeholder="0912345678"
+                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                <span asp-validation-for="SoDienThoai" class="text-statusDanger text-[11px] mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="DiaChi" class="block text-xs font-bold text-charcoal mb-1">
+                    @L["Label_DiaChiGiao"] <span class="text-statusDanger">*</span>
+                </label>
+                <input asp-for="DiaChi" maxlength="255"
+                       placeholder="Số nhà, ngõ, đường, phường/xã, quận/huyện, tỉnh/thành..."
+                       class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary transition" />
+                <span asp-validation-for="DiaChi" class="text-statusDanger text-[11px] mt-1 block"></span>
+            </div>
+
+            <div class="pt-2">
+                @if (Model.DangLaMacDinh)
+                {
+                    <input type="hidden" name="LaMacDinh" value="true" />
+                    <div class="p-3 rounded-btn bg-pastel/50 border border-primary/20 text-xs text-primary flex items-center gap-2">
+                        <i class="ph-bold ph-check text-base shrink-0"></i>
+                        <span class="font-semibold">@L["Address_DefaultBadge"]</span>
+                        <span class="text-muted">(@L["Address_CheckboxSetDefault"])</span>
+                    </div>
+                }
+                else
+                {
+                    <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                        <input asp-for="LaMacDinh" type="checkbox" class="accent-primary w-4 h-4 cursor-pointer rounded" />
+                        <span class="text-xs font-medium text-charcoal">@L["Address_CheckboxSetDefault"]</span>
+                    </label>
+                }
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-borderLight">
+                <a asp-action="Index"
+                   class="px-4 py-2.5 rounded-btn border border-borderLight hover:bg-cream text-charcoal text-xs font-semibold transition">
+                    @L["Common_Cancel"]
+                </a>
+                <button type="submit"
+                        class="px-5 py-2.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-2">
+                    <i class="ph-bold ph-check text-sm"></i>
+                    <span>@L["Address_Save"]</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

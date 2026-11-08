@@ -175,7 +175,7 @@
     <value>Email hoặc mật khẩu không đúng.</value>
   </data>
   <data name="Msg_Account_Locked" xml:space="preserve">
-    <value>Tài khoản của bạn đã bị khóa. Vui lòng liên hệ ban quản trị để được hỗ trợ.</value>
+    <value>Tài khoản của bạn đã bị khóa. Vui lòng liên hệ hotline {0} để được hỗ trợ.</value>
   </data>
   <data name="Msg_Account_NotFound" xml:space="preserve">
     <value>Không tìm thấy thông tin tài khoản.</value>
@@ -757,13 +757,7 @@
     <value>Xác minh mã OTP</value>
   </data>
   <data name="Account_VerifyOtpSubtitle" xml:space="preserve">
-    <value>Mã xác minh 6 chữ số đã được tạo cho email:</value>
-  </data>
-  <data name="Account_OtpDemoNote" xml:space="preserve">
-    <value>(Môi trường Development: Tra cứu mã OTP tại Console / Output Log)</value>
-  </data>
-  <data name="Account_OtpDemoDesc" xml:space="preserve">
-    <value>Mở cửa sổ Output / Terminal đang chạy lệnh để lấy mã OTP 6 số vừa tạo phục vụ kiểm thử.</value>
+    <value>Nhập mã xác minh 6 chữ số cho tài khoản</value>
   </data>
   <data name="Account_BtnVerifyOtp" xml:space="preserve">
     <value>Xác minh &amp; Tiếp tục</value>
@@ -1161,18 +1155,6 @@
   <data name="Checkout_OrderSummaryTitle" xml:space="preserve">
     <value>3. Sản phẩm đặt mua &amp; Mã khuyến mãi</value>
   </data>
-  <data name="Checkout_ModeCart" xml:space="preserve">
-    <value>Từ Giỏ hàng</value>
-  </data>
-  <data name="Checkout_ModeBuyNow" xml:space="preserve">
-    <value>Mua ngay</value>
-  </data>
-  <data name="Checkout_BuyNowBanner" xml:space="preserve">
-    <value>Đang thanh toán trực tiếp một sản phẩm (không thêm vào giỏ hàng, giỏ hiện tại được giữ nguyên).</value>
-  </data>
-  <data name="Checkout_BackToCart" xml:space="preserve">
-    <value>Quay lại Giỏ hàng</value>
-  </data>
   <data name="Checkout_ConfirmOrder" xml:space="preserve">
     <value>Xác Nhận Đặt Hàng</value>
   </data>
@@ -1277,6 +1259,75 @@
   </data>
   <data name="Payment_RecipientInfo" xml:space="preserve">
     <value>Thông tin nhận hàng:</value>
+  </data>
+  <data name="Nav_AddressBook" xml:space="preserve">
+    <value>Sổ địa chỉ</value>
+  </data>
+  <data name="Address_PageTitle" xml:space="preserve">
+    <value>Sổ địa chỉ nhận hàng</value>
+  </data>
+  <data name="Address_AddNew" xml:space="preserve">
+    <value>Thêm địa chỉ mới</value>
+  </data>
+  <data name="Address_EditTitle" xml:space="preserve">
+    <value>Chỉnh sửa địa chỉ</value>
+  </data>
+  <data name="Address_ListEmpty" xml:space="preserve">
+    <value>Bạn chưa có địa chỉ nhận hàng nào trong sổ địa chỉ.</value>
+  </data>
+  <data name="Address_CountFormat" xml:space="preserve">
+    <value>Đã lưu {0}/{1} địa chỉ</value>
+  </data>
+  <data name="Address_DefaultBadge" xml:space="preserve">
+    <value>Mặc định</value>
+  </data>
+  <data name="Address_SetAsDefault" xml:space="preserve">
+    <value>Đặt làm mặc định</value>
+  </data>
+  <data name="Address_CheckboxSetDefault" xml:space="preserve">
+    <value>Đặt làm địa chỉ nhận hàng mặc định</value>
+  </data>
+  <data name="Address_FirstAddressNote" xml:space="preserve">
+    <value>Địa chỉ đầu tiên sẽ tự động được đặt làm mặc định.</value>
+  </data>
+  <data name="Address_ConfirmDelete" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa địa chỉ nhận hàng này không?</value>
+  </data>
+  <data name="Address_DeliverToThis" xml:space="preserve">
+    <value>Giao đến địa chỉ này</value>
+  </data>
+  <data name="Address_Save" xml:space="preserve">
+    <value>Lưu địa chỉ</value>
+  </data>
+  <data name="Msg_Address_AddSuccess" xml:space="preserve">
+    <value>Thêm địa chỉ nhận hàng thành công!</value>
+  </data>
+  <data name="Msg_Address_EditSuccess" xml:space="preserve">
+    <value>Cập nhật địa chỉ nhận hàng thành công!</value>
+  </data>
+  <data name="Msg_Address_DeleteSuccess" xml:space="preserve">
+    <value>Xóa địa chỉ nhận hàng thành công!</value>
+  </data>
+  <data name="Msg_Address_SetDefaultSuccess" xml:space="preserve">
+    <value>Đã đặt địa chỉ làm mặc định!</value>
+  </data>
+  <data name="Msg_Address_NotFound" xml:space="preserve">
+    <value>Địa chỉ không tồn tại hoặc không thuộc quyền sở hữu của bạn.</value>
+  </data>
+  <data name="Msg_Address_LimitExceeded" xml:space="preserve">
+    <value>Sổ địa chỉ đã đạt giới hạn tối đa (10 địa chỉ).</value>
+  </data>
+  <data name="Checkout_SavedAddresses" xml:space="preserve">
+    <value>Địa chỉ nhận hàng đã lưu</value>
+  </data>
+  <data name="Checkout_DeliverToOther" xml:space="preserve">
+    <value>Giao đến địa chỉ khác</value>
+  </data>
+  <data name="Checkout_SaveToAddressBook" xml:space="preserve">
+    <value>Lưu địa chỉ này vào sổ địa chỉ để dùng cho lần sau</value>
+  </data>
+  <data name="Checkout_ManageAddressBook" xml:space="preserve">
+    <value>Quản lý sổ địa chỉ</value>
   </data>
   <data name="PaymentSim_FailedMessage" xml:space="preserve">
     <value>Thanh toán trực tuyến thất bại. Bạn có thể thử thanh toán lại hoặc chọn phương thức khác.</value>
@@ -2225,6 +2276,9 @@
   <data name="Admin_Order_Col_DeliveredDate" xml:space="preserve">
     <value>Ngày giao TC</value>
   </data>
+  <data name="Admin_Order_Col_Address" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
   <data name="Admin_Order_Empty" xml:space="preserve">
     <value>Không có đơn hàng nào phù hợp.</value>
   </data>
@@ -2283,10 +2337,10 @@
     <value>Cập nhật trạng thái đơn hàng thành công.</value>
   </data>
   <data name="Admin_Order_TrackingNumber_Placeholder" xml:space="preserve">
-    <value>Nhập mã vận đơn (tùy chọn, tối đa 50 ký tự)...</value>
+    <value>Để trống để hệ thống tự tạo mã</value>
   </data>
   <data name="Admin_Order_TrackingNumber_Label" xml:space="preserve">
-    <value>Mã vận đơn</value>
+    <value>Mã vận đơn (tùy chọn)</value>
   </data>
   <data name="Admin_Payment_Title" xml:space="preserve">
     <value>Quản lý thanh toán &amp; hoàn tiền</value>
@@ -2859,5 +2913,83 @@
   </data>
   <data name="Admin_Complaint_AdminFormat" xml:space="preserve">
     <value>Quản trị viên #{0}</value>
+  </data>
+  <data name="Address_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Address_LimitReached" xml:space="preserve">
+    <value>Đã đạt giới hạn tối đa</value>
+  </data>
+  <data name="Admin_Nav_Customers" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Checkout_ChangeAddress" xml:space="preserve">
+    <value>Thay đổi</value>
+  </data>
+  <data name="Checkout_SelectAddressModalTitle" xml:space="preserve">
+    <value>Chọn địa chỉ nhận hàng</value>
+  </data>
+  <data name="Checkout_SelectFromAddressBook" xml:space="preserve">
+    <value>Chọn từ sổ địa chỉ</value>
+  </data>
+  <data name="Admin_Product_Images_SelectFile" xml:space="preserve">
+    <value>Vui lòng chọn tệp hình ảnh.</value>
+  </data>
+  <data name="Admin_Inventory_AdjustDelta" xml:space="preserve">
+    <value>Số lượng điều chỉnh</value>
+  </data>
+  <data name="Jqv_Required" xml:space="preserve">
+    <value>Trường này là bắt buộc.</value>
+  </data>
+  <data name="Jqv_Remote" xml:space="preserve">
+    <value>Vui lòng sửa lại trường này.</value>
+  </data>
+  <data name="Jqv_Email" xml:space="preserve">
+    <value>Vui lòng nhập địa chỉ email hợp lệ.</value>
+  </data>
+  <data name="Jqv_Url" xml:space="preserve">
+    <value>Vui lòng nhập URL hợp lệ.</value>
+  </data>
+  <data name="Jqv_Date" xml:space="preserve">
+    <value>Vui lòng nhập ngày hợp lệ.</value>
+  </data>
+  <data name="Jqv_DateISO" xml:space="preserve">
+    <value>Vui lòng nhập ngày hợp lệ (ISO).</value>
+  </data>
+  <data name="Jqv_Number" xml:space="preserve">
+    <value>Vui lòng nhập số hợp lệ.</value>
+  </data>
+  <data name="Jqv_Digits" xml:space="preserve">
+    <value>Vui lòng chỉ nhập chữ số.</value>
+  </data>
+  <data name="Jqv_CreditCard" xml:space="preserve">
+    <value>Vui lòng nhập số thẻ tín dụng hợp lệ.</value>
+  </data>
+  <data name="Jqv_EqualTo" xml:space="preserve">
+    <value>Vui lòng nhập lại cùng một giá trị.</value>
+  </data>
+  <data name="Jqv_Extension" xml:space="preserve">
+    <value>Vui lòng nhập tệp có phần mở rộng hợp lệ.</value>
+  </data>
+  <data name="Jqv_MaxLength" xml:space="preserve">
+    <value>Vui lòng nhập không quá {0} ký tự.</value>
+  </data>
+  <data name="Jqv_MinLength" xml:space="preserve">
+    <value>Vui lòng nhập ít nhất {0} ký tự.</value>
+  </data>
+  <data name="Jqv_RangeLength" xml:space="preserve">
+    <value>Vui lòng nhập từ {0} đến {1} ký tự.</value>
+  </data>
+  <data name="Jqv_Range" xml:space="preserve">
+    <value>Vui lòng nhập giá trị từ {0} đến {1}.</value>
+  </data>
+  <data name="Jqv_Max" xml:space="preserve">
+    <value>Vui lòng nhập giá trị nhỏ hơn hoặc bằng {0}.</value>
+  </data>
+  <data name="Jqv_Min" xml:space="preserve">
+    <value>Vui lòng nhập giá trị lớn hơn hoặc bằng {0}.</value>
+  </data>
+  <data name="Jqv_Step" xml:space="preserve">
+    <value>Vui lòng nhập bội số của {0}.</value>
   </data>
 </root>

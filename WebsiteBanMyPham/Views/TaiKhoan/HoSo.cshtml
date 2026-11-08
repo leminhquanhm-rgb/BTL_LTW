@@ -35,6 +35,14 @@
                         <i class="ph ph-user text-base"></i>
                         <span>@L["Account_NavProfile"]</span>
                     </a>
+                    @if (Model.VaiTro == VaiTroConstant.KhachHang)
+                    {
+                        <a asp-controller="DiaChi" asp-action="Index"
+                           class="flex items-center gap-2.5 px-3 py-2 rounded-btn text-charcoal hover:bg-cream transition">
+                            <i class="ph ph-address-book text-base"></i>
+                            <span>@L["Nav_AddressBook"]</span>
+                        </a>
+                    }
                     <a asp-action="DoiMatKhau"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-btn text-charcoal hover:bg-cream transition">
                         <i class="ph ph-lock-key text-base"></i>

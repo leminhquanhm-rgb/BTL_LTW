@@ -1,4 +1,4 @@
-﻿USE master;
+USE master;
 GO
 IF DB_ID(N'WebsiteBanMyPham') IS NOT NULL
 BEGIN
@@ -86,6 +86,20 @@ CREATE TABLE GioHang (
     NgayThem DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     CONSTRAINT UQ_GioHang UNIQUE (MaTK, MaSP)
 );
+
+/* ===== 3b. SỔ ĐỊA CHỈ NHẬN HÀNG (mỗi khách nhiều địa chỉ, tối đa 1 địa chỉ mặc định) ===== */
+CREATE TABLE DiaChiNhanHang (
+    MaDC         INT IDENTITY(1,1) PRIMARY KEY,
+    MaTK         INT NOT NULL REFERENCES TaiKhoan(MaTK) ON DELETE CASCADE,
+    TenNguoiNhan NVARCHAR(100) NOT NULL,
+    SoDienThoai  VARCHAR(15)   NOT NULL,
+    DiaChi       NVARCHAR(255) NOT NULL,
+    LaMacDinh    BIT NOT NULL DEFAULT 0,
+    NgayTao      DATETIME2 NOT NULL DEFAULT SYSDATETIME()
+);
+CREATE INDEX IX_DiaChiNhanHang_MaTK ON DiaChiNhanHang(MaTK);
+-- Mỗi tài khoản chỉ có tối đa 1 địa chỉ mặc định
+CREATE UNIQUE INDEX UX_DiaChiNhanHang_MacDinh ON DiaChiNhanHang(MaTK) WHERE LaMacDinh = 1;
 
 /* ===== 4. KHUYẾN MÃI, PHƯƠNG THỨC THANH TOÁN ===== */
 CREATE TABLE KhuyenMai (

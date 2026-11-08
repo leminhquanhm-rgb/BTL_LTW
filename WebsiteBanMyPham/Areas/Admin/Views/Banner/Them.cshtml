@@ -67,6 +67,8 @@
                     @L["Admin_Banner_Col_Order"]
                 </label>
                 <input asp-for="ThuTu" type="number" min="0" max="999"
+                       data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Banner_Col_Order"].Value, 0)"
+                       data-msg-max="@string.Format(L["Validation_Range"].Value, L["Admin_Banner_Col_Order"].Value, 0, 999)"
                        class="w-32 text-xs font-mono p-2.5 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
                 <span asp-validation-for="ThuTu" class="text-[11px] text-statusDanger block mt-0.5"></span>
             </div>

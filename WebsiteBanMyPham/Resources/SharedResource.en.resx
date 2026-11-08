@@ -175,7 +175,7 @@
     <value>Incorrect email or password.</value>
   </data>
   <data name="Msg_Account_Locked" xml:space="preserve">
-    <value>Your account has been locked. Please contact administrator for support.</value>
+    <value>Your account has been locked. Please contact our hotline {0} for support.</value>
   </data>
   <data name="Msg_Account_NotFound" xml:space="preserve">
     <value>Account information not found.</value>
@@ -757,13 +757,7 @@
     <value>Verify OTP Code</value>
   </data>
   <data name="Account_VerifyOtpSubtitle" xml:space="preserve">
-    <value>A 6-digit verification code has been issued for:</value>
-  </data>
-  <data name="Account_OtpDemoNote" xml:space="preserve">
-    <value>(Development: Check OTP code in Console / Output Log)</value>
-  </data>
-  <data name="Account_OtpDemoDesc" xml:space="preserve">
-    <value>Open the Output / Terminal window running the application to retrieve the newly generated 6-digit OTP code for testing.</value>
+    <value>Enter the 6-digit verification code for</value>
   </data>
   <data name="Account_BtnVerifyOtp" xml:space="preserve">
     <value>Verify &amp; Continue</value>
@@ -1161,18 +1155,6 @@
   <data name="Checkout_OrderSummaryTitle" xml:space="preserve">
     <value>3. Order Items &amp; Promotions</value>
   </data>
-  <data name="Checkout_ModeCart" xml:space="preserve">
-    <value>From Cart</value>
-  </data>
-  <data name="Checkout_ModeBuyNow" xml:space="preserve">
-    <value>Buy Now</value>
-  </data>
-  <data name="Checkout_BuyNowBanner" xml:space="preserve">
-    <value>Direct purchase for single item (items not added to cart, current cart remains unchanged).</value>
-  </data>
-  <data name="Checkout_BackToCart" xml:space="preserve">
-    <value>Back to Cart</value>
-  </data>
   <data name="Checkout_ConfirmOrder" xml:space="preserve">
     <value>Confirm Order</value>
   </data>
@@ -1277,6 +1259,75 @@
   </data>
   <data name="Payment_RecipientInfo" xml:space="preserve">
     <value>Delivery information:</value>
+  </data>
+  <data name="Nav_AddressBook" xml:space="preserve">
+    <value>Address Book</value>
+  </data>
+  <data name="Address_PageTitle" xml:space="preserve">
+    <value>Delivery Address Book</value>
+  </data>
+  <data name="Address_AddNew" xml:space="preserve">
+    <value>Add New Address</value>
+  </data>
+  <data name="Address_EditTitle" xml:space="preserve">
+    <value>Edit Address</value>
+  </data>
+  <data name="Address_ListEmpty" xml:space="preserve">
+    <value>You don't have any saved delivery addresses yet.</value>
+  </data>
+  <data name="Address_CountFormat" xml:space="preserve">
+    <value>{0}/{1} addresses saved</value>
+  </data>
+  <data name="Address_DefaultBadge" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Address_SetAsDefault" xml:space="preserve">
+    <value>Set as default</value>
+  </data>
+  <data name="Address_CheckboxSetDefault" xml:space="preserve">
+    <value>Set as default delivery address</value>
+  </data>
+  <data name="Address_FirstAddressNote" xml:space="preserve">
+    <value>The first address will automatically be set as default.</value>
+  </data>
+  <data name="Address_ConfirmDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this delivery address?</value>
+  </data>
+  <data name="Address_DeliverToThis" xml:space="preserve">
+    <value>Deliver to this address</value>
+  </data>
+  <data name="Address_Save" xml:space="preserve">
+    <value>Save Address</value>
+  </data>
+  <data name="Msg_Address_AddSuccess" xml:space="preserve">
+    <value>Delivery address added successfully!</value>
+  </data>
+  <data name="Msg_Address_EditSuccess" xml:space="preserve">
+    <value>Delivery address updated successfully!</value>
+  </data>
+  <data name="Msg_Address_DeleteSuccess" xml:space="preserve">
+    <value>Delivery address deleted successfully!</value>
+  </data>
+  <data name="Msg_Address_SetDefaultSuccess" xml:space="preserve">
+    <value>Default address updated successfully!</value>
+  </data>
+  <data name="Msg_Address_NotFound" xml:space="preserve">
+    <value>Address not found or does not belong to you.</value>
+  </data>
+  <data name="Msg_Address_LimitExceeded" xml:space="preserve">
+    <value>Address book has reached the maximum limit (10 addresses).</value>
+  </data>
+  <data name="Checkout_SavedAddresses" xml:space="preserve">
+    <value>Saved delivery addresses</value>
+  </data>
+  <data name="Checkout_DeliverToOther" xml:space="preserve">
+    <value>Deliver to a different address</value>
+  </data>
+  <data name="Checkout_SaveToAddressBook" xml:space="preserve">
+    <value>Save this address to address book for future use</value>
+  </data>
+  <data name="Checkout_ManageAddressBook" xml:space="preserve">
+    <value>Manage address book</value>
   </data>
   <data name="PaymentSim_FailedMessage" xml:space="preserve">
     <value>Online payment failed. You can retry payment or choose another method.</value>
@@ -2225,6 +2276,9 @@
   <data name="Admin_Order_Col_DeliveredDate" xml:space="preserve">
     <value>Delivered Date</value>
   </data>
+  <data name="Admin_Order_Col_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
   <data name="Admin_Order_Empty" xml:space="preserve">
     <value>No matching orders found.</value>
   </data>
@@ -2283,10 +2337,10 @@
     <value>Order status updated successfully.</value>
   </data>
   <data name="Admin_Order_TrackingNumber_Placeholder" xml:space="preserve">
-    <value>Enter tracking number (optional, max 50 chars)...</value>
+    <value>Leave blank for system to auto-generate</value>
   </data>
   <data name="Admin_Order_TrackingNumber_Label" xml:space="preserve">
-    <value>Tracking Number</value>
+    <value>Tracking number (optional)</value>
   </data>
   <data name="Admin_Payment_Title" xml:space="preserve">
     <value>Payments &amp; Refunds</value>
@@ -2859,5 +2913,83 @@
   </data>
   <data name="Admin_Complaint_AdminFormat" xml:space="preserve">
     <value>Admin #{0}</value>
+  </data>
+  <data name="Address_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Address_LimitReached" xml:space="preserve">
+    <value>Maximum limit reached</value>
+  </data>
+  <data name="Admin_Nav_Customers" xml:space="preserve">
+    <value>Customers</value>
+  </data>
+  <data name="Checkout_ChangeAddress" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Checkout_SelectAddressModalTitle" xml:space="preserve">
+    <value>Select delivery address</value>
+  </data>
+  <data name="Checkout_SelectFromAddressBook" xml:space="preserve">
+    <value>Choose from address book</value>
+  </data>
+  <data name="Admin_Product_Images_SelectFile" xml:space="preserve">
+    <value>Please select an image file.</value>
+  </data>
+  <data name="Admin_Inventory_AdjustDelta" xml:space="preserve">
+    <value>Adjustment quantity</value>
+  </data>
+  <data name="Jqv_Required" xml:space="preserve">
+    <value>This field is required.</value>
+  </data>
+  <data name="Jqv_Remote" xml:space="preserve">
+    <value>Please fix this field.</value>
+  </data>
+  <data name="Jqv_Email" xml:space="preserve">
+    <value>Please enter a valid email address.</value>
+  </data>
+  <data name="Jqv_Url" xml:space="preserve">
+    <value>Please enter a valid URL.</value>
+  </data>
+  <data name="Jqv_Date" xml:space="preserve">
+    <value>Please enter a valid date.</value>
+  </data>
+  <data name="Jqv_DateISO" xml:space="preserve">
+    <value>Please enter a valid date (ISO).</value>
+  </data>
+  <data name="Jqv_Number" xml:space="preserve">
+    <value>Please enter a valid number.</value>
+  </data>
+  <data name="Jqv_Digits" xml:space="preserve">
+    <value>Please enter only digits.</value>
+  </data>
+  <data name="Jqv_CreditCard" xml:space="preserve">
+    <value>Please enter a valid credit card number.</value>
+  </data>
+  <data name="Jqv_EqualTo" xml:space="preserve">
+    <value>Please enter the same value again.</value>
+  </data>
+  <data name="Jqv_Extension" xml:space="preserve">
+    <value>Please enter a value with a valid extension.</value>
+  </data>
+  <data name="Jqv_MaxLength" xml:space="preserve">
+    <value>Please enter no more than {0} characters.</value>
+  </data>
+  <data name="Jqv_MinLength" xml:space="preserve">
+    <value>Please enter at least {0} characters.</value>
+  </data>
+  <data name="Jqv_RangeLength" xml:space="preserve">
+    <value>Please enter a value between {0} and {1} characters long.</value>
+  </data>
+  <data name="Jqv_Range" xml:space="preserve">
+    <value>Please enter a value between {0} and {1}.</value>
+  </data>
+  <data name="Jqv_Max" xml:space="preserve">
+    <value>Please enter a value less than or equal to {0}.</value>
+  </data>
+  <data name="Jqv_Min" xml:space="preserve">
+    <value>Please enter a value greater than or equal to {0}.</value>
+  </data>
+  <data name="Jqv_Step" xml:space="preserve">
+    <value>Please enter a multiple of {0}.</value>
   </data>
 </root>

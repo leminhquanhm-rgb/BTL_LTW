@@ -475,24 +475,18 @@ namespace WebsiteBanMyPham.Services
                 }
                 else if (trangThaiMoi == TrangThaiDonHangConstant.DangGiao)
                 {
-                    int affected;
-                    if (!string.IsNullOrEmpty(maVanDon))
+                    // Tự sinh mã vận đơn theo định dạng GHNxxxx nếu để trống
+                    if (string.IsNullOrWhiteSpace(maVanDon))
                     {
-                        affected = await _context.DonHang
-                            .Where(d => d.MaDH == maDH && d.TrangThai == TrangThaiDonHangConstant.DaXacNhan)
-                            .ExecuteUpdateAsync(s => s
-                                .SetProperty(d => d.TrangThai, TrangThaiDonHangConstant.DangGiao)
-                                .SetProperty(d => d.NgayVanDon, now)
-                                .SetProperty(d => d.MaVanDon, maVanDon));
+                        maVanDon = $"{VanChuyenConstant.TienToMaVanDon}{maDH:D4}";
                     }
-                    else
-                    {
-                        affected = await _context.DonHang
-                            .Where(d => d.MaDH == maDH && d.TrangThai == TrangThaiDonHangConstant.DaXacNhan)
-                            .ExecuteUpdateAsync(s => s
-                                .SetProperty(d => d.TrangThai, TrangThaiDonHangConstant.DangGiao)
-                                .SetProperty(d => d.NgayVanDon, now));
-                    }
+
+                    var affected = await _context.DonHang
+                        .Where(d => d.MaDH == maDH && d.TrangThai == TrangThaiDonHangConstant.DaXacNhan)
+                        .ExecuteUpdateAsync(s => s
+                            .SetProperty(d => d.TrangThai, TrangThaiDonHangConstant.DangGiao)
+                            .SetProperty(d => d.NgayVanDon, now)
+                            .SetProperty(d => d.MaVanDon, maVanDon));
 
                     if (affected == 0)
                     {

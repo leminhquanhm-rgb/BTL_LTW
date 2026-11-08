@@ -98,6 +98,7 @@
                         @L["Admin_Product_Price"] (VNĐ) <span class="text-statusDanger">*</span>
                     </label>
                     <input asp-for="Gia" type="number" min="0" step="1000"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Product_Price"].Value, 0)"
                            class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
                     <span asp-validation-for="Gia" class="text-statusDanger text-[11px] block"></span>
                 </div>
@@ -108,6 +109,7 @@
                         @L["Admin_Product_OriginalPrice"] (VNĐ)
                     </label>
                     <input asp-for="GiaGoc" type="number" min="0" step="1000"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Product_OriginalPrice"].Value, 0)"
                            class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
                     <span class="text-[11px] text-muted block">@L["Admin_Product_OriginalPrice_Hint"]</span>
                     <span asp-validation-for="GiaGoc" class="text-statusDanger text-[11px] block"></span>
@@ -119,6 +121,8 @@
                         @L["Admin_Product_InitialStock"] <span class="text-statusDanger">*</span>
                     </label>
                     <input asp-for="SoLuongTon" type="number" min="0" max="1000000"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Product_InitialStock"].Value, 0)"
+                           data-msg-max="@string.Format(L["Validation_Range"].Value, L["Admin_Product_InitialStock"].Value, 0, "1.000.000")"
                            class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
                     <span class="text-[11px] text-muted block">@L["Admin_Product_InitialStock_Notice"]</span>
                     <span asp-validation-for="SoLuongTon" class="text-statusDanger text-[11px] block"></span>
@@ -130,6 +134,8 @@
                         @L["Admin_Product_WarningThreshold"] <span class="text-statusDanger">*</span>
                     </label>
                     <input asp-for="NguongCanhBao" type="number" min="0" max="100000"
+                           data-msg-min="@string.Format(L["Validation_RangeMin"].Value, L["Admin_Product_WarningThreshold"].Value, 0)"
+                           data-msg-max="@string.Format(L["Validation_Range"].Value, L["Admin_Product_WarningThreshold"].Value, 0, "100.000")"
                            class="w-full px-3.5 py-2.5 bg-cream border border-borderLight rounded-btn text-xs text-charcoal focus:outline-none focus:border-primary" />
                     <span class="text-[11px] text-muted block">@L["Admin_Product_WarningThreshold_Hint"]</span>
                     <span asp-validation-for="NguongCanhBao" class="text-statusDanger text-[11px] block"></span>
