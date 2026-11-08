@@ -545,7 +545,10 @@
     <value>Accounts (Customers &amp; Admins)</value>
   </data>
   <data name="Admin_Nav_Reviews" xml:space="preserve">
-    <value>Reviews &amp; Complaints</value>
+    <value>Reviews</value>
+  </data>
+  <data name="Admin_Nav_Complaints" xml:space="preserve">
+    <value>Complaints</value>
   </data>
   <data name="Admin_ChangePassword" xml:space="preserve">
     <value>Change Password</value>
@@ -2657,5 +2660,171 @@
   </data>
   <data name="Admin_Customer_TotalSpentNote" xml:space="preserve">
     <value>Completed orders only</value>
+  </data>
+  <!-- Bước 6E: Quản lý đánh giá và khiếu nại -->
+  <data name="Admin_Review_Title" xml:space="preserve">
+    <value>Product reviews management</value>
+  </data>
+  <data name="Admin_Review_List" xml:space="preserve">
+    <value>Review list</value>
+  </data>
+  <data name="Admin_Review_Filter_AllRating" xml:space="preserve">
+    <value>All star ratings</value>
+  </data>
+  <data name="Admin_Review_Star_Format" xml:space="preserve">
+    <value>{0} stars</value>
+  </data>
+  <data name="Admin_Review_SearchPlaceholder" xml:space="preserve">
+    <value>Search by product, customer name, email...</value>
+  </data>
+  <data name="Admin_Review_Col_Id" xml:space="preserve">
+    <value>Review ID</value>
+  </data>
+  <data name="Admin_Review_Col_Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="Admin_Review_Col_Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="Admin_Review_Col_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="Admin_Review_Col_Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Admin_Review_Col_Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="Admin_Review_Col_CreatedDate" xml:space="preserve">
+    <value>Created date</value>
+  </data>
+  <data name="Admin_Review_Col_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Admin_Review_Action_Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Admin_Review_Action_Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="Admin_Review_Action_Reapprove" xml:space="preserve">
+    <value>Re-approve</value>
+  </data>
+  <data name="Admin_Review_RejectConfirm" xml:space="preserve">
+    <value>Are you sure you want to REJECT review #{0} for product '{1}'? It will not be publicly visible.</value>
+  </data>
+  <data name="Admin_Review_Modal_FullContent" xml:space="preserve">
+    <value>Full review content</value>
+  </data>
+  <data name="Admin_Review_ApproveSuccess" xml:space="preserve">
+    <value>Review approved successfully.</value>
+  </data>
+  <data name="Admin_Review_RejectSuccess" xml:space="preserve">
+    <value>Review rejected successfully.</value>
+  </data>
+  <data name="Admin_Review_Error_InvalidTransition" xml:space="preserve">
+    <value>Invalid review status transition.</value>
+  </data>
+  <data name="Admin_Review_Error_Concurrency" xml:space="preserve">
+    <value>Review was updated by someone else, please reload.</value>
+  </data>
+  <data name="Admin_Review_Empty" xml:space="preserve">
+    <value>No matching reviews found.</value>
+  </data>
+  <data name="Admin_Complaint_Title" xml:space="preserve">
+    <value>Complaints management</value>
+  </data>
+  <data name="Admin_Complaint_List" xml:space="preserve">
+    <value>Complaint list</value>
+  </data>
+  <data name="Admin_Complaint_Detail_Title" xml:space="preserve">
+    <value>Complaint detail</value>
+  </data>
+  <data name="Admin_Complaint_Tab_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Admin_Complaint_SearchPlaceholder" xml:space="preserve">
+    <value>Search by customer, email, order code (DH000001)...</value>
+  </data>
+  <data name="Admin_Complaint_Col_Id" xml:space="preserve">
+    <value>Complaint ID</value>
+  </data>
+  <data name="Admin_Complaint_Col_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="Admin_Complaint_Col_Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="Admin_Complaint_Col_WaitingDays" xml:space="preserve">
+    <value>Waiting</value>
+  </data>
+  <data name="Admin_Complaint_DaysFormat" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="Admin_Complaint_NoOrderAssociated" xml:space="preserve">
+    <value>No associated order</value>
+  </data>
+  <data name="Admin_Complaint_NoOrderNote" xml:space="preserve">
+    <value>No associated order (legacy data)</value>
+  </data>
+  <data name="Admin_Complaint_Section_Customer" xml:space="preserve">
+    <value>Complainant information</value>
+  </data>
+  <data name="Admin_Complaint_Section_Order" xml:space="preserve">
+    <value>Order &amp; product information</value>
+  </data>
+  <data name="Admin_Complaint_Section_Content" xml:space="preserve">
+    <value>Complaint details</value>
+  </data>
+  <data name="Admin_Complaint_Section_Process" xml:space="preserve">
+    <value>Process &amp; response</value>
+  </data>
+  <data name="Admin_Complaint_Handler" xml:space="preserve">
+    <value>Handled by</value>
+  </data>
+  <data name="Admin_Complaint_ResponseText" xml:space="preserve">
+    <value>Response message</value>
+  </data>
+  <data name="Admin_Complaint_ResponsePlaceholder" xml:space="preserve">
+    <value>Enter response message for customer (10 - 1000 characters)...</value>
+  </data>
+  <data name="Admin_Complaint_Btn_Process" xml:space="preserve">
+    <value>Process complaint</value>
+  </data>
+  <data name="Admin_Complaint_Btn_Resolve" xml:space="preserve">
+    <value>Resolve complaint</value>
+  </data>
+  <data name="Admin_Complaint_Btn_Reject" xml:space="preserve">
+    <value>Reject complaint</value>
+  </data>
+  <data name="Admin_Complaint_ClosedNotice" xml:space="preserve">
+    <value>This complaint is closed and its status cannot be changed.</value>
+  </data>
+  <data name="Admin_Complaint_ProcessSuccess" xml:space="preserve">
+    <value>Complaint status changed to In Progress.</value>
+  </data>
+  <data name="Admin_Complaint_ResolveSuccess" xml:space="preserve">
+    <value>Complaint resolved successfully.</value>
+  </data>
+  <data name="Admin_Complaint_RejectSuccess" xml:space="preserve">
+    <value>Complaint rejected successfully.</value>
+  </data>
+  <data name="Admin_Complaint_Error_ResponseRequired" xml:space="preserve">
+    <value>Please enter a response message (10 to 1000 characters) when resolving or rejecting.</value>
+  </data>
+  <data name="Admin_Complaint_Error_ResponseLength" xml:space="preserve">
+    <value>Response message must be between 10 and 1000 characters.</value>
+  </data>
+  <data name="Admin_Complaint_Error_AlreadyClosed" xml:space="preserve">
+    <value>Complaint is already closed, cannot change status.</value>
+  </data>
+  <data name="Admin_Complaint_Error_InvalidTransition" xml:space="preserve">
+    <value>Invalid complaint status transition.</value>
+  </data>
+  <data name="Admin_Complaint_Error_Concurrency" xml:space="preserve">
+    <value>Complaint was updated by someone else, please reload.</value>
+  </data>
+  <data name="Admin_Complaint_Empty" xml:space="preserve">
+    <value>No matching complaints found.</value>
   </data>
 </root>

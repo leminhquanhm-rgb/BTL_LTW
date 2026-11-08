@@ -545,7 +545,10 @@
     <value>TK Khách &amp; TK Admin</value>
   </data>
   <data name="Admin_Nav_Reviews" xml:space="preserve">
-    <value>Đánh giá &amp; Khiếu nại</value>
+    <value>Quản lý đánh giá</value>
+  </data>
+  <data name="Admin_Nav_Complaints" xml:space="preserve">
+    <value>Quản lý khiếu nại</value>
   </data>
   <data name="Admin_ChangePassword" xml:space="preserve">
     <value>Đổi mật khẩu</value>
@@ -2657,5 +2660,171 @@
   </data>
   <data name="Admin_Customer_TotalSpentNote" xml:space="preserve">
     <value>Chỉ tính đơn hoàn thành</value>
+  </data>
+  <!-- Bước 6E: Quản lý đánh giá và khiếu nại -->
+  <data name="Admin_Review_Title" xml:space="preserve">
+    <value>Quản lý đánh giá sản phẩm</value>
+  </data>
+  <data name="Admin_Review_List" xml:space="preserve">
+    <value>Danh sách đánh giá</value>
+  </data>
+  <data name="Admin_Review_Filter_AllRating" xml:space="preserve">
+    <value>Tất cả số sao</value>
+  </data>
+  <data name="Admin_Review_Star_Format" xml:space="preserve">
+    <value>{0} sao</value>
+  </data>
+  <data name="Admin_Review_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo sản phẩm, tên khách, email...</value>
+  </data>
+  <data name="Admin_Review_Col_Id" xml:space="preserve">
+    <value>Mã ĐG</value>
+  </data>
+  <data name="Admin_Review_Col_Product" xml:space="preserve">
+    <value>Sản phẩm</value>
+  </data>
+  <data name="Admin_Review_Col_Customer" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Admin_Review_Col_Order" xml:space="preserve">
+    <value>Đơn hàng</value>
+  </data>
+  <data name="Admin_Review_Col_Rating" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="Admin_Review_Col_Content" xml:space="preserve">
+    <value>Nội dung</value>
+  </data>
+  <data name="Admin_Review_Col_CreatedDate" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="Admin_Review_Col_Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Admin_Review_Action_Approve" xml:space="preserve">
+    <value>Duyệt</value>
+  </data>
+  <data name="Admin_Review_Action_Reject" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="Admin_Review_Action_Reapprove" xml:space="preserve">
+    <value>Duyệt lại</value>
+  </data>
+  <data name="Admin_Review_RejectConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn TỪ CHỐI đánh giá #{0} của sản phẩm '{1}'? Đánh giá này sẽ không được hiển thị công khai.</value>
+  </data>
+  <data name="Admin_Review_Modal_FullContent" xml:space="preserve">
+    <value>Nội dung đánh giá chi tiết</value>
+  </data>
+  <data name="Admin_Review_ApproveSuccess" xml:space="preserve">
+    <value>Đã duyệt đánh giá thành công.</value>
+  </data>
+  <data name="Admin_Review_RejectSuccess" xml:space="preserve">
+    <value>Đã từ chối đánh giá thành công.</value>
+  </data>
+  <data name="Admin_Review_Error_InvalidTransition" xml:space="preserve">
+    <value>Chuyển trạng thái đánh giá không hợp lệ.</value>
+  </data>
+  <data name="Admin_Review_Error_Concurrency" xml:space="preserve">
+    <value>Đánh giá đã được người khác cập nhật, vui lòng tải lại.</value>
+  </data>
+  <data name="Admin_Review_Empty" xml:space="preserve">
+    <value>Không tìm thấy đánh giá nào phù hợp.</value>
+  </data>
+  <data name="Admin_Complaint_Title" xml:space="preserve">
+    <value>Quản lý khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_List" xml:space="preserve">
+    <value>Danh sách khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_Detail_Title" xml:space="preserve">
+    <value>Chi tiết khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_Tab_Open" xml:space="preserve">
+    <value>Đang mở</value>
+  </data>
+  <data name="Admin_Complaint_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo khách hàng, email, mã đơn (DH000001)...</value>
+  </data>
+  <data name="Admin_Complaint_Col_Id" xml:space="preserve">
+    <value>Mã KN</value>
+  </data>
+  <data name="Admin_Complaint_Col_Order" xml:space="preserve">
+    <value>Đơn hàng</value>
+  </data>
+  <data name="Admin_Complaint_Col_Product" xml:space="preserve">
+    <value>Sản phẩm</value>
+  </data>
+  <data name="Admin_Complaint_Col_WaitingDays" xml:space="preserve">
+    <value>Đã chờ</value>
+  </data>
+  <data name="Admin_Complaint_DaysFormat" xml:space="preserve">
+    <value>{0} ngày</value>
+  </data>
+  <data name="Admin_Complaint_NoOrderAssociated" xml:space="preserve">
+    <value>Không gắn đơn hàng</value>
+  </data>
+  <data name="Admin_Complaint_NoOrderNote" xml:space="preserve">
+    <value>Không gắn đơn hàng (dữ liệu cũ)</value>
+  </data>
+  <data name="Admin_Complaint_Section_Customer" xml:space="preserve">
+    <value>Thông tin người khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_Section_Order" xml:space="preserve">
+    <value>Thông tin đơn hàng &amp; sản phẩm</value>
+  </data>
+  <data name="Admin_Complaint_Section_Content" xml:space="preserve">
+    <value>Nội dung khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_Section_Process" xml:space="preserve">
+    <value>Xử lý &amp; Phản hồi</value>
+  </data>
+  <data name="Admin_Complaint_Handler" xml:space="preserve">
+    <value>Người xử lý</value>
+  </data>
+  <data name="Admin_Complaint_ResponseText" xml:space="preserve">
+    <value>Nội dung phản hồi</value>
+  </data>
+  <data name="Admin_Complaint_ResponsePlaceholder" xml:space="preserve">
+    <value>Nhập nội dung phản hồi cho khách hàng (10 - 1000 ký tự)...</value>
+  </data>
+  <data name="Admin_Complaint_Btn_Process" xml:space="preserve">
+    <value>Tiếp nhận xử lý</value>
+  </data>
+  <data name="Admin_Complaint_Btn_Resolve" xml:space="preserve">
+    <value>Giải quyết khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_Btn_Reject" xml:space="preserve">
+    <value>Từ chối khiếu nại</value>
+  </data>
+  <data name="Admin_Complaint_ClosedNotice" xml:space="preserve">
+    <value>Khiếu nại này đã đóng và không thể thay đổi trạng thái.</value>
+  </data>
+  <data name="Admin_Complaint_ProcessSuccess" xml:space="preserve">
+    <value>Đã chuyển trạng thái khiếu nại thành Đang xử lý.</value>
+  </data>
+  <data name="Admin_Complaint_ResolveSuccess" xml:space="preserve">
+    <value>Đã giải quyết khiếu nại thành công.</value>
+  </data>
+  <data name="Admin_Complaint_RejectSuccess" xml:space="preserve">
+    <value>Đã từ chối khiếu nại thành công.</value>
+  </data>
+  <data name="Admin_Complaint_Error_ResponseRequired" xml:space="preserve">
+    <value>Vui lòng nhập nội dung phản hồi (từ 10 đến 1000 ký tự) khi giải quyết hoặc từ chối khiếu nại.</value>
+  </data>
+  <data name="Admin_Complaint_Error_ResponseLength" xml:space="preserve">
+    <value>Nội dung phản hồi phải từ 10 đến 1000 ký tự.</value>
+  </data>
+  <data name="Admin_Complaint_Error_AlreadyClosed" xml:space="preserve">
+    <value>Khiếu nại đã đóng (đã giải quyết hoặc đã từ chối), không thể thay đổi trạng thái.</value>
+  </data>
+  <data name="Admin_Complaint_Error_InvalidTransition" xml:space="preserve">
+    <value>Thao tác chuyển trạng thái khiếu nại không hợp lệ.</value>
+  </data>
+  <data name="Admin_Complaint_Error_Concurrency" xml:space="preserve">
+    <value>Khiếu nại đã được người khác cập nhật, vui lòng tải lại.</value>
+  </data>
+  <data name="Admin_Complaint_Empty" xml:space="preserve">
+    <value>Không tìm thấy khiếu nại nào phù hợp.</value>
   </data>
 </root>

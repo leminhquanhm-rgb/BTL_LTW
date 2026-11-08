@@ -1,0 +1,474 @@
+@model WebsiteBanMyPham.ViewModels.PaginatedList<WebsiteBanMyPham.ViewModels.Admin.DanhGiaAdminListItemViewModel>
+@{
+    ViewData["Title"] = L["Admin_Review_Title"].Value;
+    var filter = ViewBag.Filter as WebsiteBanMyPham.ViewModels.Admin.DanhGiaAdminFilterViewModel ?? new();
+    var counts = ViewBag.Counts as WebsiteBanMyPham.ViewModels.Admin.DanhGiaAdminStatusCountViewModel ?? new();
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Header quản lý -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-5 rounded-card border border-borderLight shadow-soft">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Review_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_Review_List"] (@Model.TotalItems)</p>
+        </div>
+    </div>
+
+    <!-- Tabs Trạng thái -->
+    <div class="flex flex-wrap items-center gap-2 border-b border-borderLight pb-3">
+        <!-- Chờ duyệt (Mặc định) -->
+        <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDanhGiaConstant.ChoDuyet"
+           asp-route-soSao="@filter.SoSao"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiDanhGiaConstant.ChoDuyet ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-clock text-sm"></i>
+            <span>@LocalizationHelper.GetReviewStatusLabel(TrangThaiDanhGiaConstant.ChoDuyet)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiDanhGiaConstant.ChoDuyet ? "bg-white/20 text-white" : "bg-statusWarning/15 text-statusWarning")">
+                @counts.ChoDuyet
+            </span>
+        </a>
+
+        <!-- Đã duyệt -->
+        <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDanhGiaConstant.DaDuyet"
+           asp-route-soSao="@filter.SoSao"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiDanhGiaConstant.DaDuyet ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-check-circle text-sm"></i>
+            <span>@LocalizationHelper.GetReviewStatusLabel(TrangThaiDanhGiaConstant.DaDuyet)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiDanhGiaConstant.DaDuyet ? "bg-white/20 text-white" : "bg-statusSuccess/15 text-statusSuccess")">
+                @counts.DaDuyet
+            </span>
+        </a>
+
+        <!-- Từ chối -->
+        <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+           asp-route-trangThai="@TrangThaiDanhGiaConstant.TuChoi"
+           asp-route-soSao="@filter.SoSao"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiDanhGiaConstant.TuChoi ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-x-circle text-sm"></i>
+            <span>@LocalizationHelper.GetReviewStatusLabel(TrangThaiDanhGiaConstant.TuChoi)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiDanhGiaConstant.TuChoi ? "bg-white/20 text-white" : "bg-statusDanger/15 text-statusDanger")">
+                @counts.TuChoi
+            </span>
+        </a>
+
+        <!-- Tất cả -->
+        <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+           asp-route-trangThai="@BoLocTrangThaiConstant.TatCa"
+           asp-route-soSao="@filter.SoSao"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == BoLocTrangThaiConstant.TatCa ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-list text-sm"></i>
+            <span>@L["Admin_Order_Filter_All"]</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == BoLocTrangThaiConstant.TatCa ? "bg-white/20 text-white" : "bg-cream text-charcoal")">
+                @counts.TatCa
+            </span>
+        </a>
+    </div>
+
+    <!-- Khối Bộ lọc bổ sung (Số sao & Từ khóa) -->
+    <form method="get" asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+          class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-4">
+        <input type="hidden" name="trangThai" value="@filter.TrangThai" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Lọc số sao (1 - 5) -->
+            <div>
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Admin_Review_Col_Rating"]</label>
+                <select name="soSao" class="w-full text-xs px-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition">
+                    <option value="">@L["Admin_Review_Filter_AllRating"]</option>
+                    @for (byte s = 5; s >= 1; s--)
+                    {
+                        <option value="@s" selected="@(filter.SoSao == s)">
+                            @string.Format(L["Admin_Review_Star_Format"].Value, s) (@string.Concat(Enumerable.Repeat("★", s)))
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Từ khóa tìm kiếm -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Search"]</label>
+                <div class="relative">
+                    <input type="text" name="keyword" value="@filter.Keyword"
+                           placeholder="@L["Admin_Review_SearchPlaceholder"]"
+                           class="w-full text-xs pl-8 pr-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                    <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-1">
+            @if (!string.IsNullOrWhiteSpace(filter.Keyword) || filter.SoSao.HasValue)
+            {
+                <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index" asp-route-trangThai="@filter.TrangThai"
+                   class="px-4 py-2 text-xs font-semibold text-muted hover:text-charcoal transition">
+                    @L["Admin_Filter_Reset"]
+                </a>
+            }
+            <button type="submit"
+                    class="px-4 py-2 bg-charcoal hover:bg-charcoal/90 text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                <i class="ph-bold ph-funnel text-sm"></i> @L["Common_Filter"]
+            </button>
+        </div>
+    </form>
+
+    <!-- Bảng danh sách đánh giá -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        @if (Model.Items == null || !Model.Items.Any())
+        {
+            <div class="p-12 text-center text-muted">
+                <i class="ph ph-star text-4xl mb-2 text-charcoal/30"></i>
+                <p class="text-xs font-medium">@L["Admin_Review_Empty"]</p>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-cream/60 border-b border-borderLight text-charcoal font-bold uppercase tracking-wider text-[11px]">
+                            <th class="p-3.5">@L["Admin_Review_Col_Id"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_Product"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_Customer"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_Order"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Review_Col_Rating"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_Content"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_CreatedDate"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Review_Col_Status"]</th>
+                            <th class="p-3.5 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="hover:bg-cream/30 transition">
+                                <td class="p-3.5 font-mono text-muted text-[11px]">
+                                    #DG@(item.MaDG)
+                                </td>
+                                <td class="p-3.5">
+                                    <div class="flex items-center gap-2.5 max-w-xs">
+                                        <img src="@item.AnhSP" alt="@item.TenSP"
+                                             onerror="this.src='/images/placeholder.svg'"
+                                             class="w-10 h-10 object-cover rounded border border-borderLight shrink-0" />
+                                        <div class="truncate">
+                                            <a asp-area="Admin" asp-controller="SanPham" asp-action="Sua" asp-route-id="@item.MaSP"
+                                               class="font-bold text-charcoal hover:text-primary transition truncate block"
+                                               title="@item.TenSP">
+                                                @item.TenSP
+                                            </a>
+                                            <span class="text-[11px] text-muted font-mono">#SP@(item.MaSP)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-3.5">
+                                    <div class="font-semibold text-charcoal">@item.TenKhachHang</div>
+                                    <div class="text-[11px] text-muted">@item.EmailKhachHang</div>
+                                </td>
+                                <td class="p-3.5">
+                                    <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@item.MaDH"
+                                       class="font-mono font-bold text-primary hover:underline">
+                                        @LocalizationHelper.MaDonHang(item.MaDH)
+                                    </a>
+                                </td>
+                                <td class="p-3.5 text-center whitespace-nowrap">
+                                    <div class="inline-flex items-center text-amber-500 font-bold">
+                                        <span class="mr-1">@item.SoSao</span>
+                                        <i class="ph-fill ph-star text-sm"></i>
+                                    </div>
+                                </td>
+                                <td class="p-3.5 max-w-xs">
+                                    @if (!string.IsNullOrWhiteSpace(item.NoiDung))
+                                    {
+                                        var truncated = item.NoiDung.Length > 60 ? item.NoiDung.Substring(0, 60) + "..." : item.NoiDung;
+                                        <div class="text-charcoal leading-relaxed">
+                                            <span>@truncated</span>
+                                            @if (item.NoiDung.Length > 60)
+                                            {
+                                                <button type="button"
+                                                        class="btn-view-content text-primary font-bold hover:underline text-[11px] ml-1"
+                                                        data-product="@item.TenSP"
+                                                        data-customer="@item.TenKhachHang"
+                                                        data-rating="@item.SoSao"
+                                                        data-content="@item.NoiDung">
+                                                    [@L["Common_Detail"]]
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted italic text-[11px]">—</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-muted text-[11px] whitespace-nowrap">
+                                    @LocalizationHelper.FormatDateTime(item.NgayTao)
+                                </td>
+                                <td class="p-3.5 text-center whitespace-nowrap">
+                                    <partial name="_StatusBadge" model='("DanhGia", item.TrangThai)' />
+                                </td>
+                                <td class="p-3.5 text-right whitespace-nowrap">
+                                    <div class="inline-flex items-center gap-1.5 justify-end">
+                                        @if (item.TrangThai == TrangThaiDanhGiaConstant.ChoDuyet)
+                                        {
+                                            <!-- Duyệt -->
+                                            <form method="post" asp-area="Admin" asp-controller="DanhGia" asp-action="CapNhatTrangThai" class="inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.MaDG" />
+                                                <input type="hidden" name="trangThaiCu" value="@item.TrangThai" />
+                                                <input type="hidden" name="trangThaiMoi" value="@TrangThaiDanhGiaConstant.DaDuyet" />
+                                                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                                <button type="submit"
+                                                        class="px-2.5 py-1 bg-statusSuccess hover:bg-statusSuccess/90 text-white rounded-btn text-xs font-bold transition flex items-center gap-1 shadow-sm"
+                                                        title="@L["Admin_Review_Action_Approve"]">
+                                                    <i class="ph-bold ph-check text-xs"></i> @L["Admin_Review_Action_Approve"]
+                                                </button>
+                                            </form>
+
+                                            <!-- Từ chối -->
+                                            <button type="button"
+                                                    class="btn-reject-review px-2.5 py-1 bg-[#FCEAEA] hover:bg-statusDanger hover:text-white text-statusDanger rounded-btn text-xs font-bold transition flex items-center gap-1"
+                                                    data-id="@item.MaDG"
+                                                    data-trang-thai-cu="@item.TrangThai"
+                                                    data-ten-sp="@item.TenSP"
+                                                    title="@L["Admin_Review_Action_Reject"]">
+                                                <i class="ph-bold ph-x text-xs"></i> @L["Admin_Review_Action_Reject"]
+                                            </button>
+                                        }
+                                        else if (item.TrangThai == TrangThaiDanhGiaConstant.DaDuyet)
+                                        {
+                                            <!-- Từ chối -->
+                                            <button type="button"
+                                                    class="btn-reject-review px-2.5 py-1 bg-[#FCEAEA] hover:bg-statusDanger hover:text-white text-statusDanger rounded-btn text-xs font-bold transition flex items-center gap-1"
+                                                    data-id="@item.MaDG"
+                                                    data-trang-thai-cu="@item.TrangThai"
+                                                    data-ten-sp="@item.TenSP"
+                                                    title="@L["Admin_Review_Action_Reject"]">
+                                                <i class="ph-bold ph-x text-xs"></i> @L["Admin_Review_Action_Reject"]
+                                            </button>
+                                        }
+                                        else if (item.TrangThai == TrangThaiDanhGiaConstant.TuChoi)
+                                        {
+                                            <!-- Duyệt lại -->
+                                            <form method="post" asp-area="Admin" asp-controller="DanhGia" asp-action="CapNhatTrangThai" class="inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.MaDG" />
+                                                <input type="hidden" name="trangThaiCu" value="@item.TrangThai" />
+                                                <input type="hidden" name="trangThaiMoi" value="@TrangThaiDanhGiaConstant.DaDuyet" />
+                                                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                                <button type="submit"
+                                                        class="px-2.5 py-1 bg-[#E6F4EE] hover:bg-statusSuccess hover:text-white text-statusSuccess rounded-btn text-xs font-bold transition flex items-center gap-1"
+                                                        title="@L["Admin_Review_Action_Reapprove"]">
+                                                    <i class="ph-bold ph-check text-xs"></i> @L["Admin_Review_Action_Reapprove"]
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <p class="text-muted">
+                        @L["Pagination_Page"] @Model.PageIndex / @Model.TotalPages (@Model.TotalItems @L["Admin_Nav_Reviews"].Value.ToLower())
+                    </p>
+                    <div class="inline-flex items-center gap-1">
+                        <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex - 1)"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-soSao="@filter.SoSao"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight @(Model.HasPreviousPage ? "bg-surface text-charcoal hover:bg-cream" : "opacity-40 pointer-events-none text-muted") transition">
+                            @L["Pagination_Previous"]
+                        </a>
+
+                        @for (int p = 1; p <= Model.TotalPages; p++)
+                        {
+                            if (p == Model.PageIndex)
+                            {
+                                <span class="px-3 py-1.5 rounded-btn bg-primary text-white font-bold">@p</span>
+                            }
+                            else if (p == 1 || p == Model.TotalPages || (p >= Model.PageIndex - 2 && p <= Model.PageIndex + 2))
+                            {
+                                <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+                                   asp-route-trang="@p"
+                                   asp-route-trangThai="@filter.TrangThai"
+                                   asp-route-soSao="@filter.SoSao"
+                                   asp-route-keyword="@filter.Keyword"
+                                   class="px-3 py-1.5 rounded-btn border border-borderLight bg-surface text-charcoal hover:bg-cream transition">
+                                    @p
+                                </a>
+                            }
+                            else if (p == Model.PageIndex - 3 || p == Model.PageIndex + 3)
+                            {
+                                <span class="px-2 py-1 text-muted">...</span>
+                            }
+                        }
+
+                        <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex + 1)"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-soSao="@filter.SoSao"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight @(Model.HasNextPage ? "bg-surface text-charcoal hover:bg-cream" : "opacity-40 pointer-events-none text-muted") transition">
+                            @L["Pagination_Next"]
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Modal xác nhận từ chối đánh giá -->
+<div id="rejectModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-md w-full shadow-hover space-y-4">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#FCEAEA] text-statusDanger flex items-center justify-center shrink-0">
+                <i class="ph-bold ph-x-circle text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-charcoal text-base">@L["Admin_Confirm_Title"]</h3>
+                <p id="rejectModalMessage" class="text-xs text-muted mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+
+        <form id="rejectForm" method="post" asp-area="Admin" asp-controller="DanhGia" asp-action="CapNhatTrangThai">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" id="rejectModalId" value="" />
+            <input type="hidden" name="trangThaiCu" id="rejectModalTrangThaiCu" value="" />
+            <input type="hidden" name="trangThaiMoi" value="@TrangThaiDanhGiaConstant.TuChoi" />
+            <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button type="button" id="btnRejectCancel" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                    @L["Common_Cancel"]
+                </button>
+                <button type="submit" class="px-4 py-2 bg-statusDanger hover:bg-statusDanger/90 text-white text-xs font-bold rounded-btn transition shadow-sm">
+                    @L["Admin_Review_Action_Reject"]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal xem chi tiết nội dung đánh giá -->
+<div id="contentModal" class="fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-card border border-borderLight p-6 max-w-lg w-full shadow-hover space-y-4">
+        <div class="flex items-center justify-between border-b border-borderLight pb-3">
+            <h3 class="font-bold text-charcoal text-sm flex items-center gap-2">
+                <i class="ph-bold ph-chat-circle-dots text-primary text-base"></i>
+                <span id="contentModalProduct" class="truncate max-w-xs"></span>
+            </h3>
+            <button type="button" id="btnContentCloseX" class="text-muted hover:text-charcoal text-lg">
+                <i class="ph-bold ph-x"></i>
+            </button>
+        </div>
+
+        <div class="text-xs space-y-2">
+            <div class="flex items-center justify-between text-muted text-[11px]">
+                <span id="contentModalCustomer" class="font-semibold text-charcoal"></span>
+                <span id="contentModalRating" class="font-bold text-amber-500"></span>
+            </div>
+            <div id="contentModalBody" class="p-3 bg-cream/60 rounded-btn text-charcoal whitespace-pre-wrap leading-relaxed border border-borderLight"></div>
+        </div>
+
+        <div class="flex justify-end pt-1">
+            <button type="button" id="btnContentClose" class="px-4 py-2 bg-cream hover:bg-pastel/40 text-charcoal text-xs font-semibold rounded-btn border border-borderLight transition">
+                @L["Common_Close"]
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="i18nReviewData" class="hidden"
+     data-reject-template="@L["Admin_Review_RejectConfirm"].Value">
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Modal Từ chối
+            var rejectModal = document.getElementById('rejectModal');
+            var rejectMsg = document.getElementById('rejectModalMessage');
+            var rejectId = document.getElementById('rejectModalId');
+            var rejectTrangThaiCu = document.getElementById('rejectModalTrangThaiCu');
+            var btnRejectCancel = document.getElementById('btnRejectCancel');
+            var i18n = document.getElementById('i18nReviewData');
+            var rejectTemplate = i18n ? i18n.dataset.rejectTemplate : '';
+
+            document.querySelectorAll('.btn-reject-review').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var id = this.dataset.id;
+                    var trangThaiCu = this.dataset.trangThaiCu;
+                    var tenSp = this.dataset.tenSp || '';
+
+                    rejectId.value = id;
+                    rejectTrangThaiCu.value = trangThaiCu;
+
+                    var formattedMsg = rejectTemplate.replace('{0}', id).replace('{1}', tenSp);
+                    rejectMsg.textContent = formattedMsg;
+
+                    rejectModal.classList.remove('hidden');
+                });
+            });
+
+            btnRejectCancel.addEventListener('click', function () {
+                rejectModal.classList.add('hidden');
+            });
+
+            // Modal Xem nội dung
+            var contentModal = document.getElementById('contentModal');
+            var contentProduct = document.getElementById('contentModalProduct');
+            var contentCustomer = document.getElementById('contentModalCustomer');
+            var contentRating = document.getElementById('contentModalRating');
+            var contentBody = document.getElementById('contentModalBody');
+            var btnContentClose = document.getElementById('btnContentClose');
+            var btnContentCloseX = document.getElementById('btnContentCloseX');
+
+            document.querySelectorAll('.btn-view-content').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    contentProduct.textContent = this.dataset.product || '';
+                    contentCustomer.textContent = this.dataset.customer || '';
+                    contentRating.textContent = '★ ' + (this.dataset.rating || '') + ' sao';
+                    contentBody.textContent = this.dataset.content || '';
+
+                    contentModal.classList.remove('hidden');
+                });
+            });
+
+            function closeContentModal() {
+                contentModal.classList.add('hidden');
+            }
+
+            if (btnContentClose) btnContentClose.addEventListener('click', closeContentModal);
+            if (btnContentCloseX) btnContentCloseX.addEventListener('click', closeContentModal);
+        });
+    </script>
+}
+

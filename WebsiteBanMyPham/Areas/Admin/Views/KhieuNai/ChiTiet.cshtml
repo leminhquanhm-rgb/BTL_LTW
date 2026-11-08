@@ -1,0 +1,269 @@
+@model WebsiteBanMyPham.ViewModels.Admin.KhieuNaiAdminDetailViewModel
+@{
+    ViewData["Title"] = $"{L["Admin_Complaint_Detail_Title"].Value} #KN{Model.MaKN}";
+}
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Breadcrumb & Tiêu đề -->
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index" class="text-xs text-muted hover:text-primary transition flex items-center gap-1 mb-1">
+                <i class="ph ph-arrow-left"></i> @L["Common_Back"]
+            </a>
+            <h1 class="text-lg font-bold text-charcoal flex items-center gap-2">
+                <span>@L["Admin_Complaint_Detail_Title"]</span>
+                <span class="font-mono text-primary">#KN@(Model.MaKN)</span>
+            </h1>
+            <p class="text-xs text-muted">@L["Admin_Review_Col_CreatedDate"]: @LocalizationHelper.FormatDateTime(Model.NgayGui)</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <partial name="_StatusBadge" model='("KhieuNai", Model.TrangThai)' />
+        </div>
+    </div>
+
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Khối 1: Thông tin người khiếu nại -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+        <div class="flex items-center justify-between border-b border-borderLight pb-2.5">
+            <h2 class="font-bold text-charcoal text-sm flex items-center gap-2">
+                <i class="ph-bold ph-user text-primary text-base"></i>
+                <span>@L["Admin_Complaint_Section_Customer"]</span>
+            </h2>
+            <a asp-area="Admin" asp-controller="TaiKhoan" asp-action="ChiTiet" asp-route-id="@Model.MaTK"
+               class="text-primary hover:underline font-bold inline-flex items-center gap-1">
+                <i class="ph-bold ph-arrow-square-out"></i> @L["Common_Detail"]
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <span class="text-muted block">@L["Admin_Customer_Col_FullName"]</span>
+                <strong class="font-semibold text-charcoal text-sm">@Model.TenKhachHang</strong>
+            </div>
+            <div>
+                <span class="text-muted block">@L["Admin_Customer_Col_Email"]</span>
+                <span class="font-medium text-charcoal">@Model.EmailKhachHang</span>
+            </div>
+            <div>
+                <span class="text-muted block">@L["Admin_Customer_Col_Phone"]</span>
+                <span class="font-mono text-charcoal">@(string.IsNullOrWhiteSpace(Model.SdtKhachHang) ? "—" : Model.SdtKhachHang)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Khối 2: Thông tin đơn hàng & Sản phẩm -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+        <h2 class="font-bold text-charcoal text-sm border-b border-borderLight pb-2.5 flex items-center gap-2">
+            <i class="ph-bold ph-package text-primary text-base"></i>
+            <span>@L["Admin_Complaint_Section_Order"]</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Đơn hàng liên quan -->
+            <div class="p-3 bg-cream/50 rounded-btn border border-borderLight space-y-1.5">
+                <span class="text-muted block font-semibold">@L["Admin_Complaint_Col_Order"]</span>
+                @if (Model.MaDH.HasValue)
+                {
+                    <div class="flex items-center justify-between">
+                        <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@Model.MaDH.Value"
+                           class="font-mono font-bold text-primary hover:underline text-sm">
+                            @LocalizationHelper.MaDonHang(Model.MaDH.Value)
+                        </a>
+                        @if (!string.IsNullOrEmpty(Model.TrangThaiDonHang))
+                        {
+                            <partial name="_StatusBadge" model="Model.TrangThaiDonHang" />
+                        }
+                    </div>
+                    @if (Model.NgayGiaoThanhCong.HasValue)
+                    {
+                        <p class="text-[11px] text-muted pt-1">
+                            @L["Admin_Order_Col_DeliveredDate"]: @LocalizationHelper.FormatDateTime(Model.NgayGiaoThanhCong)
+                        </p>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted italic">@L["Admin_Complaint_NoOrderNote"]</p>
+                }
+            </div>
+
+            <!-- Sản phẩm liên quan -->
+            <div class="p-3 bg-cream/50 rounded-btn border border-borderLight space-y-1.5">
+                <span class="text-muted block font-semibold">@L["Admin_Complaint_Col_Product"]</span>
+                @if (Model.MaSP.HasValue && !string.IsNullOrWhiteSpace(Model.TenSP))
+                {
+                    <div class="flex items-center gap-2.5">
+                        <img src="@(Model.AnhSP ?? "/images/placeholder.svg")" alt="@Model.TenSP"
+                             onerror="this.src='/images/placeholder.svg'"
+                             class="w-10 h-10 object-cover rounded border border-borderLight shrink-0" />
+                        <div class="truncate">
+                            <a asp-area="Admin" asp-controller="SanPham" asp-action="Sua" asp-route-id="@Model.MaSP.Value"
+                               class="font-semibold text-charcoal hover:text-primary transition truncate block"
+                               title="@Model.TenSP">
+                                @Model.TenSP
+                            </a>
+                            <span class="text-[11px] text-muted font-mono">#SP@(Model.MaSP.Value)</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted italic">—</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Khối 3: Nội dung khiếu nại của khách -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-3 text-xs">
+        <h2 class="font-bold text-charcoal text-sm border-b border-borderLight pb-2.5 flex items-center gap-2">
+            <i class="ph-bold ph-chat-centered-text text-primary text-base"></i>
+            <span>@L["Admin_Complaint_Section_Content"]</span>
+        </h2>
+        <div class="p-4 bg-cream/60 rounded-btn border border-borderLight text-charcoal whitespace-pre-line leading-relaxed font-medium">@Model.NoiDung</div>
+    </div>
+
+    <!-- Khối 4: Xử lý & Phản hồi -->
+    <div class="bg-surface p-6 rounded-card border border-borderLight shadow-soft space-y-4 text-xs">
+        <h2 class="font-bold text-charcoal text-sm border-b border-borderLight pb-2.5 flex items-center gap-2">
+            <i class="ph-bold ph-gear text-primary text-base"></i>
+            <span>@L["Admin_Complaint_Section_Process"]</span>
+        </h2>
+
+        <!-- Thông tin người xử lý trước đó (nếu có) -->
+        @if (Model.MaTKXuLy.HasValue || Model.NgayPhanHoi.HasValue)
+        {
+            <div class="p-3 bg-[#EBF3F9]/60 rounded-btn border border-statusInfo/20 text-charcoal flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-muted">@L["Admin_Complaint_Handler"]:</span>
+                    <strong class="font-semibold">@(Model.TenAdminXuLy ?? $"Admin #{Model.MaTKXuLy}")</strong>
+                </div>
+                @if (Model.NgayPhanHoi.HasValue)
+                {
+                    <div class="text-muted text-[11px]">
+                        @L["Order_RefundDate"]: @LocalizationHelper.FormatDateTime(Model.NgayPhanHoi)
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.LaTrangThaiCuoi)
+        {
+            <!-- Khiếu nại đã đóng: hiển thị phản hồi và thông báo đóng -->
+            <div class="space-y-3">
+                <div class="p-3 rounded-btn bg-[#E6F4EE]/60 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+                    <i class="ph-fill ph-lock-key text-base"></i>
+                    <span>@L["Admin_Complaint_ClosedNotice"]</span>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.PhanHoi))
+                {
+                    <div class="space-y-1">
+                        <span class="text-muted font-semibold block">@L["Admin_Complaint_ResponseText"]</span>
+                        <div class="p-4 bg-cream/40 rounded-btn border border-borderLight text-charcoal whitespace-pre-line leading-relaxed">@Model.PhanHoi</div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <!-- Form xử lý (khi còn mở: ChoXuLy hoặc DangXuLy) -->
+            <form id="processComplaintForm" method="post" asp-area="Admin" asp-controller="KhieuNai" asp-action="XuLyKhieuNai" class="space-y-4"
+                  data-msg-required="@L["Admin_Complaint_Error_ResponseRequired"].Value">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@Model.MaKN" />
+                <input type="hidden" name="TrangThaiCu" value="@Model.TrangThai" />
+                <input type="hidden" name="ReturnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+
+                <!-- Ô phản hồi điền sẵn phản hồi hiện có (nếu có) -->
+                <div>
+                    <label class="block font-semibold text-charcoal mb-1">
+                        @L["Admin_Complaint_ResponseText"]
+                        <span class="text-muted font-normal text-[11px] ml-1">(@L["Admin_Complaint_ResponsePlaceholder"])</span>
+                    </label>
+                    <textarea name="PhanHoi" id="txtPhanHoi" rows="4" maxlength="1000"
+                              placeholder="@L["Admin_Complaint_ResponsePlaceholder"]"
+                              class="w-full text-xs p-3 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition leading-relaxed">@Model.PhanHoi</textarea>
+                    <div class="flex items-center justify-between text-muted text-[11px] mt-1">
+                        <span>* @L["Admin_Complaint_Error_ResponseRequired"]</span>
+                        <span id="charCount">0/1000</span>
+                    </div>
+                </div>
+
+                <!-- Nút thao tác theo trạng thái -->
+                <div class="flex flex-wrap items-center justify-end gap-2.5 pt-2 border-t border-borderLight">
+                    @if (Model.TrangThai == TrangThaiKhieuNaiConstant.ChoXuLy)
+                    {
+                        <!-- Nút Tiếp nhận (DangXuLy - không bắt buộc phản hồi) -->
+                        <button type="submit" name="TrangThaiMoi" value="@TrangThaiKhieuNaiConstant.DangXuLy"
+                                class="px-4 py-2 bg-statusInfo hover:opacity-90 text-white font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                            <i class="ph-bold ph-gear text-sm"></i> @L["Admin_Complaint_Btn_Process"]
+                        </button>
+                    }
+
+                    <!-- Nút Từ chối (TuChoi - bắt buộc phản hồi) -->
+                    <button type="submit" name="TrangThaiMoi" value="@TrangThaiKhieuNaiConstant.TuChoi"
+                            class="px-4 py-2 bg-statusDanger hover:bg-statusDanger/90 text-white font-bold rounded-btn transition shadow-sm flex items-center gap-1.5"
+                            onclick="return validateRequireResponse();">
+                        <i class="ph-bold ph-x-circle text-sm"></i> @L["Admin_Complaint_Btn_Reject"]
+                    </button>
+
+                    <!-- Nút Giải quyết (DaGiaiQuyet - bắt buộc phản hồi) -->
+                    <button type="submit" name="TrangThaiMoi" value="@TrangThaiKhieuNaiConstant.DaGiaiQuyet"
+                            class="px-4 py-2 bg-statusSuccess hover:bg-statusSuccess/90 text-white font-bold rounded-btn transition shadow-sm flex items-center gap-1.5"
+                            onclick="return validateRequireResponse();">
+                        <i class="ph-bold ph-check-circle text-sm"></i> @L["Admin_Complaint_Btn_Resolve"]
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var txt = document.getElementById('txtPhanHoi');
+            var counter = document.getElementById('charCount');
+
+            if (txt && counter) {
+                function updateCount() {
+                    var len = txt.value.trim().length;
+                    counter.textContent = len + '/1000';
+                }
+                txt.addEventListener('input', updateCount);
+                updateCount();
+            }
+        });
+
+        function validateRequireResponse() {
+            var txt = document.getElementById('txtPhanHoi');
+            var form = document.getElementById('processComplaintForm');
+            if (!txt) return true;
+            var len = txt.value.trim().length;
+            if (len < 10 || len > 1000) {
+                var msg = form ? form.dataset.msgRequired : '';
+                alert(msg || 'Vui lòng nhập nội dung phản hồi từ 10 đến 1000 ký tự.');
+                txt.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

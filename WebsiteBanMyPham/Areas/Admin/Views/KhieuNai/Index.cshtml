@@ -1,0 +1,290 @@
+@model WebsiteBanMyPham.ViewModels.PaginatedList<WebsiteBanMyPham.ViewModels.Admin.KhieuNaiAdminListItemViewModel>
+@{
+    ViewData["Title"] = L["Admin_Complaint_Title"].Value;
+    var filter = ViewBag.Filter as WebsiteBanMyPham.ViewModels.Admin.KhieuNaiAdminFilterViewModel ?? new();
+    var counts = ViewBag.Counts as WebsiteBanMyPham.ViewModels.Admin.KhieuNaiAdminStatusCountViewModel ?? new();
+}
+
+<div class="space-y-6">
+    <!-- Thông báo TempData -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusSuccess/15 border border-statusSuccess/30 text-statusSuccess text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-check-circle text-base"></i>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="p-4 rounded-card bg-statusDanger/15 border border-statusDanger/30 text-statusDanger text-xs font-semibold flex items-center gap-2">
+            <i class="ph-fill ph-warning-circle text-base"></i>
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Header quản lý -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-surface p-5 rounded-card border border-borderLight shadow-soft">
+        <div>
+            <h1 class="text-lg font-bold text-charcoal">@L["Admin_Complaint_Title"]</h1>
+            <p class="text-xs text-muted mt-0.5">@L["Admin_Complaint_List"] (@Model.TotalItems)</p>
+        </div>
+    </div>
+
+    <!-- Tabs Trạng thái -->
+    <div class="flex flex-wrap items-center gap-2 border-b border-borderLight pb-3">
+        <!-- Đang mở (Mặc định: Chờ xử lý + Đang xử lý) -->
+        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+           asp-route-trangThai="@BoLocTrangThaiConstant.DangMo"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == BoLocTrangThaiConstant.DangMo ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-hourglass text-sm"></i>
+            <span>@L["Admin_Complaint_Tab_Open"]</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == BoLocTrangThaiConstant.DangMo ? "bg-white/20 text-white" : "bg-primary/15 text-primary")">
+                @counts.DangMo
+            </span>
+        </a>
+
+        <!-- Chờ xử lý -->
+        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+           asp-route-trangThai="@TrangThaiKhieuNaiConstant.ChoXuLy"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiKhieuNaiConstant.ChoXuLy ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-clock text-sm"></i>
+            <span>@LocalizationHelper.GetComplaintStatusLabel(TrangThaiKhieuNaiConstant.ChoXuLy)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiKhieuNaiConstant.ChoXuLy ? "bg-white/20 text-white" : "bg-statusWarning/15 text-statusWarning")">
+                @counts.ChoXuLy
+            </span>
+        </a>
+
+        <!-- Đang xử lý -->
+        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+           asp-route-trangThai="@TrangThaiKhieuNaiConstant.DangXuLy"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiKhieuNaiConstant.DangXuLy ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-gear text-sm"></i>
+            <span>@LocalizationHelper.GetComplaintStatusLabel(TrangThaiKhieuNaiConstant.DangXuLy)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiKhieuNaiConstant.DangXuLy ? "bg-white/20 text-white" : "bg-statusInfo/15 text-statusInfo")">
+                @counts.DangXuLy
+            </span>
+        </a>
+
+        <!-- Đã giải quyết -->
+        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+           asp-route-trangThai="@TrangThaiKhieuNaiConstant.DaGiaiQuyet"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiKhieuNaiConstant.DaGiaiQuyet ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-check-circle text-sm"></i>
+            <span>@LocalizationHelper.GetComplaintStatusLabel(TrangThaiKhieuNaiConstant.DaGiaiQuyet)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiKhieuNaiConstant.DaGiaiQuyet ? "bg-white/20 text-white" : "bg-statusSuccess/15 text-statusSuccess")">
+                @counts.DaGiaiQuyet
+            </span>
+        </a>
+
+        <!-- Từ chối -->
+        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+           asp-route-trangThai="@TrangThaiKhieuNaiConstant.TuChoi"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == TrangThaiKhieuNaiConstant.TuChoi ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-x-circle text-sm"></i>
+            <span>@LocalizationHelper.GetComplaintStatusLabel(TrangThaiKhieuNaiConstant.TuChoi)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == TrangThaiKhieuNaiConstant.TuChoi ? "bg-white/20 text-white" : "bg-statusDanger/15 text-statusDanger")">
+                @counts.TuChoi
+            </span>
+        </a>
+
+        <!-- Tất cả -->
+        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+           asp-route-trangThai="@BoLocTrangThaiConstant.TatCa"
+           asp-route-keyword="@filter.Keyword"
+           class="px-4 py-2 text-xs font-bold rounded-btn transition flex items-center gap-2 @(filter.TrangThai == BoLocTrangThaiConstant.TatCa ? "bg-primary text-white shadow-sm" : "bg-surface text-charcoal hover:bg-cream border border-borderLight")">
+            <i class="ph-bold ph-list text-sm"></i>
+            <span>@L["Admin_Order_Filter_All"]</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(filter.TrangThai == BoLocTrangThaiConstant.TatCa ? "bg-white/20 text-white" : "bg-cream text-charcoal")">
+                @counts.TatCa
+            </span>
+        </a>
+    </div>
+
+    <!-- Khối Bộ lọc Từ khóa -->
+    <form method="get" asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+          class="bg-surface p-5 rounded-card border border-borderLight shadow-soft space-y-4">
+        <input type="hidden" name="trangThai" value="@filter.TrangThai" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-charcoal mb-1">@L["Common_Search"]</label>
+                <div class="relative">
+                    <input type="text" name="keyword" value="@filter.Keyword"
+                           placeholder="@L["Admin_Complaint_SearchPlaceholder"]"
+                           class="w-full text-xs pl-8 pr-3 py-2 rounded-btn border border-borderLight bg-cream focus:bg-surface focus:outline-none focus:border-primary transition" />
+                    <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                </div>
+            </div>
+
+            <div class="flex items-end justify-end gap-2.5">
+                @if (!string.IsNullOrWhiteSpace(filter.Keyword))
+                {
+                    <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index" asp-route-trangThai="@filter.TrangThai"
+                       class="px-4 py-2 text-xs font-semibold text-muted hover:text-charcoal transition">
+                        @L["Admin_Filter_Reset"]
+                    </a>
+                }
+                <button type="submit"
+                        class="px-4 py-2 bg-charcoal hover:bg-charcoal/90 text-white text-xs font-bold rounded-btn transition shadow-sm flex items-center gap-1.5">
+                    <i class="ph-bold ph-funnel text-sm"></i> @L["Common_Filter"]
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Bảng danh sách khiếu nại -->
+    <div class="bg-surface rounded-card border border-borderLight shadow-soft overflow-hidden">
+        @if (Model.Items == null || !Model.Items.Any())
+        {
+            <div class="p-12 text-center text-muted">
+                <i class="ph ph-shield-warning text-4xl mb-2 text-charcoal/30"></i>
+                <p class="text-xs font-medium">@L["Admin_Complaint_Empty"]</p>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-cream/60 border-b border-borderLight text-charcoal font-bold uppercase tracking-wider text-[11px]">
+                            <th class="p-3.5">@L["Admin_Complaint_Col_Id"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_Customer"]</th>
+                            <th class="p-3.5">@L["Admin_Complaint_Col_Order"]</th>
+                            <th class="p-3.5">@L["Admin_Complaint_Col_Product"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_Content"]</th>
+                            <th class="p-3.5">@L["Admin_Review_Col_CreatedDate"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Complaint_Col_WaitingDays"]</th>
+                            <th class="p-3.5 text-center">@L["Admin_Review_Col_Status"]</th>
+                            <th class="p-3.5 text-right">@L["Common_Action"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight">
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="hover:bg-cream/30 transition">
+                                <td class="p-3.5 font-mono text-muted text-[11px]">
+                                    #KN@(item.MaKN)
+                                </td>
+                                <td class="p-3.5">
+                                    <div class="font-semibold text-charcoal">@item.TenKhachHang</div>
+                                    <div class="text-[11px] text-muted">@item.EmailKhachHang</div>
+                                </td>
+                                <td class="p-3.5">
+                                    @if (item.MaDH.HasValue)
+                                    {
+                                        <a asp-area="Admin" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@item.MaDH.Value"
+                                           class="font-mono font-bold text-primary hover:underline">
+                                            @LocalizationHelper.MaDonHang(item.MaDH.Value)
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted italic text-[11px]">@L["Admin_Complaint_NoOrderAssociated"]</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 max-w-xs truncate">
+                                    @if (item.MaSP.HasValue && !string.IsNullOrWhiteSpace(item.TenSP))
+                                    {
+                                        <a asp-area="Admin" asp-controller="SanPham" asp-action="Sua" asp-route-id="@item.MaSP.Value"
+                                           class="font-semibold text-charcoal hover:text-primary transition truncate block"
+                                           title="@item.TenSP">
+                                            @item.TenSP
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted italic text-[11px]">—</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 max-w-xs">
+                                    <div class="text-charcoal leading-relaxed line-clamp-2" title="@item.NoiDung">
+                                        @item.NoiDung
+                                    </div>
+                                </td>
+                                <td class="p-3.5 text-muted text-[11px] whitespace-nowrap">
+                                    @LocalizationHelper.FormatDateTime(item.NgayGui)
+                                </td>
+                                <td class="p-3.5 text-center whitespace-nowrap">
+                                    @if (item.TrangThai == TrangThaiKhieuNaiConstant.ChoXuLy || item.TrangThai == TrangThaiKhieuNaiConstant.DangXuLy)
+                                    {
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#FDF3E7] text-statusWarning border border-statusWarning/20">
+                                            @string.Format(L["Admin_Complaint_DaysFormat"].Value, item.SoNgayCho)
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted text-[11px]">—</span>
+                                    }
+                                </td>
+                                <td class="p-3.5 text-center whitespace-nowrap">
+                                    <partial name="_StatusBadge" model='("KhieuNai", item.TrangThai)' />
+                                </td>
+                                <td class="p-3.5 text-right whitespace-nowrap">
+                                    <a asp-area="Admin" asp-controller="KhieuNai" asp-action="ChiTiet" asp-route-id="@item.MaKN"
+                                       class="px-3 py-1.5 bg-primary hover:bg-primaryHover text-white text-xs font-bold rounded-btn transition shadow-sm inline-flex items-center gap-1">
+                                        <i class="ph-bold ph-pencil-simple text-xs"></i> @L["Common_Detail"]
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="p-4 border-t border-borderLight flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <p class="text-muted">
+                        @L["Pagination_Page"] @Model.PageIndex / @Model.TotalPages (@Model.TotalItems @L["Admin_Nav_Complaints"].Value.ToLower())
+                    </p>
+                    <div class="inline-flex items-center gap-1">
+                        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex - 1)"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight @(Model.HasPreviousPage ? "bg-surface text-charcoal hover:bg-cream" : "opacity-40 pointer-events-none text-muted") transition">
+                            @L["Pagination_Previous"]
+                        </a>
+
+                        @for (int p = 1; p <= Model.TotalPages; p++)
+                        {
+                            if (p == Model.PageIndex)
+                            {
+                                <span class="px-3 py-1.5 rounded-btn bg-primary text-white font-bold">@p</span>
+                            }
+                            else if (p == 1 || p == Model.TotalPages || (p >= Model.PageIndex - 2 && p <= Model.PageIndex + 2))
+                            {
+                                <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+                                   asp-route-trang="@p"
+                                   asp-route-trangThai="@filter.TrangThai"
+                                   asp-route-keyword="@filter.Keyword"
+                                   class="px-3 py-1.5 rounded-btn border border-borderLight bg-surface text-charcoal hover:bg-cream transition">
+                                    @p
+                                </a>
+                            }
+                            else if (p == Model.PageIndex - 3 || p == Model.PageIndex + 3)
+                            {
+                                <span class="px-2 py-1 text-muted">...</span>
+                            }
+                        }
+
+                        <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index"
+                           asp-route-trang="@(Model.PageIndex + 1)"
+                           asp-route-trangThai="@filter.TrangThai"
+                           asp-route-keyword="@filter.Keyword"
+                           class="px-3 py-1.5 rounded-btn border border-borderLight @(Model.HasNextPage ? "bg-surface text-charcoal hover:bg-cream" : "opacity-40 pointer-events-none text-muted") transition">
+                            @L["Pagination_Next"]
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

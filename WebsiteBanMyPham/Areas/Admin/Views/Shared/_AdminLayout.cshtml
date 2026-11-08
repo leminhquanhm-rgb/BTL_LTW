@@ -13,7 +13,8 @@
     bool isThanhToanActive = currentCtrl.Equals("ThanhToan", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("PhuongThucThanhToan", StringComparison.OrdinalIgnoreCase);
     bool isKhuyenMaiActive = currentCtrl.Equals("KhuyenMai", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("Banner", StringComparison.OrdinalIgnoreCase);
     bool isTaiKhoanActive = currentCtrl.Equals("TaiKhoan", StringComparison.OrdinalIgnoreCase);
-    bool isDanhGiaActive = currentCtrl.Equals("DanhGia", StringComparison.OrdinalIgnoreCase) || currentCtrl.Equals("KhieuNai", StringComparison.OrdinalIgnoreCase);
+    bool isDanhGiaActive = currentCtrl.Equals("DanhGia", StringComparison.OrdinalIgnoreCase);
+    bool isKhieuNaiActive = currentCtrl.Equals("KhieuNai", StringComparison.OrdinalIgnoreCase);
 }
 
 <!DOCTYPE html>
@@ -139,6 +140,9 @@
                 </p>
                 <a asp-area="Admin" asp-controller="DanhGia" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isDanhGiaActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
                     <i class="ph-fill ph-chat-centered-text text-base"></i> @L["Admin_Nav_Reviews"]
+                </a>
+                <a asp-area="Admin" asp-controller="KhieuNai" asp-action="Index" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-btn transition @(isKhieuNaiActive ? "bg-surface text-charcoal font-bold shadow-sm" : "hover:bg-surface/60 text-charcoal")">
+                    <i class="ph-fill ph-warning-circle text-base"></i> @L["Admin_Nav_Complaints"]
                 </a>
             </div>
         </div>
