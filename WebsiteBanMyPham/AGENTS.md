@@ -810,6 +810,8 @@ Lấy thông tin qua VW_DanhGia.
 -   Số sao từ 1 đến 5.
 -   Mới gửi có trạng thái ChoDuyet.
 -   Chỉ DaDuyet được hiển thị công khai.
+-   Admin chỉ chuyển trạng thái theo các cặp: ChoDuyet→DaDuyet, ChoDuyet→TuChoi, DaDuyet→TuChoi, TuChoi→DaDuyet. Không quay về ChoDuyet, không sửa nội dung, không xóa đánh giá; không có chức năng trả lời đánh giá.
+-   Cập nhật bằng ExecuteUpdateAsync có điều kiện WHERE MaDG = @id AND TrangThai = @trangThaiCu; 0 dòng → báo đã bị người khác cập nhật.
 
 ### 6.14. Khiếu nại
 
@@ -832,6 +834,15 @@ Trạng thái:
 -   DangXuLy
 -   DaGiaiQuyet
 -   TuChoi
+
+Chuyển trạng thái phía Admin:
+
+-   ChoXuLy→DangXuLy (Tiếp nhận; phản hồi tùy chọn, nếu có thì 10–1000 ký tự).
+-   ChoXuLy hoặc DangXuLy→DaGiaiQuyet / TuChoi: phản hồi BẮT BUỘC, Trim, 10–1000 ký tự.
+-   DaGiaiQuyet và TuChoi là trạng thái cuối, không đổi được nữa.
+-   Khi lưu: MaTKXuLy = Admin hiện tại; NgayPhanHoi = DateTime.Now khi có phản hồi.
+-   Cập nhật bằng ExecuteUpdateAsync có điều kiện WHERE MaKN = @id AND TrangThai = @trangThaiCu; 0 dòng → báo đã bị người khác cập nhật.
+-   NoiDung và PhanHoi là văn bản thuần: hiển thị bằng mã hóa mặc định của Razor (không Html.Raw), trong JavaScript dùng textContent (không innerHTML); giữ xuống dòng bằng CSS.
 
 ### 6.15. Doanh thu
 

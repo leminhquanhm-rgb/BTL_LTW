@@ -2827,4 +2827,7 @@
   <data name="Admin_Complaint_Empty" xml:space="preserve">
     <value>Không tìm thấy khiếu nại nào phù hợp.</value>
   </data>
+  <data name="Admin_Complaint_AdminFormat" xml:space="preserve">
+    <value>Quản trị viên #{0}</value>
+  </data>
 </root>

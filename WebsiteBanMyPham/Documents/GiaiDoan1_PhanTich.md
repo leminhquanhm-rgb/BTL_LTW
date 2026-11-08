@@ -74,7 +74,7 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 | 7 | Quản lý đơn hàng | Xem danh sách, chi tiết và xử lý đơn hàng của khách hàng. |
 | 8 | Cập nhật trạng thái đơn hàng | Thay đổi trạng thái đơn hàng theo quy trình xử lý. |
 | 9 | Quản lý giao dịch thanh toán | Theo dõi giao dịch, kiểm tra trạng thái thanh toán và cập nhật trạng thái hoàn tiền. |
-| 10 | Quản lý phương thức thanh toán | Thêm, sửa và quản lý các phương thức thanh toán được hỗ trợ. |
+| 10 | Quản lý phương thức thanh toán | Xem danh sách, sửa mô tả và bật/tắt phương thức thanh toán (COD luôn bật; không thêm phương thức mới). |
 | 11 | Quản lý khuyến mãi | Tạo, sửa, xóa và quản lý mã khuyến mãi. |
 | 12 | Quản lý khách hàng | Xem thông tin, cập nhật trạng thái và quản lý tài khoản khách hàng. |
 | 13 | Quản lý tài khoản Admin | Không quản lý trên web; tài khoản Admin được tạo trực tiếp trong CSDL khi triển khai để tránh Admin tự khóa chính mình hoặc mất quyền quản trị. |
@@ -196,7 +196,7 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
 * Điểm đánh giá nằm trong khoảng từ 1 đến 5 sao.
 * Khách hàng có thể nhập nội dung nhận xét kèm theo đánh giá.
 * Đánh giá sau khi gửi sẽ ở trạng thái Chờ duyệt. Admin kiểm tra và duyệt trước khi đánh giá được hiển thị công khai.
-* Admin có quyền từ chối hoặc ẩn đánh giá không phù hợp.
+* Admin có quyền từ chối hoặc ẩn đánh giá không phù hợp, kể cả đánh giá đã duyệt; đánh giá đã từ chối có thể được duyệt lại. Đánh giá không quay về trạng thái Chờ duyệt, Admin không sửa nội dung và không xóa đánh giá.
 
 ### 1.5.8. Quy tắc khiếu nại
 * Khách hàng đã đăng nhập mới được phép gửi khiếu nại.
@@ -215,8 +215,10 @@ Ngoài các đối tượng trên, nếu triển khai thanh toán trực tuyến
   * Từ chối.
 * **Luồng xử lý thông thường:**
   * Chờ xử lý → Đang xử lý → Đã giải quyết.
-* **Trường hợp không đủ điều kiện xử lý:**
-  * Chờ xử lý → Từ chối.
+* **Trường hợp xử lý nhanh hoặc không đủ điều kiện:**
+  * Chờ xử lý → Đã giải quyết (giải quyết ngay, không cần bước tiếp nhận).
+  * Chờ xử lý hoặc Đang xử lý → Từ chối.
+* Khi chuyển sang Đã giải quyết hoặc Từ chối, Admin bắt buộc nhập phản hồi từ 10 đến 1000 ký tự. Đã giải quyết và Từ chối là trạng thái cuối, không thay đổi được nữa.
 
 ### 1.5.9. Quy tắc thống kê
 * Admin có quyền xem các thông tin thống kê:

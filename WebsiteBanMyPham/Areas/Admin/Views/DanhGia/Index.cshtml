@@ -407,7 +407,8 @@
 </div>
 
 <div id="i18nReviewData" class="hidden"
-     data-reject-template="@L["Admin_Review_RejectConfirm"].Value">
+     data-reject-template="@L["Admin_Review_RejectConfirm"].Value"
+     data-star-format="@L["Admin_Review_Star_Format"].Value">
 </div>
 
 @section Scripts {
@@ -421,6 +422,7 @@
             var btnRejectCancel = document.getElementById('btnRejectCancel');
             var i18n = document.getElementById('i18nReviewData');
             var rejectTemplate = i18n ? i18n.dataset.rejectTemplate : '';
+            var starFormat = i18n ? (i18n.dataset.starFormat || '{0} sao') : '{0} sao';
 
             document.querySelectorAll('.btn-reject-review').forEach(function (btn) {
                 btn.addEventListener('click', function () {
@@ -455,7 +457,7 @@
                 btn.addEventListener('click', function () {
                     contentProduct.textContent = this.dataset.product || '';
                     contentCustomer.textContent = this.dataset.customer || '';
-                    contentRating.textContent = '★ ' + (this.dataset.rating || '') + ' sao';
+                    contentRating.textContent = '★ ' + starFormat.replace('{0}', this.dataset.rating || '');
                     contentBody.textContent = this.dataset.content || '';
 
                     contentModal.classList.remove('hidden');

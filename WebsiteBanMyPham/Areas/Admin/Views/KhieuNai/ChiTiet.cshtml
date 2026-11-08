@@ -152,12 +152,12 @@
             <div class="p-3 bg-[#EBF3F9]/60 rounded-btn border border-statusInfo/20 text-charcoal flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <span class="text-muted">@L["Admin_Complaint_Handler"]:</span>
-                    <strong class="font-semibold">@(Model.TenAdminXuLy ?? $"Admin #{Model.MaTKXuLy}")</strong>
+                    <strong class="font-semibold">@(Model.TenAdminXuLy ?? string.Format(L["Admin_Complaint_AdminFormat"].Value, Model.MaTKXuLy))</strong>
                 </div>
                 @if (Model.NgayPhanHoi.HasValue)
                 {
                     <div class="text-muted text-[11px]">
-                        @L["Order_RefundDate"]: @LocalizationHelper.FormatDateTime(Model.NgayPhanHoi)
+                        @L["Complaint_ReplyDate"] @LocalizationHelper.FormatDateTime(Model.NgayPhanHoi)
                     </div>
                 }
             </div>

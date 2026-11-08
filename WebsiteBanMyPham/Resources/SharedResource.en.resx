@@ -2827,4 +2827,7 @@
   <data name="Admin_Complaint_Empty" xml:space="preserve">
     <value>No matching complaints found.</value>
   </data>
+  <data name="Admin_Complaint_AdminFormat" xml:space="preserve">
+    <value>Admin #{0}</value>
+  </data>
 </root>

@@ -84,11 +84,11 @@ Giai đoạn này tập trung xác định các chức năng của hệ thống,
 | 11 | Đơn hàng | Ghi nhận ngày giao hàng thành công khi xác nhận giao thành công. |
 | 12 | Thanh toán | Theo dõi giao dịch thanh toán. |
 | 13 | Thanh toán | Cập nhật trạng thái hoàn tiền. |
-| 14 | Phương thức thanh toán | Thêm, sửa và quản lý phương thức thanh toán. |
+| 14 | Phương thức thanh toán | Xem, sửa mô tả và bật/tắt phương thức thanh toán (không thêm mới; COD luôn bật). |
 | 15 | Khuyến mãi | Tạo, sửa, xóa và quản lý mã khuyến mãi. |
 | 16 | Khách hàng | Xem và quản lý tài khoản khách hàng. |
 | 17 | Tài khoản Admin | Không quản lý trên web (tạo trực tiếp trong CSDL khi triển khai). |
-| 18 | Đánh giá | Duyệt hoặc từ chối đánh giá. |
+| 18 | Đánh giá | Duyệt, từ chối, ẩn đánh giá đã duyệt hoặc duyệt lại đánh giá đã từ chối. |
 | 19 | Khiếu nại | Tiếp nhận, phản hồi và cập nhật trạng thái khiếu nại. |
 | 20 | Thống kê | Xem báo cáo kinh doanh. |
 | 21 | Banner | Thêm, sửa, xóa và quản lý banner/slider. |
@@ -109,7 +109,7 @@ Giai đoạn này tập trung xác định các chức năng của hệ thống,
 | Đánh giá | Tạo, xem, duyệt, từ chối | Customer, Admin |
 | Khiếu nại | Tạo, xem, phản hồi, cập nhật trạng thái | Customer, Admin |
 | Thanh toán | Tạo và theo dõi giao dịch, cập nhật hoàn tiền | Customer, Admin |
-| Phương thức thanh toán | Thêm, xem, sửa, quản lý | Admin |
+| Phương thức thanh toán | Xem, sửa mô tả, bật/tắt | Admin |
 | Banner | Thêm, xem, sửa, xóa | Admin |
 | Tài khoản Admin | Tạo trực tiếp trong CSDL khi triển khai (không làm trên web) | — |
 
@@ -135,7 +135,7 @@ Các luồng dưới đây mô tả trình tự xử lý ở mức nghiệp vụ
 `Khách hàng xem đơn hàng` → `Kiểm tra đơn hàng đã hoàn thành` → `Chọn sản phẩm đã mua` → `Nhập số sao và nhận xét` → `Gửi đánh giá` → `Chờ duyệt` → `Admin kiểm tra` → `Duyệt và hiển thị hoặc từ chối đánh giá`
 
 ### 2.5.5. Luồng xử lý khiếu nại
-`Khách hàng xem đơn hàng` → `Kiểm tra đơn Hoàn thành và còn trong 10 ngày kể từ ngày giao thành công` → `Chọn sản phẩm trong đơn (không bắt buộc)` → `Nhập nội dung khiếu nại` → `Gửi khiếu nại` → `Hệ thống lưu khiếu nại` → `Chờ xử lý` → `Admin tiếp nhận` → `Đang xử lý` → `Đã giải quyết hoặc Từ chối` → `Khách hàng theo dõi kết quả`
+`Khách hàng xem đơn hàng` → `Kiểm tra đơn Hoàn thành và còn trong 10 ngày kể từ ngày giao thành công` → `Chọn sản phẩm trong đơn (không bắt buộc)` → `Nhập nội dung khiếu nại` → `Gửi khiếu nại` → `Hệ thống lưu khiếu nại` → `Chờ xử lý` → `Admin tiếp nhận` → `Đang xử lý` → `Admin nhập phản hồi` → `Đã giải quyết hoặc Từ chối` → `Khách hàng theo dõi kết quả`
 *(Nếu đơn chưa Hoàn thành, đã quá 10 ngày, không thuộc khách hàng, hoặc khách hàng đang có quá 10 khiếu nại chưa xử lý xong, hệ thống từ chối và thông báo lý do.)*
 
 ## 2.6. Phân loại mức độ ưu tiên chức năng
@@ -159,6 +159,9 @@ Các nội dung đã được nhóm thống nhất và chốt phạm vi như sau
 * **Khiếu nại:** Bắt buộc gắn với một đơn hàng của khách hàng ở trạng thái Hoàn thành và chỉ gửi được trong 10 ngày kể từ ngày giao hàng thành công; sản phẩm là tùy chọn và phải thuộc đơn đó. Nội dung từ 10 đến 1000 ký tự; tối đa 10 khiếu nại đang mở mỗi khách hàng. Trường hợp giao trễ được khiếu nại sau khi nhận hàng.
 * **Phương thức thanh toán:** Hệ thống nhận diện phương thức bằng TenPT (COD và Online); không cho phép đổi TenPT và không cho phép thêm phương thức thanh toán mới. Admin chỉ được xem danh sách, sửa mô tả (tối đa 255 ký tự) và bật/tắt trạng thái. Phương thức COD là bắt buộc và luôn bật (chặn ở cả client và server); khi tắt Online thì trang đặt hàng chỉ hiển thị COD, các đơn Online đã tạo trước đó vẫn được thanh toán mô phỏng và xử lý bình thường (chỉ đơn mới không chọn được Online).
 * **Tài khoản Admin:** Không quản lý tài khoản Admin trên giao diện web (tránh Admin tự khóa chính mình hoặc khóa hết Admin làm mất quyền quản trị). Tài khoản Admin được tạo trực tiếp trong CSDL khi triển khai; Admin vẫn tự đổi mật khẩu và dùng quên mật khẩu như hiện có. Trang Tài khoản trong Admin chỉ quản lý tài khoản khách hàng (VaiTro = KhachHang).
+* **Duyệt đánh giá (Admin):** Chuyển trạng thái chỉ theo các cặp Chờ duyệt → Đã duyệt, Chờ duyệt → Từ chối, Đã duyệt → Từ chối, Từ chối → Đã duyệt. Không quay về Chờ duyệt, không sửa nội dung, không xóa. Bảng DanhGia không có cột phản hồi nên không có chức năng trả lời đánh giá.
+* **Xử lý khiếu nại (Admin):** Chờ xử lý → Đang xử lý (phản hồi tùy chọn); Chờ xử lý hoặc Đang xử lý → Đã giải quyết / Từ chối (phản hồi bắt buộc, 10–1000 ký tự). Đã giải quyết và Từ chối là trạng thái cuối. Hệ thống ghi nhận Admin xử lý và thời gian phản hồi; khách hàng chỉ thấy trạng thái và nội dung phản hồi, không thấy thông tin Admin.
+* **Cập nhật đồng thời:** Mọi thao tác đổi trạng thái đánh giá/khiếu nại chỉ thành công khi trạng thái trong CSDL vẫn đúng như lúc Admin mở trang; nếu đã bị người khác cập nhật, hệ thống báo yêu cầu tải lại.
 
 ## 2.9. Sơ đồ Use Case
 Sơ đồ Use Case tổng quát thể hiện phạm vi chức năng của hệ thống và tương tác giữa ba Actor chính: Guest, Customer và Admin. Cổng thanh toán là tác nhân ngoài, chỉ tham gia khi triển khai thanh toán trực tuyến.
